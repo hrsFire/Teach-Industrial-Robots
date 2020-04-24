@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="teach_industrial_robots" type="teach_industrial_robots_node" name="teach_industrial_robots_node" required="true" output="screen">
+    </node>
+</launch>
