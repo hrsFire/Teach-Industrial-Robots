@@ -1,10 +1,11 @@
 #include <iostream>
 #include <ros/ros.h>
-#include <interbotix_sdk/arm_obj.h>
 #include <k4a/k4a.hpp>
 #include <k4abt.hpp>
 #include <simple_gestures/kinect/azure_kinect_gestures.hpp>
 #include <simple_gestures/kinect/azure_kinect.hpp>
+#include <robot_arm_interface/robot_arm_base.hpp>
+#include <interbotix_robot_arms_wrapper/interbotix_robot_arm.hpp>
 
 int main(int argc, char** argv) {
     std::cout << "#################################" << std::endl;
@@ -51,26 +52,16 @@ int main(int argc, char** argv) {
         bodyTracker.set_temporal_smoothing(0);
 
         gestures::GesturesBase* gestures = new kinect::AzureKinectGestures(&bodyTracker, &device, true);
-
-        // https://github.com/Interbotix/interbotix_ros_arms/tree/master/interbotix_sdk
-        // One is to command the robot via the ROS topics and/or services. In this manner, the developer can code in
-        // any language that is capable of sending a ROS message. The other approach is to 'skip' the ROS topic layer
-        // and use the publicly available functions directly. All the user would need to do is create an instance of the
-        // 'RobotArm' class as shown here to take advantage of these functions.
-        // https://github.com/Interbotix/interbotix_ros_arms/blob/master/interbotix_sdk/src/arm_node.cpp
-        ros::init(argc, argv, "teach_industrial_robots");
-        ros::NodeHandle nodeHandle;
-
         std::string robotName = "wx200";
         std::string robotModel = "wx200"; // Typically, this will be the same as robotName
-        /*ros::param::get("~robot_name", robot_name);
-        ros::param::get("~robot_model", robot_model);*/
-        // https://github.com/Interbotix/interbotix_ros_arms/blob/melodic/interbotix_sdk/launch/arm_run.launch
-        ros::param::set("~motor_configs", "/home/ubuntu/interbotix_ws/src/interbotix_ros_arms/interbotix_sdk/config/");
-        RobotArm robotArm(&nodeHandle, robotName, robotModel);
-        //ros::spin();
+        robot_arm::InterbotixRobotArmBase* robotArm = new interbotix::InterbotixRobotArm(false, argc, argv, robotName, robotModel);
         float gripperDistance = 0;
         float jointAngle = 0;
+
+        ros::Duration(0.5).sleep();
+
+        std::vector<JointState> jointStates = robotArm->GetJointStates();
+        int numberOfJointStates = jointStates.size();
 
         while (true) {
             gestures->NextCycle();
@@ -105,7 +96,7 @@ int main(int argc, char** argv) {
                         jointAngle = maxJointAngle;
                     }
 
-                    robotArm.arm_set_single_joint_angular_position("elbow", jointAngle);
+                    robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
                 } else if (distanceToLeftShoulder > 0 && distanceToLeftShoulder < 65.0) {
                     jointAngle -= jointAngleDiff;
 
@@ -113,7 +104,7 @@ int main(int argc, char** argv) {
                         jointAngle = minJointAngle;
                     }
 
-                    robotArm.arm_set_single_joint_angular_position("elbow", jointAngle);
+                    robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
                 } else if (distanceToChestRight > 0 && distanceToChestRight < 0.01) {
                     gripperDistance += gripperDiff;
 
@@ -121,7 +112,7 @@ int main(int argc, char** argv) {
                         gripperDistance = maxGripperDistance;
                     }
 
-                    robotArm.arm_set_gripper_linear_position(gripperDistance);
+                    robotArm->SendGripperCommand(gripperDistance);
                 } else if (distanceToChestLeft > 0 && distanceToChestLeft < 0.01) {
                     gripperDistance -= gripperDiff;
 
@@ -129,7 +120,7 @@ int main(int argc, char** argv) {
                         gripperDistance = minGripperDistance;
                     }
 
-                    robotArm.arm_set_gripper_linear_position(gripperDistance);
+                    robotArm->SendGripperCommand(gripperDistance);
                 }
 
                 gestures->MarkDataAsUsed();

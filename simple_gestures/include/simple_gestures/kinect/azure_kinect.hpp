@@ -6,8 +6,7 @@
 #include <k4abt.hpp>
 
 namespace kinect {
-    class AzureKinect
-    {
+    class AzureKinect {
     public:
         bool static StartSensors(k4a::device& device, k4a_device_configuration_t& deviceConfig);
         bool static StartBodyTracking(k4a::device& device, const k4a_device_configuration_t& deviceConfig, k4abt::tracker& bodyTracker);

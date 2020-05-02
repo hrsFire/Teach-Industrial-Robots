@@ -2,8 +2,7 @@
 #define GESTURES_GESTURES_BASE_HPP
 
 namespace gestures {
-    class GesturesBase
-    {
+    class GesturesBase {
     public:
         virtual void NextCycle() = 0;
         virtual bool IsNewDataAvailable() = 0;

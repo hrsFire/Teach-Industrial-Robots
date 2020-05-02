@@ -4,8 +4,7 @@
 #include <math.h>
 
 namespace common {
-    class AngleConverter
-    {
+    class AngleConverter {
     public:
         static double DegreeFromRadian(double radian);
         static double RadianFromDegree(double degree);

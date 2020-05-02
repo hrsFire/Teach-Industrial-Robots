@@ -61,10 +61,16 @@
         "condition_variable": "cpp",
         "list": "cpp",
         "mutex": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "unordered_set": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "valarray": "cpp",
+        "*.ipp": "cpp",
+        "*.cuh": "cpp"
     },
     "python.autoComplete.extraPaths": [
-        "/home/ubuntu/interbotix_ws/devel/lib/python2.7/dist-packages",
+        "${workspaceFolder}/../../../interbotix_ws/devel/lib/python2.7/dist-packages",
         "/opt/ros/melodic/lib/python2.7/dist-packages"
     ]
 }

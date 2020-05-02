@@ -8,8 +8,7 @@
 #include "../gestures/gestures_base.hpp"
 
 namespace kinect {
-    class AzureKinectGestures : public virtual gestures::GesturesBase
-    {
+    class AzureKinectGestures : public virtual gestures::GesturesBase {
     public:
         AzureKinectGestures(k4abt::tracker* bodyTracker, k4a::device* device, bool allowDifferentBodies);
         ~AzureKinectGestures();
