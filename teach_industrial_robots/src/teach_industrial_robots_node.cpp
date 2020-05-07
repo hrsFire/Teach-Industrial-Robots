@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
                     }
 
                     robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
-                } else if (gestures->IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_CLAVICLE_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 120.0)) {
+                } else if (gestures->IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0)) {
                     gripperDistance += gripperDiff;
 
                     if (gripperDistance > maxGripperDistance) {
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
                     }
 
                     robotArm->SendGripperCommand(gripperDistance);
-                } else if (gestures->IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 120.0)) {
+                } else if (gestures->IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0)) {
                     gripperDistance -= gripperDiff;
 
                     if (gripperDistance < minGripperDistance) {

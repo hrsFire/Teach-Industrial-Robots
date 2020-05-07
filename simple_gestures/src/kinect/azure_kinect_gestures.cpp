@@ -94,3 +94,25 @@ bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointI
 
     return false;
 }
+
+bool AzureKinectGestures::IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, double minDistance, double maxDistance) {
+    k4abt_joint_t joint1 = body->skeleton.joints[jointIndex1];
+    k4abt_joint_t joint2 = body->skeleton.joints[jointIndex2];
+
+    // The confidence level needs to be at least medium. Otherwise the joint is out of range or not visible likely due to occlusion.
+    if ((joint1.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint1.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) &&
+            (joint2.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint2.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH)) {
+
+        // Get the distance to the center of the sphere
+        double distance = common::Vector3::Distance(glm::vec3(joint1.position.xyz.x, joint1.position.xyz.y, joint1.position.xyz.z),
+            glm::vec3(joint2.position.xyz.x, joint2.position.xyz.y, joint2.position.xyz.z));
+
+#ifndef NDEBUG
+        std::cout << "Distance: " << distance << " mm" << std::endl;
+#endif
+
+        return distance >= minDistance && distance <= maxDistance;
+    }
+
+    return false;
+}
