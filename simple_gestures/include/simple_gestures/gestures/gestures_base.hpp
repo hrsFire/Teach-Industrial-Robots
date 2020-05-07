@@ -9,8 +9,8 @@ namespace gestures {
         virtual bool MarkDataAsUsed() {
             dataWasUsed = true;
         };
-        virtual double PerpendicularDistance(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex) = 0;
-        virtual void ShowDebugInfo() = 0;
+        // minDistance and maxDistance are specified in millimeters
+        virtual bool IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) = 0;
     protected:
         bool dataWasUsed = false;
     };

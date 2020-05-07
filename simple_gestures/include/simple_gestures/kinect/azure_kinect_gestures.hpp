@@ -14,10 +14,10 @@ namespace kinect {
         ~AzureKinectGestures();
         void NextCycle() override;
         bool IsNewDataAvailable() override;
-        double PerpendicularDistance(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex) override;
-        void ShowDebugInfo() override;
+        bool IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) override;
     private:
         const int64_t MAX_WAIT_TIME_FOR_OTHER_BODY = 5;
+        const double DEVIATION = 3.0;
         k4abt::tracker* bodyTracker = nullptr;
         k4a::device* device = nullptr;
         bool allowDifferentBodies = false;

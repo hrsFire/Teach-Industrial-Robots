@@ -68,56 +68,29 @@ bool AzureKinectGestures::IsNewDataAvailable() {
     return dataWasUsed == false && body != nullptr && &previousBody != &body;
 }
 
-double AzureKinectGestures::PerpendicularDistance(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex) {
+bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) {
     k4abt_joint_t startJoint = body->skeleton.joints[startJointIndex];
     k4abt_joint_t endJoint = body->skeleton.joints[endJointIndex];
     k4abt_joint_t joint = body->skeleton.joints[jointIndex];
 
+    // The confidence level needs to be at least medium. Otherwise the joint is out of range or not visible likely due to occlusion.
     if ((startJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || startJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) &&
             (endJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || endJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) &&
             (joint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH)) {
 
-        return common::Vector3::PerpendicularDistance(glm::vec3(startJoint.position.xyz.x, startJoint.position.xyz.y, startJoint.position.xyz.z),
-            glm::vec3(endJoint.position.xyz.x, endJoint.position.xyz.y, endJoint.position.xyz.z),
-            glm::vec3(joint.position.xyz.x, joint.position.xyz.y, joint.position.xyz.z));
+        glm::vec3 startPoint = glm::vec3(startJoint.position.xyz.x, startJoint.position.xyz.y, startJoint.position.xyz.z);
+        glm::vec3 endPoint = glm::vec3(endJoint.position.xyz.x, endJoint.position.xyz.y, endJoint.position.xyz.z);
+        glm::vec3 point = glm::vec3(joint.position.xyz.x, joint.position.xyz.y, joint.position.xyz.z);
+
+        double perpendicularDistance = common::Vector3::PerpendicularDistance(startPoint, endPoint, point);
+        double deviationOnLine = common::Vector3::DeviationOnLine(startPoint, endPoint, point);
+
+#ifndef NDEBUG
+        std::cout << "Distance: " << perpendicularDistance << " mm, " << deviationOnLine << " mm" << std::endl;
+#endif
+
+        return perpendicularDistance >= minDistance && perpendicularDistance <= maxDistance && deviationOnLine >= -DEVIATION;
     }
 
-    return 0;
-}
-
-void AzureKinectGestures::ShowDebugInfo() {
-    if (body != nullptr) {
-        k4abt_joint_t joint = body->skeleton.joints[K4ABT_JOINT_HAND_RIGHT];
-
-        // The confidence level needs to be at least medium. Otherwise the joint is out of range or not visible likely due to occlusion.
-        if (joint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) {
-            std::cout << "Joint visible" << std::endl << std::endl;
-            kinect::AzureKinect::PrintConfidenceLevel(joint);
-            std::cout << std::endl;
-
-            // The position of the joint is specified in millimeters
-            // https://microsoft.github.io/Azure-Kinect-Body-Tracking/release/1.x.x/structk4abt__joint__t.html
-            std::cout << "Coordinates:" << std::endl;
-            std::cout << "  * x: " << joint.position.xyz.x / 10.0 << " cm" << std::endl;
-            std::cout << "  * y: " << joint.position.xyz.y / 10.0 << " cm" << std::endl;
-            std::cout << "  * z: " << joint.position.xyz.z / 10.0 << " cm" << std::endl << std::endl;
-            
-            /*std::cout << "Quaternion Orientation:" << std::endl;
-            std::cout << "  * w: " << joint.orientation.wxyz.w << std::endl;
-            std::cout << "  * x: " << joint.orientation.wxyz.x << std::endl;
-            std::cout << "  * y: " << joint.orientation.wxyz.y << std::endl;
-            std::cout << "  * z: " << joint.orientation.wxyz.z << std::endl << std::endl;
-
-            // https://stackoverflow.com/questions/31589901/euler-to-quaternion-quaternion-to-euler-using-eigen
-            Eigen::Quaternionf orientation(joint.orientation.wxyz.w, joint.orientation.wxyz.x, joint.orientation.wxyz.y, joint.orientation.wxyz.z);
-            Eigen::Vector3f eulerOrientation = orientation.toRotationMatrix().eulerAngles(0, 0, 0);
-
-            std::cout << "Euler Orientation:" << std::endl;
-            std::cout << "  * x: " << common::AngleConverter::DegreeFromRadian(eulerOrientation[0]) << "°" << std::endl;
-            std::cout << "  * y: " << common::AngleConverter::DegreeFromRadian(eulerOrientation[1]) << "°" << std::endl;
-            std::cout << "  * z: " << common::AngleConverter::DegreeFromRadian(eulerOrientation[2]) << "°" << std::endl << std::endl;*/
-
-            std::cout << "------------------------" << std::endl << std::endl;
-        }
-    }
+    return false;
 }
