@@ -145,6 +145,6 @@ void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, con
     self.jointStates.clear();
 
     for (size_t i = 0; i < message->name.size(); i++) {
-        self.jointStates.push_back(JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODo: mode?
+        self.jointStates.push_back(JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODO: mode?
     }
 }

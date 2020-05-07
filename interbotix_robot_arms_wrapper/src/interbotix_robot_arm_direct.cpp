@@ -26,7 +26,7 @@ std::vector<JointState> InterbotixRobotArmDirect::GetJointStates() {
     jointStates.clear();
 
     for (size_t i = 0; i < states.name.size(); i++) {
-        jointStates.push_back(JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODo: mode?
+        jointStates.push_back(JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
     }
 
     return std::vector<JointState>();
