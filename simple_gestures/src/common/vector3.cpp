@@ -1,5 +1,4 @@
 #include "vector3.hpp"
-#include <iostream>
 
 using namespace common;
 
@@ -23,6 +22,10 @@ float Vector3::DeviationOnLine(glm::vec3 startPoint, glm::vec3 endPoint, glm::ve
 }
 
 glm::vec3 Vector3::ProjectedPoint(glm::vec3 startPoint, glm::vec3 endPoint, glm::vec3 point) {
+    if (glm::all(glm::equal(endPoint, point))) {
+        throw "'endPoint' and 'point' can't be the same: Division by zero";
+    }
+
     glm::vec3 d = (point - startPoint) / glm::distance(point, startPoint);
     glm::vec3 v = endPoint - startPoint;
     float t = glm::dot(v, d);

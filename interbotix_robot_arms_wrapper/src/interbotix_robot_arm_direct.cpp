@@ -22,7 +22,7 @@ std::vector<JointState> InterbotixRobotArmDirect::GetJointStates() {
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
 
     std::lock_guard<std::mutex> _(jointStatesMutex);
-#
+
     jointStates.clear();
 
     for (size_t i = 0; i < states.name.size(); i++) {
