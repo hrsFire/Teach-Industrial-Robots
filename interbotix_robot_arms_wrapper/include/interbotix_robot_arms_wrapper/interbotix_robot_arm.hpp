@@ -2,6 +2,7 @@
 #define INTERBOTIX_ROBOT_ARM_HPP
 
 #include <vector>
+#include <unordered_map>
 #include <robot_arm_interface/robot_arm_base.hpp>
 
 using namespace robot_arm;
@@ -11,7 +12,7 @@ namespace interbotix {
     public:
         InterbotixRobotArm(bool useRos, int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArm();
-        std::vector<JointState> GetJointStates() override;
+        std::unordered_map<std::string, JointState> GetJointStates() override;
         void SendJointCommand(JointName jointName, double value) override;
         void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) override;
         void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;

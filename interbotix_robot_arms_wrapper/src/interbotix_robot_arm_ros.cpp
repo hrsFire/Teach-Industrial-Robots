@@ -27,10 +27,10 @@ InterbotixRobotArmROS::~InterbotixRobotArmROS() {
     spinner->stop();
 }
 
-std::vector<JointState> InterbotixRobotArmROS::GetJointStates() {
+std::unordered_map<std::string, JointState> InterbotixRobotArmROS::GetJointStates() {
     std::lock_guard<std::mutex> _(jointStatesMutex);
 
-    return jointStates;
+    return unorderedJointStates;
 }
 
 void InterbotixRobotArmROS::SendJointCommand(JointName jointName, double value) {
@@ -49,7 +49,7 @@ void InterbotixRobotArmROS::SendJointCommands(const std::vector<JointName>& join
 
     {
         std::lock_guard<std::mutex> _(jointStatesMutex);
-        jointStates = GetJointStates();
+        jointStates = GetOrderedJointStates();
     }
 
     message.cmd = JointHelper::PrepareJointCommands(jointNames, values, *robotInfo, jointStates);
@@ -142,9 +142,19 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
 void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message) {
     std::lock_guard<std::mutex>(self.jointStatesMutex);
 
-    self.jointStates.clear();
+    self.orderedJointStates.clear();
+    self.orderedJointStates.reserve(message->name.size());
+    self.unorderedJointStates.clear();
+    self.unorderedJointStates.reserve(message->name.size());
 
     for (size_t i = 0; i < message->name.size(); i++) {
-        self.jointStates.push_back(JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODO: mode?
+        self.orderedJointStates.push_back(JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODO: mode?
+        self.unorderedJointStates.emplace(message->name[i], JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODO: mode?
     }
+}
+
+std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {
+    std::lock_guard<std::mutex> _(jointStatesMutex);
+
+    return orderedJointStates;
 }

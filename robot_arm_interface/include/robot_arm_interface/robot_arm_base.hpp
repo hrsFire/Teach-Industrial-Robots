@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_map>
 #include "joint_trajectory_point.hpp"
 #include "joint_state.hpp"
 #include "operating_mode.hpp"
@@ -14,7 +15,7 @@ namespace robot_arm {
     class InterbotixRobotArmBase {
     public:
         // Reads current joint states from all the motors
-        virtual std::vector<JointState> GetJointStates() = 0;
+        virtual std::unordered_map<std::string, JointState> GetJointStates() = 0;
         // Sends any type of command to a specified joint which was previously configured with an operating mode
         virtual void SendJointCommand(JointName jointName, double value) = 0;
         // Sends any type of commands to all joints which were previously configured with an operating mode

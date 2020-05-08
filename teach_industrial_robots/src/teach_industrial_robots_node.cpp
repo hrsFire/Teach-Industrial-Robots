@@ -55,13 +55,11 @@ int main(int argc, char** argv) {
         std::string robotName = "wx200";
         std::string robotModel = "wx200"; // Typically, this will be the same as robotName
         robot_arm::InterbotixRobotArmBase* robotArm = new interbotix::InterbotixRobotArm(false, argc, argv, robotName, robotModel);
-        float gripperDistance = 0;
-        float jointAngle = 0;
+        std::unordered_map<std::string, JointState> jointStates = robotArm->GetJointStates();
+        float gripperDistance = jointStates.at(JointName::GRIPPER()).position;
+        float jointAngle = jointStates.at(JointName::ELBOW()).position;
 
         ros::Duration(0.5).sleep();
-
-        std::vector<JointState> jointStates = robotArm->GetJointStates();
-        int numberOfJointStates = jointStates.size();
 
         while (true) {
             gestures->NextCycle();

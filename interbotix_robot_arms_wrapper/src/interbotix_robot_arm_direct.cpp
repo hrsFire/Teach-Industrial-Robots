@@ -18,18 +18,16 @@ InterbotixRobotArmDirect::~InterbotixRobotArmDirect() {
     delete robotArm;
 }
 
-std::vector<JointState> InterbotixRobotArmDirect::GetJointStates() {
+std::unordered_map<std::string, JointState> InterbotixRobotArmDirect::GetJointStates() {
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
-
-    std::lock_guard<std::mutex> _(jointStatesMutex);
-
-    jointStates.clear();
+    std::unordered_map<std::string, JointState> jointStates;
+    jointStates.reserve(states.name.size());
 
     for (size_t i = 0; i < states.name.size(); i++) {
-        jointStates.push_back(JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
+        jointStates.emplace(states.name[i], JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
     }
 
-    return std::vector<JointState>();
+    return jointStates;
 }
 
 void InterbotixRobotArmDirect::SendJointCommand(JointName jointName, double value) {
@@ -42,7 +40,7 @@ void InterbotixRobotArmDirect::SendJointCommand(JointName jointName, double valu
 
 void InterbotixRobotArmDirect::SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) {
     std::vector<JointState> jointStates;
-    jointStates = GetJointStates();    
+    jointStates = GetOrderedJointStates();
     std::vector<double> cmds = JointHelper::PrepareJointCommands(jointNames, values, *robotInfo, jointStates);
     interbotix_sdk::JointCommands message;
     message.cmd = values;
@@ -122,4 +120,15 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
     }
 
     throw "Could not retrieve the robot info";
+}
+
+std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
+    sensor_msgs::JointState states = robotArm->arm_get_joint_states();
+    std::vector<JointState> jointStates;
+
+    for (size_t i = 0; i < states.name.size(); i++) {
+        jointStates.push_back(JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
+    }
+
+    return jointStates;
 }
