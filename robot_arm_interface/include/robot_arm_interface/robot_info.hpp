@@ -16,7 +16,10 @@ namespace robot_arm {
         const double lowerGripperLimit;
         const double upperGripperLimit;
         const bool useGripper;
+        // Home position for each robot. Is used to command all joints (excluding gripper) to 0 radians
         const std::vector<double> homePosition;
+        // Sleep position for each robot. Is used to command all joints (excluding gripper) to a specific position in radians
+        // so that if the driver is shutdown (which torques off all motors), the arm doesn't come crashing down
         const std::vector<double> sleepPosition;
         // The number of joints in the arm (excluding gripper)
         const int numberOfJoints;
