@@ -2,6 +2,6 @@
 
 using namespace robot_arm;
 
-JointState::JointState(std::string jointName, double position, double velocity, double effort) :
+JointState::JointState(JointName jointName, double position, double velocity, double effort) :
         jointName(jointName), position(position), velocity(velocity), effort(effort) {
 }

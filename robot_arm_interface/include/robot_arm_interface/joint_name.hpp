@@ -19,7 +19,7 @@ namespace robot_arm {
         static JointName GRIPPER();
         static JointName NONE();
         operator std::string();
-        bool operator==(const JointName& jointName);
+        bool operator==(const JointName& jointName) const;
     private:
         enum class Joint {
             WAIST = 0,
@@ -33,6 +33,13 @@ namespace robot_arm {
         };
         JointName(Joint joint);
         Joint joint;
+    };
+}
+
+namespace std {
+    template<> class hash<robot_arm::JointName> {
+    public:
+        std::size_t operator()(robot_arm::JointName const& jointName) const noexcept;
     };
 }
 

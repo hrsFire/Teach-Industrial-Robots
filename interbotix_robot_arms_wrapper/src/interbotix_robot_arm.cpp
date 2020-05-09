@@ -23,7 +23,7 @@ InterbotixRobotArm::~InterbotixRobotArm() {
     delete robotArm;
 }
 
-std::unordered_map<std::string, JointState> InterbotixRobotArm::GetJointStates() {
+std::unordered_map<JointName, JointState> InterbotixRobotArm::GetJointStates() {
     return robotArm->GetJointStates();
 }
 

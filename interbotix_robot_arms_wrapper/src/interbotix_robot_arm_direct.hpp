@@ -13,7 +13,7 @@ namespace interbotix {
     public:
         InterbotixRobotArmDirect(int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArmDirect();
-        std::unordered_map<std::string, JointState> GetJointStates() override;
+        std::unordered_map<JointName, JointState> GetJointStates() override;
         void SendJointCommand(JointName jointName, double value) override;
         void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) override;
         void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;

@@ -55,9 +55,10 @@ int main(int argc, char** argv) {
         std::string robotName = "wx200";
         std::string robotModel = "wx200"; // Typically, this will be the same as robotName
         robot_arm::InterbotixRobotArmBase* robotArm = new interbotix::InterbotixRobotArm(false, argc, argv, robotName, robotModel);
-        std::unordered_map<std::string, JointState> jointStates = robotArm->GetJointStates();
+        std::unordered_map<JointName, JointState> jointStates = robotArm->GetJointStates();
         float gripperDistance = jointStates.at(JointName::GRIPPER()).position;
         float jointAngle = jointStates.at(JointName::ELBOW()).position;
+        std::shared_ptr<RobotInfo> robotInfo = robotArm->GetRobotInfo();
 
         ros::Duration(0.5).sleep();
 
@@ -67,12 +68,12 @@ int main(int argc, char** argv) {
             if (gestures->IsNewDataAvailable()) {
                 // http://support.interbotix.com/html/specifications/wx200.html#default-joint-limits
                 float gripperDiff = 0.002;
-                float minGripperDistance = 0.025;
-                float maxGripperDistance = 0.076;
+                float minGripperDistance = robotInfo->lowerGripperLimit;
+                float maxGripperDistance = robotInfo->upperGripperLimit;
 
                 float jointAngleDiff = 1.0 * M_PI / 180.0;
-                float minJointAngle = -90.0 * M_PI / 180.0;
-                float maxJointAngle = 90.0 * M_PI / 180.0;
+                float minJointAngle = robotInfo->joints.at(JointName::ELBOW()).lowerLimit;
+                float maxJointAngle = robotInfo->joints.at(JointName::ELBOW()).upperLimit;
 
                 if (gestures->IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0)) {
                     jointAngle += jointAngleDiff;

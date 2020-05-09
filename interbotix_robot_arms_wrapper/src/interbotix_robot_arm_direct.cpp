@@ -18,10 +18,9 @@ InterbotixRobotArmDirect::~InterbotixRobotArmDirect() {
     delete robotArm;
 }
 
-std::unordered_map<std::string, JointState> InterbotixRobotArmDirect::GetJointStates() {
+std::unordered_map<JointName, JointState> InterbotixRobotArmDirect::GetJointStates() {
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
-    std::unordered_map<std::string, JointState> jointStates;
-    jointStates.reserve(states.name.size());
+    std::unordered_map<JointName, JointState> jointStates(states.name.size());
 
     for (size_t i = 0; i < states.name.size(); i++) {
         jointStates.emplace(states.name[i], JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
@@ -96,7 +95,7 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
     interbotix_sdk::RobotInfoRequest req;
     interbotix_sdk::RobotInfoResponse res;
 
-    if (robotInfo != nullptr) {
+    if (robotInfo == nullptr) {
         if (robotArm->arm_get_robot_info(res)) {
             std::vector<JointName> jointNames;
             
@@ -110,7 +109,7 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
                 jointIDs.push_back(id);
             }
 
-            robotInfo.reset(new RobotInfo(jointNames, jointIDs, res.lower_joint_limits, res.upper_joint_limits, res.velocity_limits,
+            robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, res.lower_joint_limits, res.upper_joint_limits, res.velocity_limits),
                 res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
         }
     }

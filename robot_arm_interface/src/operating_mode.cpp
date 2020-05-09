@@ -10,8 +10,8 @@ OperatingMode OperatingMode::POSITION() {
     return OperatingMode(Mode::POSITION);
 }
 
-OperatingMode OperatingMode::EXT_POSITION() {
-    return OperatingMode(Mode::EXT_POSITION);
+OperatingMode OperatingMode::POSITION_MULTIPLE_REVOLUTIONS() {
+    return OperatingMode(Mode::POSITION_MULTIPLE_REVOLUTIONS);
 }
 
 OperatingMode OperatingMode::VELOCITY() {
@@ -27,13 +27,12 @@ OperatingMode OperatingMode::PWM() {
 }
 
 OperatingMode::operator std::string() {
-    switch (mode)
-    {
+    switch (mode) {
         case Mode::NONE:
             return "none";
         case Mode::POSITION:
             return "position";
-        case Mode::EXT_POSITION:
+        case Mode::POSITION_MULTIPLE_REVOLUTIONS:
             return "ext_position";
         case Mode::VELOCITY:
             return "velocity";

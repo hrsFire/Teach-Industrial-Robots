@@ -8,7 +8,7 @@ namespace robot_arm {
     public:
         static OperatingMode NONE();
         static OperatingMode POSITION();
-        static OperatingMode EXT_POSITION();
+        static OperatingMode POSITION_MULTIPLE_REVOLUTIONS();
         static OperatingMode VELOCITY();
         static OperatingMode CURRENT();
         static OperatingMode PWM();
@@ -17,7 +17,7 @@ namespace robot_arm {
         enum class Mode {
             NONE,
             POSITION,
-            EXT_POSITION,
+            POSITION_MULTIPLE_REVOLUTIONS,
             VELOCITY,
             CURRENT,
             PWM  // pulse width modulation

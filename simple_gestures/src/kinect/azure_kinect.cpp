@@ -102,8 +102,7 @@ bool AzureKinect::StartBodyTracking(k4a::device& device, const k4a_device_config
 }
 
 void AzureKinect::PrintConfidenceLevel(k4abt_joint_t joint) {
-    switch (joint.confidence_level)
-    {
+    switch (joint.confidence_level) {
         case K4ABT_JOINT_CONFIDENCE_NONE:
             std::cout << "NONE confidence" << std::endl;
             break;

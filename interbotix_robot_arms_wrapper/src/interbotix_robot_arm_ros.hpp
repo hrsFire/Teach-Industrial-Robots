@@ -23,7 +23,7 @@ namespace interbotix {
     public:
         InterbotixRobotArmROS(int argc, char** argv, std::string robotName);
         ~InterbotixRobotArmROS();
-        std::unordered_map<std::string, JointState> GetJointStates() override;
+        std::unordered_map<JointName, JointState> GetJointStates() override;
         void SendJointCommand(JointName jointName, double value) override;
         void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) override;
         void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;
@@ -40,7 +40,7 @@ namespace interbotix {
         ros::AsyncSpinner* spinner;
         std::mutex jointStatesMutex;
         std::vector<JointState> orderedJointStates;
-        std::unordered_map<std::string, JointState> unorderedJointStates;
+        std::unordered_map<JointName, JointState> unorderedJointStates;
         std::shared_ptr<RobotInfo> robotInfo;
 
         ros::Subscriber jointStatesSubscriber;

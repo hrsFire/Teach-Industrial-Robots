@@ -4,19 +4,19 @@ using namespace robot_arm;
 
 JointName::JointName(std::string joint) {
     if (joint == "waist") {
-        JointName(Joint::WAIST);
+        this->joint = Joint::WAIST;
     } else if (joint == "shoulder") {
-        JointName(Joint::SHOULDER);
+        this->joint = Joint::SHOULDER;
     } else if (joint == "elbow") {
-        JointName(Joint::ELBOW);
+        this->joint = Joint::ELBOW;
     } else if (joint == "forearm_roll") {
-        JointName(Joint::FOREARM_ROLL);
+        this->joint = Joint::FOREARM_ROLL;
     } else if (joint == "wrist_angle") {
-        JointName(Joint::WRIST_ANGLE);
+        this->joint = Joint::WRIST_ANGLE;
     } else if (joint == "wrist_rotate") {
-        JointName(Joint::WRIST_ROTATE);
+        this->joint = Joint::WRIST_ROTATE;
     } else if (joint == "gripper") {
-        JointName(Joint::GRIPPER);
+        this->joint = Joint::GRIPPER;
     } else {
         throw std::invalid_argument("'" + joint + "' is not a valid name for a joint");
     }
@@ -55,8 +55,7 @@ JointName JointName::NONE() {
 }
 
 JointName::operator std::string() {
-    switch (joint)
-    {
+    switch (joint) {
         case Joint::WAIST:
             return "waist";
         case Joint::SHOULDER:
@@ -78,10 +77,13 @@ JointName::operator std::string() {
     }
 }
 
-bool JointName::operator==(const JointName& jointName) {
+bool JointName::operator==(const JointName& jointName) const {
     return joint == jointName.joint;
 }
 
-JointName::JointName(Joint joint) {
-    this->joint = joint;
+JointName::JointName(Joint joint) : joint(joint) {
+}
+
+size_t std::hash<JointName>::operator()(robot_arm::JointName const& jointName) const noexcept {
+    return std::hash<std::string>{}((std::string)(robot_arm::JointName) jointName);
 }

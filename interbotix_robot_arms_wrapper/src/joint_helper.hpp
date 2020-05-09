@@ -17,6 +17,8 @@ namespace interbotix {
         static int8_t GetAffectedJoints(robot_arm::AffectedJoints affectedJoints);
         static void CopyToJointTrajectoryMessage(const std::vector<robot_arm::JointName>& jointNames, const std::vector<robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints,
             trajectory_msgs::JointTrajectory& message);
+        static std::unordered_map<robot_arm::JointName, robot_arm::Joint> CreateJoints(const std::vector<robot_arm::JointName>& jointNames, const std::vector<int>& jointIDs,
+            const std::vector<double>& lowerJointLimits, const std::vector<double> upperJointLimits, const std::vector<double>& velocityLimits);
     };
 }
 

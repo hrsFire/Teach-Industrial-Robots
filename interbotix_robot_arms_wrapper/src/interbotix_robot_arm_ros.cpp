@@ -27,7 +27,7 @@ InterbotixRobotArmROS::~InterbotixRobotArmROS() {
     spinner->stop();
 }
 
-std::unordered_map<std::string, JointState> InterbotixRobotArmROS::GetJointStates() {
+std::unordered_map<JointName, JointState> InterbotixRobotArmROS::GetJointStates() {
     std::lock_guard<std::mutex> _(jointStatesMutex);
 
     return unorderedJointStates;
@@ -128,7 +128,7 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
             jointIDs.push_back(id);
         }
 
-        robotInfo.reset(new RobotInfo(jointNames, jointIDs, res.lower_joint_limits, res.upper_joint_limits, res.velocity_limits, res.lower_gripper_limit,
+        robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, res.lower_joint_limits, res.upper_joint_limits, res.velocity_limits), res.lower_gripper_limit,
             res.upper_gripper_limit, res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
     }
 
