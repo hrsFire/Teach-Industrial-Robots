@@ -19,6 +19,13 @@ namespace interbotix {
             trajectory_msgs::JointTrajectory& message);
         static std::unordered_map<robot_arm::JointName, robot_arm::Joint> CreateJoints(const std::vector<robot_arm::JointName>& jointNames, const std::vector<int>& jointIDs,
             const std::vector<double>& lowerJointLimits, const std::vector<double> upperJointLimits, const std::vector<double>& velocityLimits);
+        static void PrepareRobotInfoJoints(const std::vector<std::string>& jointNames, std::vector<robot_arm::JointName>& newJointNames,
+            const std::vector<int16_t>& jointIDs, std::vector<int>& newJointIDs, const std::vector<double>& lowerJointLimits,
+            std::vector<double>& newLowerJointLimits, const std::vector<double>& upperJointLimits, std::vector<double>& newUpperJointLimits,
+            double lowerGripperLimit, double upperGripperLimit, bool useGripper);
+        static void PrepareJointStates(std::vector<robot_arm::JointState>* orderedJointStates, std::unordered_map<robot_arm::JointName, robot_arm::JointState>* unorderedJointStates,
+            const std::vector<std::string>& jointNames, const std::vector<double>& jointPositions, const std::vector<double>& jointVelocities,
+            const std::vector<double>& jointEfforts);
     };
 }
 

@@ -10,6 +10,8 @@ InterbotixRobotArmDirect::InterbotixRobotArmDirect(int argc, char** argv, std::s
     ros::param::get("~robot_model", robot_model);*/
     // https://github.com/Interbotix/interbotix_ros_arms/blob/melodic/interbotix_sdk/launch/arm_run.launch
     ros::param::set("~motor_configs", "/home/ubuntu/interbotix_ws/src/interbotix_ros_arms/interbotix_sdk/config/");
+    ros::param::set("~use_default_gripper_bar", true);
+    ros::param::set("~use_default_gripper_fingers", true);
     this->robotArm = new RobotArm(robotName, robotModel);
     SetOperatingMode(OperatingMode::POSITION(), AffectedJoints::ARM_JOINTS_AND_GRIPPER, JointName::NONE(), false, 0, 0);
 }
@@ -20,11 +22,9 @@ InterbotixRobotArmDirect::~InterbotixRobotArmDirect() {
 
 std::unordered_map<JointName, JointState> InterbotixRobotArmDirect::GetJointStates() {
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
-    std::unordered_map<JointName, JointState> jointStates(states.name.size());
+    std::unordered_map<JointName, JointState> jointStates;
 
-    for (size_t i = 0; i < states.name.size(); i++) {
-        jointStates.emplace(states.name[i], JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
-    }
+    JointHelper::PrepareJointStates(nullptr, &jointStates, states.name, states.position, states.velocity, states.effort);
 
     return jointStates;
 }
@@ -98,19 +98,15 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
     if (robotInfo == nullptr) {
         if (robotArm->arm_get_robot_info(res)) {
             std::vector<JointName> jointNames;
-            
-            for (std::string joint : res.joint_names) {
-                jointNames.push_back(joint);
-            }
-
             std::vector<int> jointIDs;
+            std::vector<double> lowerJointLimits;
+            std::vector<double> upperJointLimits;
 
-            for (int16_t id : res.joint_ids) {
-                jointIDs.push_back(id);
-            }
+            JointHelper::PrepareRobotInfoJoints(res.joint_names, jointNames, res.joint_ids, jointIDs, res.lower_joint_limits, lowerJointLimits, res.upper_joint_limits,
+                upperJointLimits, res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper);
 
-            robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, res.lower_joint_limits, res.upper_joint_limits, res.velocity_limits),
-                res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
+            robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, lowerJointLimits, upperJointLimits, res.velocity_limits),
+                res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
         }
     }
 
@@ -125,9 +121,7 @@ std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
     std::vector<JointState> jointStates;
 
-    for (size_t i = 0; i < states.name.size(); i++) {
-        jointStates.push_back(JointState(states.name[i], states.position[i], states.velocity[i], states.effort[i]));  // TODO: mode?
-    }
+    JointHelper::PrepareJointStates(&jointStates, nullptr, states.name, states.position, states.velocity, states.effort);
 
     return jointStates;
 }

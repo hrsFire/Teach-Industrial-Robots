@@ -115,21 +115,16 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
     interbotix_sdk::RobotInfoResponse res;
 
     if (robotInfo == nullptr && getRobotInfoClient.call(req, res)) {
-
         std::vector<JointName> jointNames;
-
-        for (std::string joint : res.joint_names) {
-            jointNames.push_back(JointName(joint));
-        }
-
         std::vector<int> jointIDs;
+        std::vector<double> lowerJointLimits;
+        std::vector<double> upperJointLimits;
 
-        for (int16_t id : jointIDs) {
-            jointIDs.push_back(id);
-        }
+        JointHelper::PrepareRobotInfoJoints(res.joint_names, jointNames, res.joint_ids, jointIDs, res.lower_joint_limits, lowerJointLimits, res.upper_joint_limits,
+            upperJointLimits, res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper);
 
-        robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, res.lower_joint_limits, res.upper_joint_limits, res.velocity_limits), res.lower_gripper_limit,
-            res.upper_gripper_limit, res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
+        robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, lowerJointLimits, upperJointLimits, res.velocity_limits),
+            res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
     }
 
     if (robotInfo != nullptr) {
@@ -142,15 +137,7 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
 void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message) {
     std::lock_guard<std::mutex>(self.jointStatesMutex);
 
-    self.orderedJointStates.clear();
-    self.orderedJointStates.reserve(message->name.size());
-    self.unorderedJointStates.clear();
-    self.unorderedJointStates.reserve(message->name.size());
-
-    for (size_t i = 0; i < message->name.size(); i++) {
-        self.orderedJointStates.push_back(JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODO: mode?
-        self.unorderedJointStates.emplace(message->name[i], JointState(message->name[i], message->position[i], message->velocity[i], message->effort[i]));  // TODO: mode?
-    }
+    JointHelper::PrepareJointStates(&self.orderedJointStates, &self.unorderedJointStates, message->name, message->position, message->velocity, message->effort);
 }
 
 std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {

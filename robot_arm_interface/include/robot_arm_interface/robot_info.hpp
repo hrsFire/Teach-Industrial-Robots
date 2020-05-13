@@ -10,11 +10,9 @@
 namespace robot_arm {
     class RobotInfo {
     public:
-        RobotInfo(std::unordered_map<JointName, Joint> joints, double lowerGripperLimit, double upperGripperLimit, bool useGripper, std::vector<double> homePosition,
-            std::vector<double> sleepPosition, int numberOfJoints, int numberOfSingleJoints);
+        RobotInfo(std::unordered_map<JointName, Joint> joints, bool useGripper, std::vector<double> homePosition, std::vector<double> sleepPosition,
+            int numberOfJoints, int numberOfSingleJoints);
         const std::unordered_map<JointName, Joint> joints;
-        const double lowerGripperLimit;
-        const double upperGripperLimit;
         const bool useGripper;
         // Home position for each robot. Is used to command all joints (excluding gripper) to 0 radians
         const std::vector<double> homePosition;
