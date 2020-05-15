@@ -67,7 +67,8 @@
         "hash_set": "cpp",
         "valarray": "cpp",
         "*.ipp": "cpp",
-        "*.cuh": "cpp"
+        "*.cuh": "cpp",
+        "forward_list": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "${workspaceFolder}/../../../interbotix_ws/devel/lib/python2.7/dist-packages",

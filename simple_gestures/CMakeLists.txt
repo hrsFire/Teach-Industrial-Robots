@@ -56,6 +56,10 @@ add_library(${PROJECT_NAME} SHARED
   src/common/vector3.cpp
   src/kinect/azure_kinect_gestures.cpp
   src/kinect/azure_kinect.cpp
+  src/gestures/gesture.cpp
+  src/gestures/gesture_group.cpp
+  src/gestures/gesture_item.cpp
+  src/gestures/gestures_engine.cpp
 )
 
 ## Specify libraries to link a library or executable target against
