@@ -150,6 +150,14 @@ int main(int argc, char** argv) {
             ExitSafely();
         });
 
+        signal(SIGTERM, [](int i) {
+            ExitSafely();
+        });
+
+        signal(SIGQUIT, [](int i) {
+            ExitSafely();
+        });
+
         gesturesEngine->Start();
 
         delete gesturesEngine;
