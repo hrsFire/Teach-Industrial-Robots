@@ -31,8 +31,8 @@ void InterbotixRobotArm::SendJointCommand(const JointName& jointName, double val
     robotArm->SendJointCommand(jointName, value);
 }
 
-void InterbotixRobotArm::SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) {
-    robotArm->SendJointCommands(jointNames, values);
+void InterbotixRobotArm::SendJointCommands(const std::unordered_map<JointName, double>& jointValues) {
+    robotArm->SendJointCommands(jointValues);
 }
 
 void InterbotixRobotArm::SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) {

@@ -2,8 +2,8 @@
 
 using namespace robot_arm;
 
-RobotInfo::RobotInfo(std::unordered_map<JointName, Joint> joints, bool useGripper, std::vector<double> homePosition, std::vector<double> sleepPosition,
-                int numberOfJoints, int numberOfSingleJoints) :
+RobotInfo::RobotInfo(std::unordered_map<JointName, Joint> joints, bool useGripper, std::unordered_map<JointName, double> homePosition,
+                std::unordered_map<JointName, double> sleepPosition, int numberOfJoints, int numberOfSingleJoints) :
         joints(joints), useGripper(useGripper), homePosition(homePosition), sleepPosition(sleepPosition), numberOfJoints(numberOfJoints),
         numberOfSingleJoints(numberOfSingleJoints) {
 }

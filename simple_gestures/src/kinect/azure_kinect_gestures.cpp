@@ -12,6 +12,13 @@ AzureKinectGestures::AzureKinectGestures(k4abt::tracker* bodyTracker, k4a::devic
 }
 
 AzureKinectGestures::~AzureKinectGestures() {
+    std::cout << "Close the device" << std::endl;
+    bodyTracker->shutdown();
+    bodyTracker->destroy();
+    device->stop_cameras();
+    device->stop_imu();
+    device->close();
+    kinect::AzureKinect::Destroy();
 }
 
 void AzureKinectGestures::NextCycle() {

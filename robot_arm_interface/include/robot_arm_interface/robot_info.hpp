@@ -10,15 +10,15 @@
 namespace robot_arm {
     class RobotInfo {
     public:
-        RobotInfo(std::unordered_map<JointName, Joint> joints, bool useGripper, std::vector<double> homePosition, std::vector<double> sleepPosition,
-            int numberOfJoints, int numberOfSingleJoints);
+        RobotInfo(std::unordered_map<JointName, Joint> joints, bool useGripper, std::unordered_map<JointName, double> homePosition, std::unordered_map<JointName,
+            double> sleepPosition, int numberOfJoints, int numberOfSingleJoints);
         const std::unordered_map<JointName, Joint> joints;
         const bool useGripper;
         // Home position for each robot. Is used to command all joints (excluding gripper) to 0 radians
-        const std::vector<double> homePosition;
+        const std::unordered_map<JointName, double> homePosition;
         // Sleep position for each robot. Is used to command all joints (excluding gripper) to a specific position in radians
         // so that if the driver is shutdown (which torques off all motors), the arm doesn't come crashing down
-        const std::vector<double> sleepPosition;
+        const std::unordered_map<JointName, double> sleepPosition;
         // The number of joints in the arm (excluding gripper)
         const int numberOfJoints;
         // The number of all joints in the robot (includes gripper and any 'single' joints)

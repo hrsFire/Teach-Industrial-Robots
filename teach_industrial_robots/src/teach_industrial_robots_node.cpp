@@ -1,4 +1,6 @@
 #include <iostream>
+#include <csignal>
+#include <mutex>
 #include <ros/ros.h>
 #include <k4a/k4a.hpp>
 #include <k4abt.hpp>
@@ -8,6 +10,29 @@
 #include <simple_gestures/gestures/gesture.hpp>
 #include <robot_arm_interface/robot_arm_base.hpp>
 #include <interbotix_robot_arms_wrapper/interbotix_robot_arm.hpp>
+
+gestures::GesturesEngine* gesturesEngine = nullptr;
+robot_arm::InterbotixRobotArmBase* robotArm = nullptr;
+std::mutex exitSafelyMutex;
+bool exitSafelyDone = false;
+
+void ExitSafely() {
+    std::lock_guard<std::mutex> _(exitSafelyMutex);
+
+    if (!exitSafelyDone) {
+        if (gesturesEngine != nullptr) {
+            std::cout << "Close Gestures Engine" << std::endl;
+            gesturesEngine->Stop();
+        }
+
+        if (robotArm != nullptr) {
+            std::cout << "Move to home position" << std::endl;
+            robotArm->SendJointCommands(robotArm->GetRobotInfo()->sleepPosition);
+        }
+
+        exitSafelyDone = true;
+    }
+}
 
 int main(int argc, char** argv) {
     std::cout << "#################################" << std::endl;
@@ -53,10 +78,9 @@ int main(int argc, char** argv) {
         // A value of 1 seems to have no performance impact in CPU mode
         bodyTracker.set_temporal_smoothing(0);
 
-        gestures::GesturesBase* gesturesImpl = new kinect::AzureKinectGestures(&bodyTracker, &device, true);
         std::string robotName = "wx200";
         std::string robotModel = "wx200"; // Typically, this will be the same as robotName
-        robot_arm::InterbotixRobotArmBase* robotArm = new interbotix::InterbotixRobotArm(false, argc, argv, robotName, robotModel);
+        robotArm = new interbotix::InterbotixRobotArm(false, argc, argv, robotName, robotModel);
 
         ros::Duration(0.5).sleep();
 
@@ -72,11 +96,11 @@ int main(int argc, char** argv) {
         double minJointAngle = robotInfo->joints.at(JointName::ELBOW()).lowerLimit;
         double maxJointAngle = robotInfo->joints.at(JointName::ELBOW()).upperLimit;
 
-        gestures::GesturesEngine gesturesEngine(gesturesImpl);
+        gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, true));
 
-        gesturesEngine.AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
+        gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0);
-        }, [&robotArm, &jointAngle, maxJointAngle](std::chrono::milliseconds duration) {
+        }, [&jointAngle, maxJointAngle](std::chrono::milliseconds duration) {
             jointAngle += robotArm->CalculateAcceleration(JointName::ELBOW(), duration);
 
             if (jointAngle > maxJointAngle) {
@@ -86,9 +110,9 @@ int main(int argc, char** argv) {
             robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
         }), "single_joint", 0, 0, { JointName::ELBOW() });
 
-        gesturesEngine.AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
+        gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_LEFT, K4ABT_JOINT_SHOULDER_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 65.0);
-        }, [&robotArm, &jointAngle, minJointAngle](std::chrono::milliseconds duration) {
+        }, [&jointAngle, minJointAngle](std::chrono::milliseconds duration) {
             jointAngle -= robotArm->CalculateAcceleration(JointName::ELBOW(), duration);
 
             if (jointAngle < minJointAngle) {
@@ -98,9 +122,9 @@ int main(int argc, char** argv) {
             robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
         }), "single_joint", 0, 1, { JointName::ELBOW() });
 
-        gesturesEngine.AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
+        gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
-        }, [&robotArm, &gripperDistance, maxGripperDistance](std::chrono::milliseconds duration) {
+        }, [&gripperDistance, maxGripperDistance](std::chrono::milliseconds duration) {
             gripperDistance += robotArm->CalculateAcceleration(JointName::GRIPPER(), duration);
 
             if (gripperDistance > maxGripperDistance) {
@@ -110,9 +134,9 @@ int main(int argc, char** argv) {
             robotArm->SendGripperCommand(gripperDistance);
         }), "gripper", 1, 0, { JointName::GRIPPER() });
 
-        gesturesEngine.AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
+        gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
-        }, [&robotArm, &gripperDistance, minGripperDistance](std::chrono::milliseconds duration) {
+        }, [&gripperDistance, minGripperDistance](std::chrono::milliseconds duration) {
             gripperDistance -= robotArm->CalculateAcceleration(JointName::GRIPPER(), duration);
 
             if (gripperDistance < minGripperDistance) {
@@ -122,15 +146,13 @@ int main(int argc, char** argv) {
             robotArm->SendGripperCommand(gripperDistance);
         }), "gripper", 1, 1, { JointName::GRIPPER() });
 
-        gesturesEngine.Start();
+        signal(SIGINT, [](int i) {
+            ExitSafely();
+        });
 
-        std::cout << "Close the device" << std::endl;
-        gesturesEngine.Stop();
-        bodyTracker.shutdown();
-        bodyTracker.destroy();
-        device.stop_cameras();
-        device.stop_imu();
-        device.close();
-        kinect::AzureKinect::Destroy();
+        gesturesEngine->Start();
+
+        delete gesturesEngine;
+        gesturesEngine = nullptr;
     }
 }

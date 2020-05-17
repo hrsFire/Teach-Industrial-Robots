@@ -39,12 +39,11 @@ void InterbotixRobotArmDirect::SendJointCommand(const JointName& jointName, doub
     robotArm->arm_send_single_joint_command(message);
 }
 
-void InterbotixRobotArmDirect::SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) {
+void InterbotixRobotArmDirect::SendJointCommands(const std::unordered_map<JointName, double>& jointValues) {
     std::vector<JointState> jointStates;
     jointStates = GetOrderedJointStates();
-    std::vector<double> cmds = JointHelper::PrepareJointCommands(jointNames, values, *robotInfo, jointStates);
     interbotix_sdk::JointCommands message;
-    message.cmd = values;
+    message.cmd = JointHelper::PrepareJointCommands(jointValues, *robotInfo, jointStates);
 
     robotArm->arm_send_joint_commands(message);
 }
@@ -105,12 +104,14 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
             std::vector<int> jointIDs;
             std::vector<double> lowerJointLimits;
             std::vector<double> upperJointLimits;
+            std::unordered_map<JointName, double> homePosition;
+            std::unordered_map<JointName, double> sleepPosition;
 
-            JointHelper::PrepareRobotInfoJoints(res.joint_names, jointNames, res.joint_ids, jointIDs, res.lower_joint_limits, lowerJointLimits, res.upper_joint_limits,
-                upperJointLimits, res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper);
+            JointHelper::PrepareRobotInfoJoints(res.joint_names, jointNames, res.joint_ids, jointIDs, res.home_pos, homePosition, res.sleep_pos, sleepPosition,
+                res.lower_joint_limits, lowerJointLimits, res.upper_joint_limits, upperJointLimits, res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper);
 
             robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, lowerJointLimits, upperJointLimits, res.velocity_limits),
-                res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
+                res.use_gripper, homePosition, sleepPosition, res.num_joints, res.num_single_joints));
         }
     }
 

@@ -20,7 +20,7 @@ namespace robot_arm {
         // Sends any type of command to a specified joint which was previously configured with an operating mode
         virtual void SendJointCommand(const JointName& jointName, double value) = 0;
         // Sends any type of commands to all joints which were previously configured with an operating mode
-        virtual void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) = 0;
+        virtual void SendJointCommands(const std::unordered_map<JointName, double>& jointValues) = 0;
         // Sends joint trajectory for the robot arm (excludes gripper)
         virtual void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) = 0;
         // Sends any type of gripper command to a gripper which was previously configured with an operating mode

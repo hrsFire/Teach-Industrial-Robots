@@ -15,7 +15,7 @@ namespace interbotix {
         ~InterbotixRobotArmDirect();
         std::unordered_map<JointName, JointState> GetJointStates() override;
         void SendJointCommand(const JointName& jointName, double value) override;
-        void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) override;
+        void SendJointCommands(const std::unordered_map<JointName, double>& jointValues) override;
         void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
         void SendGripperTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;

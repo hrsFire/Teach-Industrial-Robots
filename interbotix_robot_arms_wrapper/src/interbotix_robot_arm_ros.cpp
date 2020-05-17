@@ -43,18 +43,11 @@ void InterbotixRobotArmROS::SendJointCommand(const JointName& jointName, double 
     jointCommandPublisher.publish(message);
 }
 
-void InterbotixRobotArmROS::SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) {
+void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName, double>& jointValues) {
     interbotix_sdk::JointCommands message;
     std::shared_ptr<RobotInfo> robotInfo = GetRobotInfo();
-
-    std::vector<JointState> jointStates;
-
-    {
-        std::lock_guard<std::mutex> _(jointStatesMutex);
-        jointStates = GetOrderedJointStates();
-    }
-
-    message.cmd = JointHelper::PrepareJointCommands(jointNames, values, *robotInfo, jointStates);
+    std::vector<JointState> jointStates = GetOrderedJointStates();
+    message.cmd = JointHelper::PrepareJointCommands(jointValues, *robotInfo, jointStates);
 
     jointCommandsPublisher.publish(message);
 }
@@ -123,12 +116,14 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
         std::vector<int> jointIDs;
         std::vector<double> lowerJointLimits;
         std::vector<double> upperJointLimits;
+        std::unordered_map<JointName, double> homePosition;
+            std::unordered_map<JointName, double> sleepPosition;
 
-        JointHelper::PrepareRobotInfoJoints(res.joint_names, jointNames, res.joint_ids, jointIDs, res.lower_joint_limits, lowerJointLimits, res.upper_joint_limits,
-            upperJointLimits, res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper);
+        JointHelper::PrepareRobotInfoJoints(res.joint_names, jointNames, res.joint_ids, jointIDs, res.home_pos, homePosition, res.sleep_pos, sleepPosition,
+            res.lower_joint_limits, lowerJointLimits, res.upper_joint_limits, upperJointLimits, res.lower_gripper_limit, res.upper_gripper_limit, res.use_gripper);
 
         robotInfo.reset(new RobotInfo(JointHelper::CreateJoints(jointNames, jointIDs, lowerJointLimits, upperJointLimits, res.velocity_limits),
-            res.use_gripper, res.home_pos, res.sleep_pos, res.num_joints, res.num_single_joints));
+            res.use_gripper, homePosition, sleepPosition, res.num_joints, res.num_single_joints));
     }
 
     if (robotInfo != nullptr) {

@@ -3,22 +3,16 @@
 using namespace interbotix;
 
 // Sort and add additonal values
-std::vector<double> JointHelper::PrepareJointCommands(const std::vector<robot_arm::JointName>& jointNames, const std::vector<double>& values,
-        robot_arm::RobotInfo& robotInfo, const std::vector<robot_arm::JointState>& jointStates) {
-    std::vector<double> sortedValues(jointStates.size());
-    bool jointAdded;
+std::vector<double> JointHelper::PrepareJointCommands(const std::unordered_map<robot_arm::JointName, double>& jointValues, robot_arm::RobotInfo& robotInfo,
+        const std::vector<robot_arm::JointState>& jointStates) {
+    std::vector<double> sortedValues;
+    sortedValues.reserve(jointStates.size());
 
-    for (size_t i = 0; i < sortedValues.size(); i++) {
-        jointAdded = false;
-
-        for (size_t n = 0; n < jointNames.size(); n++) {
-            if (jointStates[i].jointName == jointNames[n]) {
-                sortedValues.push_back(values[n]);
-                jointAdded = true;
-            }
-
-            if (!jointAdded) {
-                sortedValues.push_back(jointStates[i].position); // TODO: detect acceleration mode
+    for (size_t i = 0; i < jointStates.size(); i++) {
+        for (auto jointValue : jointValues) {
+            if (jointStates[i].jointName == jointValue.first) {
+                sortedValues.push_back(jointValue.second);
+                break;
             }
         }
     }
@@ -80,11 +74,18 @@ std::unordered_map<robot_arm::JointName, robot_arm::Joint> JointHelper::CreateJo
 }
 
 void JointHelper::PrepareRobotInfoJoints(const std::vector<std::string>& jointNames, std::vector<robot_arm::JointName>& newJointNames,
-            const std::vector<int16_t>& jointIDs, std::vector<int>& newJointIDs, const std::vector<double>& lowerJointLimits,
-            std::vector<double>& newLowerJointLimits, const std::vector<double>& upperJointLimits, std::vector<double>& newUpperJointLimits,
-            double lowerGripperLimit, double upperGripperLimit, bool useGripper) {
+            const std::vector<int16_t>& jointIDs, std::vector<int>& newJointIDs, const std::vector<double>& homePosition,
+            std::unordered_map<robot_arm::JointName, double>& newHomePosition, const std::vector<double>& sleepPosition,
+            std::unordered_map<robot_arm::JointName, double>& newSleepPosition, const std::vector<double>& lowerJointLimits, std::vector<double>& newLowerJointLimits,
+            const std::vector<double>& upperJointLimits, std::vector<double>& newUpperJointLimits, double lowerGripperLimit, double upperGripperLimit, bool useGripper) {
     int gripperIndex = 0;
     bool gripperIndexFound = false;
+    newJointNames.reserve(jointNames.size());
+    newJointIDs.reserve(jointIDs.size());
+    newLowerJointLimits.reserve(lowerJointLimits.size());
+    newUpperJointLimits.reserve(upperJointLimits.size());
+    newHomePosition.reserve(homePosition.size());
+    newSleepPosition.reserve(sleepPosition.size());
 
     for (const std::string& joint : jointNames) {
         newJointNames.push_back(robot_arm::JointName(joint));
@@ -116,6 +117,14 @@ void JointHelper::PrepareRobotInfoJoints(const std::vector<std::string>& jointNa
         } else {
             newUpperJointLimits.push_back(upperGripperLimit * 2.0);
         }
+    }
+
+    for (size_t i = 0; i < homePosition.size(); i++) {
+        newHomePosition.emplace(robot_arm::JointName(jointNames[i]), homePosition[i]);
+    }
+
+    for (size_t i = 0; i < sleepPosition.size(); i++) {
+        newSleepPosition.emplace(robot_arm::JointName(jointNames[i]), sleepPosition[i]);
     }
 }
 
