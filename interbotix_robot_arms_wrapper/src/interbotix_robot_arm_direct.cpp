@@ -13,6 +13,8 @@ InterbotixRobotArmDirect::InterbotixRobotArmDirect(int argc, char** argv, std::s
     ros::param::set("~use_default_gripper_bar", true);
     ros::param::set("~use_default_gripper_fingers", true);
     this->robotArm = new RobotArm(robotName, robotModel);
+    operatingModes = JointHelper::GetInitialOperatingModes();
+
     SetOperatingMode(OperatingMode::POSITION(), AffectedJoints::ARM_JOINTS_AND_GRIPPER, JointName::NONE(), false, 0, 0);
 }
 
@@ -24,14 +26,14 @@ std::unordered_map<JointName, JointState> InterbotixRobotArmDirect::GetJointStat
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
     std::unordered_map<JointName, JointState> jointStates;
 
-    JointHelper::PrepareJointStates(nullptr, &jointStates, states.name, states.position, states.velocity, states.effort);
+    JointHelper::PrepareJointStates(nullptr, &jointStates, states.name, states.position, states.velocity, states.effort, operatingModes);
 
     return jointStates;
 }
 
-void InterbotixRobotArmDirect::SendJointCommand(JointName jointName, double value) {
+void InterbotixRobotArmDirect::SendJointCommand(const JointName& jointName, double value) {
     interbotix_sdk::SingleCommand message;
-    message.joint_name = jointName;
+    message.joint_name = JointName(jointName);
     message.cmd = value;
 
     robotArm->arm_send_single_joint_command(message);
@@ -76,19 +78,21 @@ void InterbotixRobotArmDirect::SetTorqueState(bool on) {
     }
 }
 
-void InterbotixRobotArmDirect::SetOperatingMode(OperatingMode operatingMode, AffectedJoints affectedJoints, JointName jointName, bool useCustomProfiles,
+void InterbotixRobotArmDirect::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
    interbotix_sdk::OperatingModesRequest req;
    interbotix_sdk::OperatingModesResponse res;
 
-   req.mode = operatingMode;
+   req.mode = OperatingMode(operatingMode);
    req.cmd = JointHelper::GetAffectedJoints(affectedJoints);
-   req.joint_name = jointName;
+   req.joint_name = JointName(jointName);
    req.use_custom_profiles = useCustomProfiles;
    req.profile_velocity = profileVelocity;
    req.profile_acceleration = profileAcceleration;
 
-   robotArm->arm_set_operating_modes(req);
+   if (robotArm->arm_set_operating_modes(req)) {
+       JointHelper::SetOperatingMode(operatingModes, jointName, operatingMode);
+   }
 }
 
 std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
@@ -117,11 +121,15 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
     throw "Could not retrieve the robot info";
 }
 
+double InterbotixRobotArmDirect::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) {
+    return JointHelper::CalculateAcceleration(jointName, operatingModes.at(jointName), duration);
+}
+
 std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
     std::vector<JointState> jointStates;
 
-    JointHelper::PrepareJointStates(&jointStates, nullptr, states.name, states.position, states.velocity, states.effort);
+    JointHelper::PrepareJointStates(&jointStates, nullptr, states.name, states.position, states.velocity, states.effort, operatingModes);
 
     return jointStates;
 }

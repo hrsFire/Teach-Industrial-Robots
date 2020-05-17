@@ -19,6 +19,8 @@ InterbotixRobotArmROS::InterbotixRobotArmROS(int argc, char** argv, std::string 
     setOperatingModeClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::OperatingModes>(robotName + "/set_operating_modes");
     getRobotInfoClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::RobotInfo>(robotName + "/get_robot_info");
 
+    operatingModes = JointHelper::GetInitialOperatingModes();
+
     this->spinner = new ros::AsyncSpinner(0);
     this->spinner->start();
 }
@@ -33,9 +35,9 @@ std::unordered_map<JointName, JointState> InterbotixRobotArmROS::GetJointStates(
     return unorderedJointStates;
 }
 
-void InterbotixRobotArmROS::SendJointCommand(JointName jointName, double value) {
+void InterbotixRobotArmROS::SendJointCommand(const JointName& jointName, double value) {
     interbotix_sdk::SingleCommand message;
-    message.joint_name = jointName;
+    message.joint_name = JointName(jointName);
     message.cmd = value;
 
     jointCommandPublisher.publish(message);
@@ -93,20 +95,22 @@ void InterbotixRobotArmROS::SetTorqueState(bool on) {
     }
 }
 
-void InterbotixRobotArmROS::SetOperatingMode(OperatingMode operatingMode, AffectedJoints affectedJoints, JointName jointName, bool useCustomProfiles,
+void InterbotixRobotArmROS::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
     interbotix_sdk::OperatingModesRequest req;
     interbotix_sdk::OperatingModesResponse res;
 
-    req.mode = operatingMode;
+    req.mode = OperatingMode(operatingMode);
     req.cmd = JointHelper::GetAffectedJoints(affectedJoints);
-    req.joint_name = jointName;
+    req.joint_name = JointName(jointName);
     req.use_custom_profiles = useCustomProfiles;
     req.profile_velocity = profileVelocity;
     req.profile_acceleration = profileAcceleration;
 
     if (!setOperatingModeClient.call(req, res)) {
-        ROS_ERROR(("Could not set operating mode for '" + (std::string) jointName + "'").c_str());
+        ROS_ERROR(("Could not set operating mode for '" + (std::string)(JointName) jointName + "'").c_str());
+    } else {
+        JointHelper::SetOperatingMode(operatingModes, jointName, operatingMode);
     }
 }
 
@@ -134,10 +138,15 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
     throw "Could not retrieve the robot info";
 }
 
+double InterbotixRobotArmROS::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) {
+    return JointHelper::CalculateAcceleration(jointName, operatingModes.at(jointName), duration);
+}
+
 void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message) {
     std::lock_guard<std::mutex>(self.jointStatesMutex);
 
-    JointHelper::PrepareJointStates(&self.orderedJointStates, &self.unorderedJointStates, message->name, message->position, message->velocity, message->effort);
+    JointHelper::PrepareJointStates(&self.orderedJointStates, &self.unorderedJointStates, message->name, message->position, message->velocity, message->effort,
+        self.operatingModes);
 }
 
 std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {

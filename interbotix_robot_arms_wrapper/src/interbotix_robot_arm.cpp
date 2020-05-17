@@ -27,7 +27,7 @@ std::unordered_map<JointName, JointState> InterbotixRobotArm::GetJointStates() {
     return robotArm->GetJointStates();
 }
 
-void InterbotixRobotArm::SendJointCommand(JointName jointName, double value) {
+void InterbotixRobotArm::SendJointCommand(const JointName& jointName, double value) {
     robotArm->SendJointCommand(jointName, value);
 }
 
@@ -51,11 +51,15 @@ void InterbotixRobotArm::SetTorqueState(bool on) {
     robotArm->SetTorqueState(on);
 }
 
-void InterbotixRobotArm::SetOperatingMode(OperatingMode operatingMode, AffectedJoints affectedJoints, JointName jointName, bool useCustomProfiles,
+void InterbotixRobotArm::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
     robotArm->SetOperatingMode(operatingMode, affectedJoints, jointName, useCustomProfiles, profileVelocity,profileAcceleration);
 }
 
 std::shared_ptr<RobotInfo> InterbotixRobotArm::GetRobotInfo() {
     return robotArm->GetRobotInfo();
+}
+
+double InterbotixRobotArm::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) {
+    return robotArm->CalculateAcceleration(jointName, duration);
 }

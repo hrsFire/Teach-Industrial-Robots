@@ -4,9 +4,14 @@
 #include <vector>
 #include <list>
 #include <unordered_set>
+#include <chrono>
 #include "gesture.hpp"
 #include "gestures_base.hpp"
 #include "../src/gestures/gesture_group.hpp"
+
+#ifndef NDEBUG
+#include <iostream>
+#endif
 
 namespace gestures {
     class GesturesEngine {

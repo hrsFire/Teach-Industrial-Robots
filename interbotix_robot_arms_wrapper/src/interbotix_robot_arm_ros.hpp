@@ -2,6 +2,7 @@
 #define INTERBOTIX_INTERBOTIX_ROBOT_ARM_ROS_HPP
 
 #include <mutex>
+#include <unordered_map>
 #include <ros/ros.h>
 #include <ros/spinner.h>
 #include <sensor_msgs/JointState.h>
@@ -24,15 +25,16 @@ namespace interbotix {
         InterbotixRobotArmROS(int argc, char** argv, std::string robotName);
         ~InterbotixRobotArmROS();
         std::unordered_map<JointName, JointState> GetJointStates() override;
-        void SendJointCommand(JointName jointName, double value) override;
+        void SendJointCommand(const JointName& jointName, double value) override;
         void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) override;
         void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
         void SendGripperTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SetTorqueState(bool on) override;
-        void SetOperatingMode(OperatingMode operatingMode, AffectedJoints affectedJoints, const JointName jointName, bool useCustomProfiles,
+        void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
             int profileVelocity, int profileAcceleration) override;
         std::shared_ptr<RobotInfo> GetRobotInfo() override;
+        double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) override;
     private:
         static void JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message);
         std::vector<JointState> GetOrderedJointStates();
@@ -42,6 +44,7 @@ namespace interbotix {
         std::vector<JointState> orderedJointStates;
         std::unordered_map<JointName, JointState> unorderedJointStates;
         std::shared_ptr<RobotInfo> robotInfo;
+        std::unordered_map<JointName, OperatingMode> operatingModes;
 
         ros::Subscriber jointStatesSubscriber;
 

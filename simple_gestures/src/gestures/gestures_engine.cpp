@@ -49,37 +49,61 @@ void GesturesEngine::Start() {
     isRunning = true;
     std::unordered_set<std::string> affectedItems;
     bool isAffected;
+    bool isCleanupActive = false;
 
     while (isRunning) {
         gesturesImpl->NextCycle();
 
         if (gesturesImpl->IsNewDataAvailable()) {
-            for (GestureGroup group : groups) {
-                for (GestureItem gestureItem : group.gestures) {
-                    isAffected = false;
+            for (GestureGroup& group : groups) {
+                isCleanupActive = false;
 
-                    if (gestureItem.preventConflicts) {
-                        for (std::string affectedItem : gestureItem.affectedItems) {
-                            if (affectedItems.find(affectedItem) != affectedItems.end()) {
-                                isAffected = true;
-                                break;
+                for (GestureItem& gestureItem : group.gestures) {
+                    if (!isCleanupActive) {
+                        isAffected = false;
+
+                        if (gestureItem.preventConflicts) {
+                            for (const std::string& affectedItem : gestureItem.affectedItems) {
+                                if (affectedItems.find(affectedItem) != affectedItems.end()) {
+                                    isAffected = true;
+                                    break;
+                                }
+                            }
+
+                            if (isAffected) {
+                                gestureItem.isActive = false;
+                                continue;
                             }
                         }
 
-                        if (isAffected) {
-                            continue;
+                        if (gestureItem.gesture.isGesture(*gesturesImpl)) {
+                            std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+
+                            if (!gestureItem.isActive) {
+                                gestureItem.startTime = currentTime;
+                                gestureItem.isActive = true;
+                            }
+
+                            std::chrono::seconds gestureDuration = std::chrono::duration_cast<std::chrono::seconds>(currentTime - gestureItem.startTime);
+
+#ifndef NDEBUG
+                            std::cout << "Gesture Duration: " << gestureDuration.count() << " s" << std::endl;
+#endif
+
+                            gestureItem.gesture.doAction(gestureDuration);
+
+                            for (const std::string& affectedItem : gestureItem.affectedItems) {
+                                affectedItems.insert(affectedItem);
+                            }
+
+                            // Only one element in a group can be active
+                            isCleanupActive = true;
+                        } else {
+                            // If the gesture wasn't recognized once the gesture is set to inactive
+                            gestureItem.isActive = false;
                         }
-                    }
-
-                    if (gestureItem.gesture.isGesture(*gesturesImpl)) {
-                        gestureItem.gesture.doAction();
-
-                        for (std::string affectedItem : gestureItem.affectedItems) {
-                            affectedItems.insert(affectedItem);
-                        }
-
-                        // Only one element in a group can be active
-                        break;
+                    } else {
+                        gestureItem.isActive = false;
                     }
                 }
             }

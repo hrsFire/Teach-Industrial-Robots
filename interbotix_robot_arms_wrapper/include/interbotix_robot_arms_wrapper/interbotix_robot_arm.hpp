@@ -13,15 +13,16 @@ namespace interbotix {
         InterbotixRobotArm(bool useRos, int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArm();
         std::unordered_map<JointName, JointState> GetJointStates() override;
-        void SendJointCommand(JointName jointName, double value) override;
+        void SendJointCommand(const JointName& jointName, double value) override;
         void SendJointCommands(const std::vector<JointName>& jointNames, const std::vector<double>& values) override;
         void SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
         void SendGripperTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SetTorqueState(bool on) override;
-        void SetOperatingMode(OperatingMode operatingMode, AffectedJoints affectedJoints, JointName jointName, bool useCustomProfiles,
+        void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
             int profileVelocity, int profileAcceleration) override;
         std::shared_ptr<RobotInfo> GetRobotInfo() override;
+        double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) override;
     private:
         InterbotixRobotArmBase* robotArm;
     };

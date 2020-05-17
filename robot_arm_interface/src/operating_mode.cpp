@@ -45,6 +45,10 @@ OperatingMode::operator std::string() {
     }
 }
 
+bool OperatingMode::operator==(const OperatingMode& operatingMode) const {
+    return mode == operatingMode.mode;
+}
+
 OperatingMode::OperatingMode(Mode mode) {
     this->mode = mode;
 }

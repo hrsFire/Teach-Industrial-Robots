@@ -12,7 +12,7 @@ std::vector<double> JointHelper::PrepareJointCommands(const std::vector<robot_ar
         jointAdded = false;
 
         for (size_t n = 0; n < jointNames.size(); n++) {
-            if ((robot_arm::JointName) jointStates[i].jointName == jointNames[n]) {
+            if (jointStates[i].jointName == jointNames[n]) {
                 sortedValues.push_back(values[n]);
                 jointAdded = true;
             }
@@ -26,7 +26,7 @@ std::vector<double> JointHelper::PrepareJointCommands(const std::vector<robot_ar
     return sortedValues;
 }
 
-int8_t JointHelper::GetAffectedJoints(robot_arm::AffectedJoints affectedJoints) {
+int8_t JointHelper::GetAffectedJoints(const robot_arm::AffectedJoints& affectedJoints) {
     switch (affectedJoints) {
         case robot_arm::AffectedJoints::ARM_JOINTS_AND_GRIPPER:
             return interbotix_sdk::OperatingModesRequest::ARM_JOINTS_AND_GRIPPER;
@@ -72,7 +72,8 @@ std::unordered_map<robot_arm::JointName, robot_arm::Joint> JointHelper::CreateJo
             lowerJointDeviation = 0.001739;
         }
 
-        joints.emplace((robot_arm::JointName) jointNames[i], robot_arm::Joint(jointNames[i], jointIDs[i], lowerJointLimits[i] + lowerJointDeviation, upperJointLimits[i], velocityLimits[i]));
+        joints.emplace(jointNames[i], robot_arm::Joint(jointNames[i], jointIDs[i], lowerJointLimits[i] + lowerJointDeviation,
+            upperJointLimits[i], velocityLimits[i]));
     }
 
     return joints;
@@ -85,7 +86,7 @@ void JointHelper::PrepareRobotInfoJoints(const std::vector<std::string>& jointNa
     int gripperIndex = 0;
     bool gripperIndexFound = false;
 
-    for (std::string joint : jointNames) {
+    for (const std::string& joint : jointNames) {
         newJointNames.push_back(robot_arm::JointName(joint));
 
         if (!gripperIndexFound) {
@@ -120,7 +121,7 @@ void JointHelper::PrepareRobotInfoJoints(const std::vector<std::string>& jointNa
 
 void JointHelper::PrepareJointStates(std::vector<robot_arm::JointState>* orderedJointStates, std::unordered_map<robot_arm::JointName, robot_arm::JointState>* unorderedJointStates,
         const std::vector<std::string>& jointNames, const std::vector<double>& jointPositions, const std::vector<double>& jointVelocities,
-        const std::vector<double>& jointEfforts) {
+        const std::vector<double>& jointEfforts, const std::unordered_map<robot_arm::JointName, robot_arm::OperatingMode>& operatingModes) {
     std::string jointName;
     double position;
 
@@ -147,11 +148,53 @@ void JointHelper::PrepareJointStates(std::vector<robot_arm::JointState>* ordered
         }
 
         if (orderedJointStates != nullptr) {
-            orderedJointStates->push_back(robot_arm::JointState(jointName, jointPositions[i], jointVelocities[i], jointEfforts[i]));  // TODO: mode?
+            orderedJointStates->push_back(robot_arm::JointState(jointName, jointPositions[i], jointVelocities[i], jointEfforts[i], operatingModes.at(jointName)));
         }
 
         if (unorderedJointStates != nullptr) {
-            unorderedJointStates->emplace(jointName, robot_arm::JointState(jointName, position, jointVelocities[i], jointEfforts[i]));  // TODO: mode?
+            unorderedJointStates->emplace(jointName, robot_arm::JointState(jointName, position, jointVelocities[i], jointEfforts[i], operatingModes.at(jointName)));
         }
+    }
+}
+
+void JointHelper::SetOperatingMode(std::unordered_map<robot_arm::JointName, robot_arm::OperatingMode>& operatingModes, const robot_arm::JointName& jointName,
+        const robot_arm::OperatingMode operatingMode) {
+    auto it = operatingModes.find(jointName);
+
+    if (it != operatingModes.end()) {
+        it->second = operatingMode;
+    }
+}
+
+std::unordered_map<robot_arm::JointName, robot_arm::OperatingMode> JointHelper::GetInitialOperatingModes() {
+    std::unordered_map<robot_arm::JointName, robot_arm::OperatingMode> operatingModes(6);
+    operatingModes.emplace(robot_arm::JointName::WAIST(), robot_arm::OperatingMode::POSITION());
+    operatingModes.emplace(robot_arm::JointName::SHOULDER(), robot_arm::OperatingMode::POSITION());
+    operatingModes.emplace(robot_arm::JointName::ELBOW(), robot_arm::OperatingMode::POSITION());
+    operatingModes.emplace(robot_arm::JointName::FOREARM_ROLL(), robot_arm::OperatingMode::POSITION());
+    operatingModes.emplace(robot_arm::JointName::WRIST_ANGLE(), robot_arm::OperatingMode::POSITION());
+    operatingModes.emplace(robot_arm::JointName::WRIST_ROTATE(), robot_arm::OperatingMode::POSITION());
+    operatingModes.emplace(robot_arm::JointName::GRIPPER(), robot_arm::OperatingMode::POSITION());
+
+    return operatingModes;
+}
+
+double JointHelper::CalculateAcceleration(const robot_arm::JointName& jointName, const robot_arm::OperatingMode& operatingMode, std::chrono::milliseconds duration) {
+    if (operatingMode == robot_arm::OperatingMode::POSITION() || operatingMode == robot_arm::OperatingMode::POSITION_MULTIPLE_REVOLUTIONS()) {
+        double factor = (duration == std::chrono::milliseconds(0) ? 1.0 : (double) std::chrono::duration_cast<std::chrono::seconds>(duration).count());;
+
+        if (jointName == robot_arm::JointName::GRIPPER()) {
+            return GRIPPER_CHANGE * factor;
+        } else {
+            return JOINT_ANGLE_CHANGE * factor;
+        }
+    } else if (operatingMode == robot_arm::OperatingMode::VELOCITY()) {
+        return 1;
+    } else if (operatingMode == robot_arm::OperatingMode::CURRENT()) {
+        return 0;
+    } else if (operatingMode == robot_arm::OperatingMode::PWM()) {
+        return 0;
+    } else {
+        return 0;
     }
 }
