@@ -28,6 +28,8 @@ void ExitSafely() {
         if (robotArm != nullptr) {
             std::cout << "Move to home position" << std::endl;
             robotArm->SendJointCommands(robotArm->GetRobotInfo()->sleepPosition);
+            delete robotArm;
+            robotArm = nullptr;
         }
 
         exitSafelyDone = true;

@@ -52,9 +52,9 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
     jointCommandsPublisher.publish(message);
 }
 
-void InterbotixRobotArmROS::SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) {
+void InterbotixRobotArmROS::SendJointTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) {
     trajectory_msgs::JointTrajectory message;
-    JointHelper::CopyToJointTrajectoryMessage(jointNames, jointTrajectoryPoints, message);
+    JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
     armControllerTrajectoryPublisher.publish(message);
 
@@ -68,9 +68,9 @@ void InterbotixRobotArmROS::SendGripperCommand(double value) {
     gripperCommandPublisher.publish(message);
 }
 
-void InterbotixRobotArmROS::SendGripperTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) {
+void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) {
     trajectory_msgs::JointTrajectory message;
-    JointHelper::CopyToJointTrajectoryMessage(jointNames, jointTrajectoryPoints, message);
+    JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
     gripperTrajectoryPublisher.publish(message);
 

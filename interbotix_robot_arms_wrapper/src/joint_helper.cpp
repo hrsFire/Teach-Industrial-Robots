@@ -35,13 +35,12 @@ int8_t JointHelper::GetAffectedJoints(const robot_arm::AffectedJoints& affectedJ
     return -1;
 }
 
-void JointHelper::CopyToJointTrajectoryMessage(const std::vector<robot_arm::JointName>& jointNames, const std::vector<robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints,
+void JointHelper::CopyToJointTrajectoryMessage(const std::unordered_map<robot_arm::JointName, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints,
         trajectory_msgs::JointTrajectory& message) {
-    for (robot_arm::JointName jointName : jointNames) {
-        message.joint_names.push_back(jointName);
-    }
+    for (auto jointTrajectoryPoint : jointTrajectoryPoints) {
+        message.joint_names.push_back((robot_arm::JointName) jointTrajectoryPoint.first);
 
-    for (robot_arm::JointTrajectoryPoint point : jointTrajectoryPoints) {
+        robot_arm::JointTrajectoryPoint& point = jointTrajectoryPoint.second;
         trajectory_msgs::JointTrajectoryPoint trajectoryPoint;
         trajectoryPoint.accelerations = point.GetAccelerations();
         trajectoryPoint.effort = point.GetEfforts();

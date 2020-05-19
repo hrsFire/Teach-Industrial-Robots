@@ -35,16 +35,16 @@ void InterbotixRobotArm::SendJointCommands(const std::unordered_map<JointName, d
     robotArm->SendJointCommands(jointValues);
 }
 
-void InterbotixRobotArm::SendJointTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) {
-    robotArm->SendJointTrajectory(jointNames, jointTrajectoryPoints);
+void InterbotixRobotArm::SendJointTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) {
+    robotArm->SendJointTrajectory(jointTrajectoryPoints);
 }
 
 void InterbotixRobotArm::SendGripperCommand(double value) {
     robotArm->SendGripperCommand(value);
 }
 
-void InterbotixRobotArm::SendGripperTrajectory(const std::vector<JointName>& jointNames, const std::vector<JointTrajectoryPoint>& jointTrajectoryPoints) {
-    robotArm->SendGripperTrajectory(jointNames, jointTrajectoryPoints);
+void InterbotixRobotArm::SendGripperTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) {
+    robotArm->SendGripperTrajectory(jointTrajectoryPoints);
 }
 
 void InterbotixRobotArm::SetTorqueState(bool on) {
