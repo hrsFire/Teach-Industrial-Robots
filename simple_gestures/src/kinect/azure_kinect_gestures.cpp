@@ -30,12 +30,16 @@ void AzureKinectGestures::NextCycle() {
 
                 uint32_t numberOfBodies = frame.get_num_bodies();
                 std::chrono::microseconds timestamp = frame.get_device_timestamp();
+#ifndef NDEBUG
                 std::cout << "Number of bodies: " << numberOfBodies << std::endl;
                 std::cout << "Timestamp: " << timestamp.count() * 1e-6 << " s" << std::endl;
+#endif
 
                 if (numberOfBodies == 1 || (allowDifferentBodies && numberOfBodies > 1)) {
                     k4abt_body_t* tmpBody = new k4abt_body_t(frame.get_body(0));
+#ifndef NDEBUG
                     std::cout << "Body ID: " << tmpBody->id << std::endl;
+#endif
 
                     // Each person has it's own body ID for temporal correlation between frames and the kinematic skeleton
                     // https://docs.microsoft.com/de-de/azure/Kinect-dk/body-joints
@@ -63,7 +67,9 @@ void AzureKinectGestures::NextCycle() {
                 // Release the sensor capture
                 sensorCapture.reset();
 
+#ifndef NDEBUG
                 std::cout << std::endl << "------------------------" << std::endl << std::endl;
+#endif
             }
         }
     } catch (k4a::error e) {
@@ -94,7 +100,7 @@ bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointI
 
 #ifndef NDEBUG
         std::cout << "Distance: " << perpendicularDistance << " mm, " << deviationOnLine << " mm" << std::endl;
-#endif
+#endif //NDEBUG
 
         return perpendicularDistance >= minDistance && perpendicularDistance <= maxDistance && deviationOnLine >= -DEVIATION;
     }
@@ -116,7 +122,7 @@ bool AzureKinectGestures::IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, 
 
 #ifndef NDEBUG
         std::cout << "Distance: " << distance << " mm" << std::endl;
-#endif
+#endif //NDEBUG
 
         return distance >= minDistance && distance <= maxDistance;
     }

@@ -26,7 +26,7 @@ OperatingMode OperatingMode::PWM() {
     return OperatingMode(Mode::PWM);
 }
 
-OperatingMode::operator std::string() {
+OperatingMode::operator std::string() const {
     switch (mode) {
         case Mode::NONE:
             return "none";

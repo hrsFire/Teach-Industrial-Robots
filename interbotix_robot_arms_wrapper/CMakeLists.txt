@@ -70,6 +70,7 @@ add_library(${PROJECT_NAME} SHARED
   src/interbotix_robot_arm.cpp
   src/interbotix_robot_arm_direct.cpp
   src/interbotix_robot_arm_ros.cpp
+  src/interbotix_joint_name.cpp
   src/joint_helper.cpp
 )
 

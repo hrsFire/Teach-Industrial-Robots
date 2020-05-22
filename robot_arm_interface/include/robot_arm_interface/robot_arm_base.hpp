@@ -9,6 +9,7 @@
 #include "joint_state.hpp"
 #include "operating_mode.hpp"
 #include "joint_name.hpp"
+#include "joint_name_impl.hpp"
 #include "robot_info.hpp"
 #include "affected_joints.hpp"
 
@@ -16,17 +17,17 @@ namespace robot_arm {
     class InterbotixRobotArmBase {
     public:
         // Reads current joint states from all the motors
-        virtual std::unordered_map<JointName, JointState> GetJointStates() = 0;
+        virtual std::unordered_map<JointNameImpl, JointState> GetJointStates() = 0;
         // Sends any type of command to a specified joint which was previously configured with an operating mode
         virtual void SendJointCommand(const JointName& jointName, double value) = 0;
         // Sends any type of commands to all joints which were previously configured with an operating mode
-        virtual void SendJointCommands(const std::unordered_map<JointName, double>& jointValues) = 0;
+        virtual void SendJointCommands(const std::unordered_map<JointNameImpl, double>& jointValues) = 0;
         // Sends joint trajectory for the robot arm (excludes gripper)
-        virtual void SendJointTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) = 0;
+        virtual void SendJointTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) = 0;
         // Sends any type of gripper command to a gripper which was previously configured with an operating mode
         virtual void SendGripperCommand(double value) = 0;
         // Sends joint trajectory for the gripper only
-        virtual void SendGripperTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) = 0;
+        virtual void SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) = 0;
         // Sets the torque state
         virtual void SetTorqueState(bool on) = 0;
         // Sets the operating mode for a specified joint
@@ -35,7 +36,7 @@ namespace robot_arm {
         // Get information about the robot arm
         virtual std::shared_ptr<RobotInfo> GetRobotInfo() = 0;
         // The robot arm takes care of the specific operating mode
-        virtual double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) = 0;
+        virtual double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) = 0;
     };
 }
 

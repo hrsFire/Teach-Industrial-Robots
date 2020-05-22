@@ -24,17 +24,17 @@ namespace interbotix {
     public:
         InterbotixRobotArmROS(int argc, char** argv, std::string robotName);
         ~InterbotixRobotArmROS();
-        std::unordered_map<JointName, JointState> GetJointStates() override;
+        std::unordered_map<JointNameImpl, JointState> GetJointStates() override;
         void SendJointCommand(const JointName& jointName, double value) override;
-        void SendJointCommands(const std::unordered_map<JointName, double>& jointValues) override;
-        void SendJointTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) override;
+        void SendJointCommands(const std::unordered_map<JointNameImpl, double>& jointValues) override;
+        void SendJointTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
-        void SendGripperTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) override;
+        void SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SetTorqueState(bool on) override;
         void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
             int profileVelocity, int profileAcceleration) override;
         std::shared_ptr<RobotInfo> GetRobotInfo() override;
-        double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) override;
+        double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) override;
     private:
         static void JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message);
         std::vector<JointState> GetOrderedJointStates();
@@ -42,9 +42,11 @@ namespace interbotix {
         ros::AsyncSpinner* spinner;
         std::mutex jointStatesMutex;
         std::vector<JointState> orderedJointStates;
-        std::unordered_map<JointName, JointState> unorderedJointStates;
+        std::unordered_map<JointNameImpl, JointState> unorderedJointStates;
         std::shared_ptr<RobotInfo> robotInfo;
-        std::unordered_map<JointName, OperatingMode> operatingModes;
+        std::unordered_map<JointNameImpl, OperatingMode> operatingModes;
+        InterbotixJointName::DOF dof;
+        bool isArmInitialized = false;
 
         ros::Subscriber jointStatesSubscriber;
 

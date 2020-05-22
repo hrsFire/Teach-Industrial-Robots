@@ -18,7 +18,7 @@ namespace robot_arm {
         static OperatingMode CURRENT();
         // All commands will be treated as goal pwms (pulse width modulation)
         static OperatingMode PWM();
-        operator std::string();
+        operator std::string() const;
         bool operator==(const OperatingMode& operatingMode) const;
     private:
         enum class Mode {

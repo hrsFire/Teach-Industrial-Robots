@@ -2,6 +2,6 @@
 
 using namespace robot_arm;
 
-JointState::JointState(JointName jointName, double position, double velocity, double effort, OperatingMode operatingMode) :
+JointState::JointState(std::shared_ptr<JointName> jointName, double position, double velocity, double effort, OperatingMode operatingMode) :
         jointName(jointName), position(position), velocity(velocity), effort(effort), operatingMode(operatingMode) {
 }

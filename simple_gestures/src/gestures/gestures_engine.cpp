@@ -1,21 +1,53 @@
+#define GESTURES_GESTURES_ENGINE_PRIVATE
+
 #include "simple_gestures/gestures/gestures_engine.hpp"
+#include "gesture_group_item.hpp"
 
 using namespace gestures;
 
 GesturesEngine::GesturesEngine(GesturesBase* gesturesImpl) : gesturesImpl(gesturesImpl) {
+    this->groups = reinterpret_cast<std::list<void>*>(new std::list<GestureGroupItem>);
 }
 
 GesturesEngine::~GesturesEngine() {
     delete gesturesImpl;
+    delete reinterpret_cast<std::list<GestureGroupItem>*>(groups);
 }
 
-void GesturesEngine::AddGesture(Gesture gesture, std::string group, uint groupPriority, uint priorityInGroup, std::vector<std::string> affectedItems, bool preventConflicts) {
-    bool wasAdded = false;
-    std::list<GestureGroup>::iterator gestureGroupItr;
-    GestureItem gestureItem = GestureItem(gesture, affectedItems, preventConflicts);
+GestureGroup GesturesEngine::AddGestureGroup(std::string name, uint priority, std::list<GestureGroup> excludedGroups) {
+    std::list<GestureGroupItem>::iterator gestureGroupItr;
+    std::list<GestureGroupItem>& groups = *reinterpret_cast<std::list<GestureGroupItem>*>(this->groups);
 
     // Search for a group which is already available
-    for (gestureGroupItr = groups.begin(); gestureGroupItr != groups.end() && gestureGroupItr->name != group; gestureGroupItr++);
+    for (gestureGroupItr = groups.begin(); gestureGroupItr != groups.end() && gestureGroupItr->name != name; gestureGroupItr++);
+
+    if (gestureGroupItr != groups.end()) {
+        // The group is already available. Therefore don't insert the group.
+        return GestureGroup(gestureGroupItr->name);
+    } else {
+        // The group isn't available yet. Therefore create the group.
+        GestureGroupItem gestureGroupItem = GestureGroupItem(name, {}, excludedGroups);
+        uint i = 0;
+        for (gestureGroupItr = groups.begin(); i != priority && gestureGroupItr != groups.end(); gestureGroupItr++, i++);
+
+        if (gestureGroupItr != groups.end()) {
+            groups.insert(gestureGroupItr, gestureGroupItem);
+        } else {
+            groups.push_back(gestureGroupItem);
+        }
+
+        return GestureGroup(name);
+    }
+}
+
+bool GesturesEngine::AddGesture(Gesture gesture, GestureGroup group, uint priorityInGroup, std::vector<std::string> affectedItems, bool preventConflicts) {
+    bool wasAdded = false;
+    std::list<GestureGroupItem>::iterator gestureGroupItr;
+    GestureItem gestureItem = GestureItem(gesture, affectedItems, preventConflicts);
+    std::list<GestureGroupItem>& groups = *reinterpret_cast<std::list<GestureGroupItem>*>(this->groups);
+
+    // Search for a group which is already available
+    for (gestureGroupItr = groups.begin(); gestureGroupItr != groups.end() && gestureGroupItr->name != (std::string) group; gestureGroupItr++);
 
     if (gestureGroupItr != groups.end()) {
         // The group is already available. Therefore insert the gesture at the correct position.
@@ -28,20 +60,11 @@ void GesturesEngine::AddGesture(Gesture gesture, std::string group, uint groupPr
         } else {
             gestureGroupItr->gestures.push_back(gestureItem);
         }
+
+        return true;
     } else {
         // The group isn't available yet
-        std::list<GestureItem> gestures;
-        gestures.push_back(gestureItem);
-        GestureGroup gestureGroup = GestureGroup(group, gestures);
-
-        uint i = 0;
-        for (gestureGroupItr = groups.begin(); i != groupPriority && gestureGroupItr != groups.end(); gestureGroupItr++, i++);
-
-        if (gestureGroupItr != groups.end()) {
-            groups.insert(gestureGroupItr, gestureGroup);
-        } else {
-            groups.push_back(gestureGroup);
-        }
+        return false;
     }
 }
 
@@ -50,12 +73,13 @@ void GesturesEngine::Start() {
     std::unordered_set<std::string> affectedItems;
     bool isAffected;
     bool isCleanupActive = false;
+    std::list<GestureGroupItem>& groups = *reinterpret_cast<std::list<GestureGroupItem>*>(this->groups);
 
     while (isRunning) {
         gesturesImpl->NextCycle();
 
         if (gesturesImpl->IsNewDataAvailable()) {
-            for (GestureGroup& group : groups) {
+            for (GestureGroupItem& group : groups) {
                 isCleanupActive = false;
 
                 for (GestureItem& gestureItem : group.gestures) {
@@ -88,7 +112,7 @@ void GesturesEngine::Start() {
 
 #ifndef NDEBUG
                             std::cout << "Gesture Duration: " << gestureDuration.count() << " s" << std::endl;
-#endif
+#endif //NDEBUG
 
                             gestureItem.gesture.doAction(gestureDuration);
 

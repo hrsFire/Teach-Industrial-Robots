@@ -3,26 +3,29 @@
 
 #include <vector>
 #include <unordered_map>
+#include <chrono>
 #include <robot_arm_interface/robot_arm_base.hpp>
-
-using namespace robot_arm;
+#include <robot_arm_interface/joint_name.hpp>
+#include <robot_arm_interface/joint_name_impl.hpp>
+#include <robot_arm_interface/joint_trajectory_point.hpp>
+#include <robot_arm_interface/operating_mode.hpp>
 
 namespace interbotix {
-    class InterbotixRobotArm : public InterbotixRobotArmBase {
+    class InterbotixRobotArm : public robot_arm::InterbotixRobotArmBase {
     public:
-        InterbotixRobotArm(bool useRos, int argc, char** argv, std::string robotName, std::string robotModel);
+        InterbotixRobotArm(bool useROS, int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArm();
-        std::unordered_map<JointName, JointState> GetJointStates() override;
-        void SendJointCommand(const JointName& jointName, double value) override;
-        void SendJointCommands(const std::unordered_map<JointName, double>& jointValues) override;
-        void SendJointTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) override;
+        std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> GetJointStates() override;
+        void SendJointCommand(const robot_arm::JointName& jointName, double value) override;
+        void SendJointCommands(const std::unordered_map<robot_arm::JointNameImpl, double>& jointValues) override;
+        void SendJointTrajectory(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
-        void SendGripperTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) override;
+        void SendGripperTrajectory(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SetTorqueState(bool on) override;
-        void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
-            int profileVelocity, int profileAcceleration) override;
-        std::shared_ptr<RobotInfo> GetRobotInfo() override;
-        double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) override;
+        void SetOperatingMode(const robot_arm::OperatingMode& operatingMode, const robot_arm::AffectedJoints& affectedJoints, const robot_arm::JointName& jointName,
+            bool useCustomProfiles, int profileVelocity, int profileAcceleration) override;
+        std::shared_ptr<robot_arm::RobotInfo> GetRobotInfo() override;
+        double CalculateAcceleration(const robot_arm::JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) override;
     private:
         InterbotixRobotArmBase* robotArm;
     };

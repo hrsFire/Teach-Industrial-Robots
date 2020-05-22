@@ -44,7 +44,7 @@ include_directories(
 add_library(${PROJECT_NAME} SHARED
   src/joint_trajectory_point.cpp
   src/joint_state.cpp
-  src/joint_name.cpp
+  src/joint_name_impl.cpp
   src/joint.cpp
   src/operating_mode.cpp
   src/robot_info.cpp

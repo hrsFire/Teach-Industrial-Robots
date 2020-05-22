@@ -4,7 +4,7 @@
 
 using namespace interbotix;
 
-InterbotixRobotArm::InterbotixRobotArm(bool useRos, int argc, char** argv, std::string robotName, std::string robotModel) {
+InterbotixRobotArm::InterbotixRobotArm(bool useROS, int argc, char** argv, std::string robotName, std::string robotModel) {
     // https://github.com/Interbotix/interbotix_ros_arms/tree/master/interbotix_sdk
     // One is to command the robot via the ROS topics and/or services. In this manner, the developer can code in
     // any language that is capable of sending a ROS message. The other approach is to 'skip' the ROS topic layer
@@ -12,7 +12,7 @@ InterbotixRobotArm::InterbotixRobotArm(bool useRos, int argc, char** argv, std::
     // 'RobotArm' class as shown here to take advantage of these functions.
     // https://github.com/Interbotix/interbotix_ros_arms/blob/master/interbotix_sdk/src/arm_node.cpp
 
-    if (useRos) {
+    if (useROS) {
         this->robotArm = new InterbotixRobotArmROS(argc, argv, robotName);
     } else {
         this->robotArm = new InterbotixRobotArmDirect(argc, argv, robotName, robotModel);
@@ -23,7 +23,7 @@ InterbotixRobotArm::~InterbotixRobotArm() {
     delete robotArm;
 }
 
-std::unordered_map<JointName, JointState> InterbotixRobotArm::GetJointStates() {
+std::unordered_map<robot_arm::JointNameImpl, JointState> InterbotixRobotArm::GetJointStates() {
     return robotArm->GetJointStates();
 }
 
@@ -31,11 +31,11 @@ void InterbotixRobotArm::SendJointCommand(const JointName& jointName, double val
     robotArm->SendJointCommand(jointName, value);
 }
 
-void InterbotixRobotArm::SendJointCommands(const std::unordered_map<JointName, double>& jointValues) {
+void InterbotixRobotArm::SendJointCommands(const std::unordered_map<robot_arm::JointNameImpl, double>& jointValues) {
     robotArm->SendJointCommands(jointValues);
 }
 
-void InterbotixRobotArm::SendJointTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) {
+void InterbotixRobotArm::SendJointTrajectory(const std::unordered_map<robot_arm::JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
     robotArm->SendJointTrajectory(jointTrajectoryPoints);
 }
 
@@ -43,7 +43,7 @@ void InterbotixRobotArm::SendGripperCommand(double value) {
     robotArm->SendGripperCommand(value);
 }
 
-void InterbotixRobotArm::SendGripperTrajectory(const std::unordered_map<JointName, JointTrajectoryPoint>& jointTrajectoryPoints) {
+void InterbotixRobotArm::SendGripperTrajectory(const std::unordered_map<robot_arm::JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
     robotArm->SendGripperTrajectory(jointTrajectoryPoints);
 }
 
@@ -56,10 +56,11 @@ void InterbotixRobotArm::SetOperatingMode(const OperatingMode& operatingMode, co
     robotArm->SetOperatingMode(operatingMode, affectedJoints, jointName, useCustomProfiles, profileVelocity,profileAcceleration);
 }
 
+// This provides among other things the joint limits (http://support.interbotix.com/html/specifications/wx200.html#default-joint-limits)
 std::shared_ptr<RobotInfo> InterbotixRobotArm::GetRobotInfo() {
     return robotArm->GetRobotInfo();
 }
 
-double InterbotixRobotArm::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration) {
-    return robotArm->CalculateAcceleration(jointName, duration);
+double InterbotixRobotArm::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) {
+    return robotArm->CalculateAcceleration(jointName, duration, isGoingUpwards);
 }

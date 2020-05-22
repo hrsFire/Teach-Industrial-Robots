@@ -58,6 +58,7 @@ add_library(${PROJECT_NAME} SHARED
   src/kinect/azure_kinect.cpp
   src/gestures/gesture.cpp
   src/gestures/gesture_group.cpp
+  src/gestures/gesture_group_item.cpp
   src/gestures/gesture_item.cpp
   src/gestures/gestures_engine.cpp
 )

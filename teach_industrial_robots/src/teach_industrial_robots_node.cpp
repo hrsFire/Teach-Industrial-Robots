@@ -1,6 +1,8 @@
 #include <iostream>
+#include <memory>
 #include <csignal>
 #include <mutex>
+#include <unordered_map>
 #include <ros/ros.h>
 #include <k4a/k4a.hpp>
 #include <k4abt.hpp>
@@ -8,8 +10,10 @@
 #include <simple_gestures/kinect/azure_kinect.hpp>
 #include <simple_gestures/gestures/gestures_engine.hpp>
 #include <simple_gestures/gestures/gesture.hpp>
+#include <simple_gestures/gestures/gesture_group.hpp>
 #include <robot_arm_interface/robot_arm_base.hpp>
 #include <interbotix_robot_arms_wrapper/interbotix_robot_arm.hpp>
+#include <interbotix_robot_arms_wrapper/interbotix_joint_name.hpp>
 
 gestures::GesturesEngine* gesturesEngine = nullptr;
 robot_arm::InterbotixRobotArmBase* robotArm = nullptr;
@@ -82,71 +86,87 @@ int main(int argc, char** argv) {
 
         std::string robotName = "wx200";
         std::string robotModel = "wx200"; // Typically, this will be the same as robotName
-        robotArm = new interbotix::InterbotixRobotArm(false, argc, argv, robotName, robotModel);
+        bool useROS = false;
+        robotArm = new interbotix::InterbotixRobotArm(useROS, argc, argv, robotName, robotModel);
 
-        ros::Duration(0.5).sleep();
-
-        std::unordered_map<JointName, JointState> jointStates = robotArm->GetJointStates();
-        double gripperDistance = jointStates.at(JointName::GRIPPER()).position;
-        double jointAngle = jointStates.at(JointName::ELBOW()).position;
-        std::shared_ptr<RobotInfo> robotInfo = robotArm->GetRobotInfo();
-
-        // http://support.interbotix.com/html/specifications/wx200.html#default-joint-limits
-        double minGripperDistance = robotInfo->joints.at(JointName::GRIPPER()).lowerLimit;
-        double maxGripperDistance = robotInfo->joints.at(JointName::GRIPPER()).upperLimit;
-
-        double minJointAngle = robotInfo->joints.at(JointName::ELBOW()).lowerLimit;
-        double maxJointAngle = robotInfo->joints.at(JointName::ELBOW()).upperLimit;
+        std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+        interbotix::InterbotixJointName currentJoint = interbotix::InterbotixJointName::ELBOW();
 
         gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, true));
+        gestures::GestureGroup singleJointGestureGroup = gesturesEngine->AddGestureGroup("single_joint", 0, {});
+        gestures::GestureGroup gripperGestureGroup = gesturesEngine->AddGestureGroup("gripper", 1, {});
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0);
-        }, [&jointAngle, maxJointAngle](std::chrono::milliseconds duration) {
-            jointAngle += robotArm->CalculateAcceleration(JointName::ELBOW(), duration);
+        }, [&currentJoint](std::chrono::milliseconds duration) {
+            std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
+            double maxJointAngle = robotInfo->joints.at(currentJoint).upperLimit;
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+            double jointAngle = jointStates.at(currentJoint).position;
+
+            jointAngle += robotArm->CalculateAcceleration(currentJoint, duration, true);
 
             if (jointAngle > maxJointAngle) {
                 jointAngle = maxJointAngle;
             }
 
-            robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
-        }), "single_joint", 0, 0, { JointName::ELBOW() });
+            robotArm->SendJointCommand(currentJoint, jointAngle);
+        }), singleJointGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
+            interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_LEFT, K4ABT_JOINT_SHOULDER_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 65.0);
-        }, [&jointAngle, minJointAngle](std::chrono::milliseconds duration) {
-            jointAngle -= robotArm->CalculateAcceleration(JointName::ELBOW(), duration);
+        }, [&currentJoint](std::chrono::milliseconds duration) {
+            std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
+            double minJointAngle = robotInfo->joints.at(currentJoint).lowerLimit;
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+            double jointAngle = jointStates.at(currentJoint).position;
+
+            jointAngle -= robotArm->CalculateAcceleration(currentJoint, duration, false);
 
             if (jointAngle < minJointAngle) {
                 jointAngle = minJointAngle;
             }
 
-            robotArm->SendJointCommand(JointName::ELBOW(), jointAngle);
-        }), "single_joint", 0, 1, { JointName::ELBOW() });
+            robotArm->SendJointCommand(currentJoint, jointAngle);
+        }), singleJointGestureGroup, 1, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
+            interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
-        }, [&gripperDistance, maxGripperDistance](std::chrono::milliseconds duration) {
-            gripperDistance += robotArm->CalculateAcceleration(JointName::GRIPPER(), duration);
+        }, [](std::chrono::milliseconds duration) {
+            interbotix::InterbotixJointName gripperJointNamePtr = interbotix::InterbotixJointName::GRIPPER();
+            std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
+            double maxGripperDistance = robotInfo->joints.at(gripperJointNamePtr).upperLimit;
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+            double gripperDistance = jointStates.at(gripperJointNamePtr).position;
+
+            gripperDistance += robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
 
             if (gripperDistance > maxGripperDistance) {
                 gripperDistance = maxGripperDistance;
             }
 
             robotArm->SendGripperCommand(gripperDistance);
-        }), "gripper", 1, 0, { JointName::GRIPPER() });
+        }), gripperGestureGroup, 0, { interbotix::InterbotixJointName::GRIPPER() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
-        }, [&gripperDistance, minGripperDistance](std::chrono::milliseconds duration) {
-            gripperDistance -= robotArm->CalculateAcceleration(JointName::GRIPPER(), duration);
+        }, [](std::chrono::milliseconds duration) {
+            interbotix::InterbotixJointName gripperJointNamePtr = interbotix::InterbotixJointName::GRIPPER();
+            std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
+            double minGripperDistance = robotInfo->joints.at(gripperJointNamePtr).lowerLimit;
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+            double gripperDistance = jointStates.at(gripperJointNamePtr).position;
+
+            gripperDistance -= robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
 
             if (gripperDistance < minGripperDistance) {
                 gripperDistance = minGripperDistance;
             }
 
             robotArm->SendGripperCommand(gripperDistance);
-        }), "gripper", 1, 1, { JointName::GRIPPER() });
+        }), gripperGestureGroup, 1, { interbotix::InterbotixJointName::GRIPPER() });
 
         signal(SIGINT, [](int i) {
             ExitSafely();
