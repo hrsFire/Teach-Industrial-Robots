@@ -10,7 +10,8 @@ std::vector<double> JointHelper::PrepareJointCommands(const std::unordered_map<r
 
     for (size_t i = 0; i < jointStates.size(); i++) {
         for (auto jointValue : jointValues) {
-            if (*(jointStates[i].jointName) == jointValue.first) {
+            // @TODO: causes a bad cast exception if the items are switched
+            if (jointValue.first == *(jointStates[i].jointName)) {
                 sortedValues.push_back(jointValue.second);
                 break;
             }
@@ -217,15 +218,14 @@ double JointHelper::CalculateAcceleration(const robot_arm::JointName& jointName,
         std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
         // This handles the cases for log(0) = undefined, log(1) = 0 and log(x) < 0 when x < 1.0
         double factor = seconds >= std::chrono::seconds(0) && seconds <= std::chrono::seconds(2) ? 1.0 : 
-            log(std::chrono::duration_cast<std::chrono::seconds>(duration).count()) / log(base);
+            log(seconds.count()) / log(base);
 
         if (jointName == InterbotixJointName::GRIPPER()) {
             return GRIPPER_CHANGE * factor;
         } else {
             double additionalChange = 0;
 
-            if (std::chrono::duration_cast<std::chrono::seconds>(duration) >= std::chrono::seconds(0) ||
-                std::chrono::duration_cast<std::chrono::seconds>(duration) <= std::chrono::seconds(1)) {
+            if (seconds >= std::chrono::seconds(0) || seconds <= std::chrono::seconds(1)) {
                 additionalChange = 0.06;
             }
 

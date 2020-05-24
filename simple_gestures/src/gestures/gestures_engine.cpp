@@ -71,6 +71,7 @@ bool GesturesEngine::AddGesture(Gesture gesture, GestureGroup group, uint priori
 void GesturesEngine::Start() {
     isRunning = true;
     std::unordered_set<std::string> affectedItems;
+    std::vector<GestureGroup> executedGroups;
     bool isAffected;
     bool isCleanupActive = false;
     std::list<GestureGroupItem>& groups = *reinterpret_cast<std::list<GestureGroupItem>*>(this->groups);
@@ -81,6 +82,19 @@ void GesturesEngine::Start() {
         if (gesturesImpl->IsNewDataAvailable()) {
             for (GestureGroupItem& group : groups) {
                 isCleanupActive = false;
+
+                for (const GestureGroup& executedGroup : executedGroups) {
+                    for (const GestureGroup& gestureGroup : group.excludedGroups) {
+                        if (executedGroup == gestureGroup) {
+                            isCleanupActive = true;
+                            break;
+                        }
+                    }
+
+                    if (isCleanupActive) {
+                        break;
+                    }
+                }
 
                 for (GestureItem& gestureItem : group.gestures) {
                     if (!isCleanupActive) {

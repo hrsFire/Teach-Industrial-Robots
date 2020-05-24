@@ -163,7 +163,7 @@ std::shared_ptr<robot_arm::JointName> InterbotixJointName::Prev() {
             prevJoint = Joint::ELBOW;
             break;
         case Joint::WRIST_ANGLE:
-            if (dof == DOF::DOF_5 || dof == DOF::DOF_6) {
+            if (dof == DOF::DOF_6) {
                 prevJoint = Joint::FOREARM_ROLL;
             } else {
                 prevJoint = Joint::ELBOW;

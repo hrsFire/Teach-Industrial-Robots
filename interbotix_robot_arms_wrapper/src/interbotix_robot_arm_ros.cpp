@@ -148,7 +148,6 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
 }
 
 double InterbotixRobotArmROS::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) {
-    std::cout << "Debug 3" << std::endl;
     return JointHelper::CalculateAcceleration(jointName,
         operatingModes.at(JointNameImpl(std::make_shared<InterbotixJointName>((const InterbotixJointName&) jointName))), duration, isGoingUpwards);
 }

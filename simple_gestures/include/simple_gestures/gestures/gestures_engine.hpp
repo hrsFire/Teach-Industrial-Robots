@@ -18,6 +18,8 @@ namespace gestures {
     public:
         GesturesEngine(GesturesBase* gesturesImpl);
         ~GesturesEngine();
+        // excludedGroups: Describes the gesture groups which can't be executed with this gesture group. If a gesture in a gesture group was
+        //                 already executed in this gestures cycle this gesture group will not be executed and therefore will be skipped.
         GestureGroup AddGestureGroup(std::string name, uint priority, std::list<GestureGroup> excludedGroups);
         // affectedItems: Describes the items which are affected through the gesture. If an item was previously affected in the current gestures
         //                cycle a further action for the gesture which would also affect the item will not be executed. This prevents gestures
