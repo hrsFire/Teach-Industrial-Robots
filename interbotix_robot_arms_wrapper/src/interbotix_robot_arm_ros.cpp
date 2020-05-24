@@ -38,7 +38,7 @@ InterbotixRobotArmROS::~InterbotixRobotArmROS() {
 }
 
 std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmROS::GetJointStates() {
-    std::lock_guard<std::mutex> _(jointStatesMutex);
+    std::lock_guard<std::mutex> lock(jointStatesMutex);
 
     return unorderedJointStates;
 }
@@ -148,12 +148,13 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
 }
 
 double InterbotixRobotArmROS::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) {
+    std::cout << "Debug 3" << std::endl;
     return JointHelper::CalculateAcceleration(jointName,
         operatingModes.at(JointNameImpl(std::make_shared<InterbotixJointName>((const InterbotixJointName&) jointName))), duration, isGoingUpwards);
 }
 
 void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message) {
-    std::lock_guard<std::mutex>(self.jointStatesMutex);
+    std::lock_guard<std::mutex> lock(self.jointStatesMutex);
 
     if (!self.isArmInitialized) {
         self.GetRobotInfo();
@@ -165,7 +166,7 @@ void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, con
 }
 
 std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {
-    std::lock_guard<std::mutex> _(jointStatesMutex);
+    std::lock_guard<std::mutex> lock(jointStatesMutex);
 
     return orderedJointStates;
 }
