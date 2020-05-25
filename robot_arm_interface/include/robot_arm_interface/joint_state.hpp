@@ -9,11 +9,17 @@ namespace robot_arm {
     class JointState {
     public:
         JointState(std::shared_ptr<JointName> jointName, double position, double velocity, double effort, OperatingMode operatingMode);
-        const std::shared_ptr<JointName> jointName;
-        const double position;
-        const double velocity;
-        const double effort;
-        const OperatingMode operatingMode;
+        std::shared_ptr<JointName> GetJointName() const;
+        double GetPosition() const;
+        double GetVelocity() const;
+        double GetEffort() const;
+        OperatingMode GetOperatingMode() const;
+    private:
+        std::shared_ptr<JointName> jointName;
+        double position;
+        double velocity;
+        double effort;
+        OperatingMode operatingMode;
     };
 }
 

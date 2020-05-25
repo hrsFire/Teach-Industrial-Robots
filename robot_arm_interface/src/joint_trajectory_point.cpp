@@ -23,6 +23,6 @@ const std::vector<double>& JointTrajectoryPoint::GetEfforts() {
     return efforts;
 }
 
-const double JointTrajectoryPoint::GetSecondsFromStart() {
+double JointTrajectoryPoint::GetSecondsFromStart() const {
     return secondsFromStart;
 }

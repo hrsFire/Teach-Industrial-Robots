@@ -28,9 +28,13 @@ namespace interbotix {
     private:
         std::vector<JointState> GetOrderedJointStates();
         RobotArm* robotArm = nullptr;
+        std::mutex jointStatesMutex;
+        std::vector<JointState> orderedJointStates;
+        std::unordered_map<JointNameImpl, JointState> unorderedJointStates;
         std::shared_ptr<RobotInfo> robotInfo;
         std::unordered_map<JointNameImpl, OperatingMode> operatingModes;
         InterbotixJointName::DOF dof;
+        std::chrono::high_resolution_clock::time_point jointStatesLastChanged;
     };
 }
 

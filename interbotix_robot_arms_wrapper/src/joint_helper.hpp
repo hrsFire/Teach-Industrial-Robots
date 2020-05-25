@@ -34,7 +34,7 @@ namespace interbotix {
         static void PrepareJointStates(std::vector<robot_arm::JointState>* orderedJointStates, std::unordered_map<robot_arm::JointNameImpl,
             robot_arm::JointState>* unorderedJointStates, const std::vector<std::string>& jointNames, const std::vector<double>& jointPositions, const std::vector<double>& jointVelocities,
             const std::vector<double>& jointEfforts, const std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes,
-            InterbotixJointName::DOF dof);
+            InterbotixJointName::DOF dof, std::chrono::system_clock::time_point& jointStatesLastChanged);
         static std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode> GetInitialOperatingModes(InterbotixJointName::DOF dof);
         static void SetOperatingMode(std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes, const robot_arm::JointName& jointName,
             const robot_arm::OperatingMode operatingMode);
@@ -42,9 +42,16 @@ namespace interbotix {
             bool isGoingUpwards);
         static InterbotixJointName::DOF DetermineDOF(const robot_arm::RobotInfo& robotInfo);
         static InterbotixJointName::DOF DetermineDOF(uint numberOfJoints);
+        static void SetJointState(const robot_arm::JointNameImpl& newJointStateName, double newJointStateValue, std::vector<robot_arm::JointState>& orderedJointStates,
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>& unorderedJointStates, std::chrono::high_resolution_clock::time_point& jointStatesLastChanged,
+            const std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes);
+        static void SetJointStates(const std::unordered_map<robot_arm::JointNameImpl, double>& newJointStates, std::vector<robot_arm::JointState>& orderedJointStates,
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>& unorderedJointStates, std::chrono::high_resolution_clock::time_point& jointStatesLastChanged,
+            const std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes);
     private:
+        static bool HaveJointStatesExpired(const std::chrono::high_resolution_clock::time_point& jointStatesLastChanged);
         static constexpr double GRIPPER_CHANGE = 0.002;
-        static constexpr double JOINT_ANGLE_CHANGE = 1.03 * M_PI / 180.0;
+        static constexpr double JOINT_ANGLE_CHANGE = 0.5 * M_PI / 180.0; // = 0.4999999994299069 degrees
     };
 }
 

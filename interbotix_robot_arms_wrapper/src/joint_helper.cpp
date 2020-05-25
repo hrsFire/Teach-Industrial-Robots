@@ -11,7 +11,7 @@ std::vector<double> JointHelper::PrepareJointCommands(const std::unordered_map<r
     for (size_t i = 0; i < jointStates.size(); i++) {
         for (auto jointValue : jointValues) {
             // @TODO: causes a bad cast exception if the items are switched
-            if (jointValue.first == *(jointStates[i].jointName)) {
+            if (jointValue.first == *(jointStates[i].GetJointName())) {
                 sortedValues.push_back(jointValue.second);
                 break;
             }
@@ -132,9 +132,13 @@ void JointHelper::PrepareRobotInfoJoints(const std::vector<std::string>& jointNa
 void JointHelper::PrepareJointStates(std::vector<robot_arm::JointState>* orderedJointStates, std::unordered_map<robot_arm::JointNameImpl,
         robot_arm::JointState>* unorderedJointStates, const std::vector<std::string>& jointNames, const std::vector<double>& jointPositions,
         const std::vector<double>& jointVelocities, const std::vector<double>& jointEfforts, const std::unordered_map<robot_arm::JointNameImpl,
-        robot_arm::OperatingMode>& operatingModes, InterbotixJointName::DOF dof) {
+        robot_arm::OperatingMode>& operatingModes, InterbotixJointName::DOF dof, std::chrono::system_clock::time_point& jointStatesLastChanged) {
     std::string jointName;
     double position;
+
+    if (!JointHelper::HaveJointStatesExpired(jointStatesLastChanged)) {
+        return;
+    }
 
     if (orderedJointStates != nullptr) {
         orderedJointStates->clear();
@@ -176,6 +180,8 @@ void JointHelper::PrepareJointStates(std::vector<robot_arm::JointState>* ordered
                 operatingModes.at(jointNameImpl)));
         }
     }
+
+    jointStatesLastChanged = std::chrono::high_resolution_clock::now();
 }
 
 void JointHelper::SetOperatingMode(std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes,
@@ -216,20 +222,13 @@ double JointHelper::CalculateAcceleration(const robot_arm::JointName& jointName,
         // This smooths down the movement and prevents to abrupt movements.
         double base = 2.9;
         std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
-        // This handles the cases for log(0) = undefined, log(1) = 0 and log(x) < 0 when x < 1.0
-        double factor = seconds >= std::chrono::seconds(0) && seconds <= std::chrono::seconds(2) ? 1.0 : 
-            log(seconds.count()) / log(base);
+        // This handles the cases for log(0) = undefined, log(1) = 0, log(x) < 0 when x < 1.0 and log(x)/log(base) <= 1 when x <= base
+        double factor = seconds >= std::chrono::seconds(0) && seconds <= std::chrono::seconds(2) && seconds.count() <= base ? 1.0 : log(seconds.count()) / log(base);
 
         if (jointName == InterbotixJointName::GRIPPER()) {
             return GRIPPER_CHANGE * factor;
         } else {
-            double additionalChange = 0;
-
-            if (seconds >= std::chrono::seconds(0) || seconds <= std::chrono::seconds(1)) {
-                additionalChange = 0.06;
-            }
-
-            return (JOINT_ANGLE_CHANGE + additionalChange) * factor;
+            return JOINT_ANGLE_CHANGE * factor;
         }
     } else if (operatingMode == robot_arm::OperatingMode::VELOCITY()) {
         return 1;
@@ -257,4 +256,48 @@ InterbotixJointName::DOF JointHelper::DetermineDOF(uint numberOfJoints) {
         default:
             throw "This Interbotix robot arm isn't supported yet. It has %i DOF (degrees of freedom). Only 4, 5 and 6 DOF are currently supported.";
     }
+}
+
+void JointHelper::SetJointState(const robot_arm::JointNameImpl& newJointStateName, double newJointStateValue, std::vector<robot_arm::JointState>& orderedJointStates,
+        std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>& unorderedJointStates, std::chrono::high_resolution_clock::time_point& jointStatesLastChanged,
+        const std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes) {
+    std::unordered_map<robot_arm::JointNameImpl, double> newStates;
+    newStates.emplace(newJointStateName, newJointStateValue);
+    JointHelper::SetJointStates(newStates, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
+}
+
+void JointHelper::SetJointStates(const std::unordered_map<robot_arm::JointNameImpl, double>& newJointStates, std::vector<robot_arm::JointState>& orderedJointStates,
+        std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>& unorderedJointStates, std::chrono::high_resolution_clock::time_point& jointStatesLastChanged,
+        const std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes) {
+    std::shared_ptr<robot_arm::JointName> jointName;
+    double position;
+    double velocity;
+
+    for (size_t i = 0; i < orderedJointStates.size(); i++) {
+        jointName = orderedJointStates[i].GetJointName();
+        auto newJointState = newJointStates.find(jointName);
+
+        if (newJointState != newJointStates.end()) {
+            position = orderedJointStates[i].GetPosition();
+            velocity = orderedJointStates[i].GetVelocity();
+            robot_arm::OperatingMode operatingMode = operatingModes.at(jointName);
+
+            if (operatingMode == robot_arm::OperatingMode::POSITION() || operatingMode == robot_arm::OperatingMode::POSITION_MULTIPLE_REVOLUTIONS()) {
+                position = newJointState->second;
+            } else if (operatingMode == robot_arm::OperatingMode::VELOCITY()) {
+                velocity = newJointState->second;
+            }
+
+            robot_arm::JointState tmpJointState = robot_arm::JointState(jointName, position, velocity, orderedJointStates[i].GetEffort(), orderedJointStates[i].GetOperatingMode());
+            unorderedJointStates.at(jointName) = tmpJointState;
+            orderedJointStates[i] = tmpJointState;
+        }
+    }
+
+    jointStatesLastChanged = std::chrono::high_resolution_clock::now();
+}
+
+bool JointHelper::HaveJointStatesExpired(const std::chrono::high_resolution_clock::time_point& jointStatesLastChanged) {
+    // If true: This prevents issues when reading the current joint states
+    return std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - jointStatesLastChanged) >= std::chrono::seconds(1);
 }

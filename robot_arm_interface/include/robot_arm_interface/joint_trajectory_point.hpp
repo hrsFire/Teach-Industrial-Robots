@@ -12,7 +12,7 @@ namespace robot_arm {
         const std::vector<double>& GetVelocities();
         const std::vector<double>& GetAccelerations();
         const std::vector<double>& GetEfforts();
-        const double GetSecondsFromStart();
+        double GetSecondsFromStart() const;
     private:
         std::vector<double> positions;;
         std::vector<double> velocities;

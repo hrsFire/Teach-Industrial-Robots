@@ -115,6 +115,7 @@ void GesturesEngine::Start() {
                         }
 
                         if (gestureItem.gesture.isGesture(*gesturesImpl)) {
+                            executedGroups.push_back(GestureGroup(group.name));
                             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
                             if (!gestureItem.isActive) {
@@ -146,6 +147,7 @@ void GesturesEngine::Start() {
                 }
             }
 
+            executedGroups.clear();
             affectedItems.clear();
             gesturesImpl->MarkDataAsUsed();
         }

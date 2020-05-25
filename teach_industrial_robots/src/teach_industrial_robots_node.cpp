@@ -105,7 +105,7 @@ int main(int argc, char** argv) {
             std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
             double maxJointAngle = robotInfo->joints.at(currentJoint).upperLimit;
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
-            double jointAngle = jointStates.at(currentJoint).position;
+            double jointAngle = jointStates.at(currentJoint).GetPosition();
 
             jointAngle += robotArm->CalculateAcceleration(*currentJoint, duration, true);
 
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
             std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
             double minJointAngle = robotInfo->joints.at(currentJoint).lowerLimit;
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
-            double jointAngle = jointStates.at(currentJoint).position;
+            double jointAngle = jointStates.at(currentJoint).GetPosition();
 
             jointAngle -= robotArm->CalculateAcceleration(*currentJoint, duration, false);
 
@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
             std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
             double maxGripperDistance = robotInfo->joints.at(gripperJointNamePtr).upperLimit;
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
-            double gripperDistance = jointStates.at(gripperJointNamePtr).position;
+            double gripperDistance = jointStates.at(gripperJointNamePtr).GetPosition();
 
             gripperDistance += robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
 
@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
             std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
             double minGripperDistance = robotInfo->joints.at(gripperJointNamePtr).lowerLimit;
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
-            double gripperDistance = jointStates.at(gripperJointNamePtr).position;
+            double gripperDistance = jointStates.at(gripperJointNamePtr).GetPosition();
 
             gripperDistance -= robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
 

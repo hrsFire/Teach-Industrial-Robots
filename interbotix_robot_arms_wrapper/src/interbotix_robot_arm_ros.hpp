@@ -47,6 +47,7 @@ namespace interbotix {
         std::unordered_map<JointNameImpl, OperatingMode> operatingModes;
         InterbotixJointName::DOF dof;
         bool isArmInitialized = false;
+        std::chrono::high_resolution_clock::time_point jointStatesLastChanged;
 
         ros::Subscriber jointStatesSubscriber;
 
