@@ -27,7 +27,7 @@ std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmDirect::GetJoint
 
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
 
-    JointHelper::PrepareJointStates(nullptr, &unorderedJointStates, states.name, states.position, states.velocity, states.effort, operatingModes, dof, jointStatesLastChanged);
+    JointHelper::PrepareJointStates(&orderedJointStates, &unorderedJointStates, states.name, states.position, states.velocity, states.effort, operatingModes, dof, jointStatesLastChanged);
 
     return unorderedJointStates;
 }
@@ -156,7 +156,7 @@ std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
 
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
 
-    JointHelper::PrepareJointStates(&orderedJointStates, nullptr, states.name, states.position, states.velocity, states.effort, operatingModes, dof, jointStatesLastChanged);
+    JointHelper::PrepareJointStates(&orderedJointStates, &unorderedJointStates, states.name, states.position, states.velocity, states.effort, operatingModes, dof, jointStatesLastChanged);
 
     return orderedJointStates;
 }
