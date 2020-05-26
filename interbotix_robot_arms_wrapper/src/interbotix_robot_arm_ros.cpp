@@ -181,7 +181,5 @@ void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, con
 }
 
 std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {
-    std::lock_guard<std::mutex> lock(jointStatesMutex);
-
     return orderedJointStates;
 }

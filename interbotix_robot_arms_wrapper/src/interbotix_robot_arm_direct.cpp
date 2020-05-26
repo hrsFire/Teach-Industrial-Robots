@@ -152,8 +152,6 @@ double InterbotixRobotArmDirect::CalculateAcceleration(const JointName& jointNam
 }
 
 std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
-    std::lock_guard<std::mutex> lock(jointStatesMutex);
-
     sensor_msgs::JointState states = robotArm->arm_get_joint_states();
 
     JointHelper::PrepareJointStates(&orderedJointStates, &unorderedJointStates, states.name, states.position, states.velocity, states.effort, operatingModes, dof, jointStatesLastChanged);
