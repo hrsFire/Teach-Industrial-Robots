@@ -7,12 +7,20 @@
 namespace robot_arm {
     class Joint {
     public:
-        Joint(std::shared_ptr<JointName> name, uint id, double lowerLimit, double upperLimit, double velocityLimit);
-        const std::shared_ptr<JointName> name;
-        const uint id;
-        const double lowerLimit;
-        const double upperLimit;
-        const double velocityLimit;
+        Joint(std::shared_ptr<JointName> name, uint id, double lowerLimit, double upperLimit, double velocityLimit, bool canRotate);
+        std::shared_ptr<JointName> GetName() const;
+        uint GetID() const;
+        double GetLowerLimit() const;
+        double GetUpperLimit() const;
+        double GetVelocitiyLimit() const;
+        double CanRotate() const;
+    private:
+        std::shared_ptr<JointName> name;
+        uint id;
+        double lowerLimit;
+        double upperLimit;
+        double velocityLimit;
+        bool canRotate;
     };
 }
 

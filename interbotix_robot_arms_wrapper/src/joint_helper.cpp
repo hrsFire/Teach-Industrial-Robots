@@ -58,6 +58,7 @@ std::unordered_map<robot_arm::JointNameImpl, robot_arm::Joint> JointHelper::Crea
         const std::vector<double>& velocityLimits) {
     std::unordered_map<robot_arm::JointNameImpl, robot_arm::Joint> joints(jointNames.size());
     double lowerJointDeviation;
+    bool canRotate;
 
     for (size_t i = 0; i < jointNames.size(); i++) {
         if (jointNames[i] == InterbotixJointName::GRIPPER()) {
@@ -67,7 +68,15 @@ std::unordered_map<robot_arm::JointNameImpl, robot_arm::Joint> JointHelper::Crea
             lowerJointDeviation = 0.001739;
         }
 
-        joints.emplace(jointNames[i], robot_arm::Joint(jointNames[i], jointIDs[i], lowerJointLimits[i] + lowerJointDeviation, upperJointLimits[i], velocityLimits[i]));
+        if (jointNames[i] == InterbotixJointName::WAIST() || jointNames[i] == InterbotixJointName::WRIST_ROTATE() ||
+                jointNames[i] == InterbotixJointName::FOREARM_ROLL()) {
+            canRotate = true;
+        } else {
+            canRotate = false;
+        }
+
+        joints.emplace(jointNames[i], robot_arm::Joint(jointNames[i], jointIDs[i], lowerJointLimits[i] + lowerJointDeviation, upperJointLimits[i],
+            velocityLimits[i], canRotate));
     }
 
     return joints;
@@ -295,6 +304,46 @@ void JointHelper::SetJointStates(const std::unordered_map<robot_arm::JointNameIm
     }
 
     jointStatesLastChanged = std::chrono::high_resolution_clock::now();
+}
+
+bool JointHelper::CheckJointValue(const robot_arm::JointNameImpl& jointName, double& jointValue, const robot_arm::RobotInfo& robotInfo) {
+    robot_arm::Joint joint = robotInfo.joints.at(jointName);
+    double minJointValue = joint.GetLowerLimit();
+    double maxJointValue = joint.GetUpperLimit();
+    bool isInRange = true;
+
+    if (!joint.CanRotate()) {
+        if (jointValue < minJointValue) {
+            jointValue = minJointValue;
+            isInRange = false;
+        }
+
+        if (jointValue > maxJointValue) {
+            jointValue = maxJointValue;
+            isInRange = false;
+        }
+
+        return true;
+    } else {
+        isInRange = jointValue < minJointValue || jointValue > maxJointValue;
+        double difference = abs(maxJointValue - minJointValue);
+
+        while (jointValue < minJointValue) {
+            jointValue += difference;
+        }
+
+        while (jointValue > maxJointValue) {
+            jointValue -= difference;
+        }
+
+        return isInRange;
+    }
+}
+
+void JointHelper::CheckJointValues(std::unordered_map<robot_arm::JointNameImpl, double>& jointValues, const robot_arm::RobotInfo& robotInfo) {
+    for (auto& item : jointValues) {
+        JointHelper::CheckJointValue(item.first, item.second, robotInfo);
+    }
 }
 
 bool JointHelper::HaveJointStatesExpired(const std::chrono::high_resolution_clock::time_point& jointStatesLastChanged) {

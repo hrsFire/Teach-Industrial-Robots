@@ -48,6 +48,9 @@ namespace interbotix {
         static void SetJointStates(const std::unordered_map<robot_arm::JointNameImpl, double>& newJointStates, std::vector<robot_arm::JointState>& orderedJointStates,
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>& unorderedJointStates, std::chrono::high_resolution_clock::time_point& jointStatesLastChanged,
             const std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode>& operatingModes);
+        // If true: The joint value is valid. Otherwise: The joint value is invalid and a corrected value is stored in jointValue.
+        static bool CheckJointValue(const robot_arm::JointNameImpl& jointName, double& jointValue, const robot_arm::RobotInfo& robotInfo);
+        static void CheckJointValues(std::unordered_map<robot_arm::JointNameImpl, double>& jointValues, const robot_arm::RobotInfo& robotInfo);
     private:
         static bool HaveJointStatesExpired(const std::chrono::high_resolution_clock::time_point& jointStatesLastChanged);
         static constexpr double GRIPPER_CHANGE = 0.002;
