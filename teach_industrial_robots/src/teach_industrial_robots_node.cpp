@@ -94,7 +94,9 @@ int main(int argc, char** argv) {
         std::chrono::system_clock::time_point switchToPrevJointTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point switchToNextJointTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point switchPrecisionModeTime = std::chrono::system_clock::now();
+        std::chrono::system_clock::time_point switchGripperLockTime = std::chrono::system_clock::now();
         std::unique_ptr<bool> isPreciseMode = std::make_unique<bool>(true);
+        std::unique_ptr<bool> isGripperLocked = std::make_unique<bool>(true);
 
         gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, true));
         gestures::GestureGroup singleJointGestureGroup = gesturesEngine->AddGestureGroup("single_joint", 0, {});
@@ -136,7 +138,11 @@ int main(int argc, char** argv) {
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
-        }, [&isPreciseMode](std::chrono::milliseconds duration) {
+        }, [&isPreciseMode, &isGripperLocked](std::chrono::milliseconds duration) {
+            if (*isGripperLocked) {
+                return;
+            }
+
             interbotix::InterbotixJointName gripperJointNamePtr = interbotix::InterbotixJointName::GRIPPER();
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
             double gripperDistance = jointStates.at(gripperJointNamePtr).GetPosition();
@@ -151,7 +157,11 @@ int main(int argc, char** argv) {
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
-        }, [&isPreciseMode](std::chrono::milliseconds duration) {
+        }, [&isPreciseMode, &isGripperLocked](std::chrono::milliseconds duration) {
+            if (*isGripperLocked) {
+                return;
+            }
+
             interbotix::InterbotixJointName gripperJointNamePtr = interbotix::InterbotixJointName::GRIPPER();
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
             double gripperDistance = jointStates.at(gripperJointNamePtr).GetPosition();
@@ -163,6 +173,28 @@ int main(int argc, char** argv) {
             gripperDistance -= robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
             robotArm->SendGripperCommand(gripperDistance);
         }), gripperGestureGroup, 1, { interbotix::InterbotixJointName::GRIPPER() });
+
+        gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
+            return gesturesImpl.IsGesture(K4ABT_JOINT_KNEE_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) ||
+                gesturesImpl.IsGesture(K4ABT_JOINT_KNEE_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
+        }, [&isGripperLocked, &switchGripperLockTime](std::chrono::milliseconds duration) {
+            std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchGripperLockTime) > std::chrono::seconds(1)) {
+                switchGripperLockTime = currentTime;
+                isGripperLocked.reset(new bool(!(*isGripperLocked)));
+
+                std::cout << "Gripper lock mode: ";
+
+                if (*isGripperLocked) {
+                    std::cout << "locked";
+                } else {
+                    std::cout << "unlocked";
+                }
+
+                std::cout << std::endl;
+            }
+        }), gripperGestureGroup, 2, { interbotix::InterbotixJointName::GRIPPER() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_EAR_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
