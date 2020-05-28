@@ -204,8 +204,8 @@ int main(int argc, char** argv) {
 
             if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchToPrevJointTime) > std::chrono::seconds(1)) {
                 switchToPrevJointTime = currentTime;
-                std::cout << "Set previous joint" << std::endl;
                 currentJoint = currentJoint->Prev();
+                std::cout << "Set previous joint: "<< (std::string) *currentJoint << std::endl;
             }
         }), switchJointGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
@@ -217,8 +217,8 @@ int main(int argc, char** argv) {
 
             if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchToNextJointTime) > std::chrono::seconds(1)) {
                 switchToNextJointTime = currentTime;
-                std::cout << "Set next joint" << std::endl;
                 currentJoint = currentJoint->Next();
+                std::cout << "Set next joint: " << (std::string) *currentJoint << std::endl;
             }
         }), switchJointGestureGroup, 1, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
