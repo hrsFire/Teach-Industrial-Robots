@@ -7,7 +7,7 @@
 #include <rapidjson/encodings.h>
 #include <rapidjson/document.h>
 #include <rapidjson/reader.h>
-#include <rapidjson/writer.h>
+#include <rapidjson/prettywriter.h>
 
 #ifdef unix
 #include <unistd.h>
@@ -53,7 +53,7 @@ bool ConfigurationStorage::SavePositions(const std::vector<std::unordered_map<ro
 
     if (file.is_open()) {
         rapidjson::StringBuffer buffer;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
         writer.StartObject();
         writer.Key("all_positions");
         writer.StartArray();
@@ -246,6 +246,8 @@ bool ConfigurationStorage::LoadPositions(std::string directoryPath, std::string 
                                 if (hasError) {
                                     break;
                                 }
+
+                                allJointPositions.push_back(jointPositions);
                             } else {
                                 hasError = true;
                                 break;

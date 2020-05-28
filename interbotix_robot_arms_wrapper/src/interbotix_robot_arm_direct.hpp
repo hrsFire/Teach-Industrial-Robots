@@ -27,6 +27,7 @@ namespace interbotix {
         double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) override;
     private:
         std::vector<JointState> GetOrderedJointStates();
+        void SendGripperCommandUnlocked(double value);
         RobotArm* robotArm = nullptr;
         std::mutex jointStatesMutex;
         std::vector<JointState> orderedJointStates;

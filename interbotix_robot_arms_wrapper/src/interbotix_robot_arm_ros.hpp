@@ -38,6 +38,7 @@ namespace interbotix {
     private:
         static void JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message);
         std::vector<JointState> GetOrderedJointStates();
+        void SendGripperCommandUnlocked(double value);
         ros::NodeHandlePtr nodeHandlePtr;
         ros::AsyncSpinner* spinner;
         std::mutex jointStatesMutex;

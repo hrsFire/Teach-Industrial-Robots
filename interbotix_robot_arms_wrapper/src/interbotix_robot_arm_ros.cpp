@@ -72,6 +72,12 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
 
     jointCommandsPublisher.publish(message);
 
+    auto gripper = newJointValues.find(InterbotixJointName::GRIPPER());
+
+    if (gripper != newJointValues.end()) {
+        SendGripperCommandUnlocked(gripper->second);
+    }
+
     JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
 }
 
@@ -89,14 +95,9 @@ void InterbotixRobotArmROS::SendGripperCommand(double value) {
 
     JointNameImpl alteredJointName = JointNameImpl(std::make_shared<InterbotixJointName>(InterbotixJointName::GRIPPER()));
     JointHelper::CheckJointValue(alteredJointName, value, *GetRobotInfo());
+    SendGripperCommandUnlocked(value);
 
-    std_msgs::Float64 message;
-    message.data = value;
-
-    gripperCommandPublisher.publish(message);
-
-    JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
-        jointStatesLastChanged, operatingModes);
+    JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
 }
 
 void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
@@ -189,4 +190,11 @@ void InterbotixRobotArmROS::JointStatesCallback(InterbotixRobotArmROS& self, con
 
 std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {
     return orderedJointStates;
+}
+
+void InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
+    std_msgs::Float64 message;
+    message.data = value;
+
+    gripperCommandPublisher.publish(message);
 }

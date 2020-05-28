@@ -3,6 +3,7 @@
 #include <csignal>
 #include <mutex>
 #include <unordered_map>
+#include <locale>
 #include <ros/ros.h>
 #include <k4a/k4a.hpp>
 #include <k4abt.hpp>
@@ -41,10 +42,187 @@ void ExitSafely() {
     }
 }
 
+void PrintHelp() {
+    std::cout << std::endl << std::endl;
+    std::cout << "Command line options:" << std::endl;
+    std::cout << "  " << "-opf, --overwrite-positions-file" << "\t" << "Enables to overwrite the positions file."
+        << " Make a backup of the positions file, becasue otherwise this leads to data loss." << std::endl;
+    std::cout << "  " << "-rrp, --repeat-recorded-positions" << "\t" << "Repeat the recorded positions from the positions file" << std::endl;
+    std::cout << "  " << "-tp, --teach-positions" << "\t\t" << "Teach positions" << std::endl;
+    std::cout << "  " << "-rn, --robot-name" << "\t\t\t" << "Robot name" << std::endl;
+    std::cout << "  " << "-rm, --robot-model" << "\t\t\t" << "Robot model (typically the same as the robot name)" << std::endl;
+    std::cout << "  " << "-ur, --use-ros" << "\t\t\t" << "Use ROS or use a direct connection" << std::endl;
+    std::cout << "  " << "--help" << "\t\t\t\t" << "This help" << std::endl;
+}
+
 int main(int argc, char** argv) {
+    bool overwritePositionsFile = false;
+    bool repeatRecordedPositions = false;
+    bool teachPositions = false;
+    std::string robotName = "wx200";
+    std::string robotModel = "wx200"; // Typically, this will be the same as robotName
+    bool useROS = false;
+
+#ifndef NDEBUG
+    overwritePositionsFile = false;
+    repeatRecordedPositions = true;
+    teachPositions = false;
+    useROS = true;
+#else
+    if (argc == 1) {
+        PrintHelp();
+        return 0;
+    }
+
+    bool keyFound = false;
+    std::string key;
+
+    for (size_t i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+
+        if (!keyFound) {
+            if (arg.rfind("-", 0) == 0 || arg.rfind("--", 0) == 0) {
+                key = arg;
+                bool requiresValue = false;
+
+                if (key == "--overwrite-positions-file" || key == "-opf") {
+                    overwritePositionsFile = true;
+                } else if (key == "--repeat-recorded-positions" || key == "-rrp") {
+                    repeatRecordedPositions = true;
+                } else if (key == "--teach-positions" || key == "-tp") {
+                    teachPositions = true;
+                } else if (key == "--robot-name" || key == "-rn") {
+                    requiresValue = true;
+                } else if (key == "--robot-model" || key == "-rm") {
+                    requiresValue = true;
+                } else if (key == "--use-ros" || key == "-ur") {
+                    useROS = true;
+                } else if (key == "--help") {
+                    PrintHelp();
+                    return 0;
+                } else {
+                    std::cout << std::endl << "> Invalid key: " << key << std::endl;
+                    PrintHelp();
+                    return 0;
+                }
+
+                if (requiresValue && i == argc -1) {
+                    std::cout << std::endl << "> Key requires value: " << key << std::endl;
+                    PrintHelp();
+                    return 0;
+                }
+
+                if (requiresValue) {
+                    keyFound = true;
+                }
+            } else {
+                keyFound == false;
+                std::cout << std::endl << "> Invalid parameter: " << arg << std::endl;
+                PrintHelp();
+                return 0;
+            }
+        } else {
+            // Check for keys with values
+            if (key == "--robot-name" || key == "-rn") {
+                robotName = arg;
+            } else if (key == "--robot-model" || key == "-rm") {
+                robotModel = arg;
+            } else {
+                PrintHelp();
+                return 0;
+            }
+
+            keyFound = false;
+        }
+    }
+#endif //NDEBUG
+
     std::cout << "#################################" << std::endl;
     std::cout << "###  Teach Industrial Robots  ###" << std::endl;
     std::cout << "#################################" << std::endl << std::endl;
+
+    if (repeatRecordedPositions || teachPositions) {
+        signal(SIGINT, [](int i) {
+            ExitSafely();
+        });
+
+        signal(SIGTERM, [](int i) {
+            ExitSafely();
+        });
+
+        signal(SIGQUIT, [](int i) {
+            ExitSafely();
+        });
+
+        robotArm = new interbotix::InterbotixRobotArm(useROS, argc, argv, robotName, robotModel);
+    }
+
+    if (repeatRecordedPositions) {
+        robot_arm_common::ConfigurationStorage configurationStorage;
+        std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>> recordedPositions;
+
+        if (configurationStorage.LoadPositions(interbotix::InterbotixJointName::NONE(), recordedPositions)) {
+            std::cout << "Successfully loaded recorded positions" << std::endl;
+            std::cout << "Start to repeat the recorded positions" << std::endl;
+            int numberOfJointPositionsReached;
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> previousJointPositions;
+            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> currentJointPositions;
+            size_t positionCount = 0;
+
+            for (auto& singlePositions : recordedPositions) {
+                positionCount++;
+                std::unordered_map<robot_arm::JointNameImpl, double> tmpSinglePositions;
+
+                for (auto& singlePosition : singlePositions) {
+                    tmpSinglePositions.emplace(singlePosition.first, singlePosition.second.GetPosition());
+                }
+
+                std::cout << "Move to " << positionCount << ". recorded position" << std::endl;
+                robotArm->SendJointCommands(tmpSinglePositions);
+
+                previousJointPositions = robotArm->GetJointStates();
+                // Use a timeout to prevent getting the same joint state
+                sleep(1);
+
+                while (true) {
+                    numberOfJointPositionsReached = 0;
+                    currentJointPositions = robotArm->GetJointStates();
+
+                    for (auto& item : currentJointPositions) {
+                        double previousJointPosition = previousJointPositions.at(item.first).GetPosition();
+                        double currentPosition = item.second.GetPosition();
+
+#ifndef NDEBUG
+                        std::cout << "Joint Name: " << (std::string) item.first << std::endl;
+                        std::cout << "Previous position: " << previousJointPosition << std::endl;
+                        std::cout << "Current positon: " << currentPosition << std::endl;
+                        std::cout << "-----------------------" << std::endl;
+#endif //NDEBUG
+
+                        if (currentPosition == previousJointPosition) {
+                            numberOfJointPositionsReached++;
+                        }
+                    }
+
+                    if (numberOfJointPositionsReached == singlePositions.size()) {
+                        break;
+                    }
+
+                    previousJointPositions = currentJointPositions;
+                    // Use a timeout to prevent getting the same joint state
+                    sleep(1);
+                }
+            }
+        } else {
+            std::cout << "Failed to load the recorded positions" << std::endl;
+        }
+
+        ExitSafely();
+
+        return 0;
+    } else if (!teachPositions) {
+        return 0;
+    }
 
     uint32_t installedDevices = k4a::device::get_installed_count();
     std::cout << "Installed devices: " << installedDevices << std::endl;
@@ -85,25 +263,25 @@ int main(int argc, char** argv) {
         // A value of 1 seems to have no performance impact in CPU mode
         bodyTracker.set_temporal_smoothing(0);
 
-        std::string robotName = "wx200";
-        std::string robotModel = "wx200"; // Typically, this will be the same as robotName
-        bool useROS = false;
-        robotArm = new interbotix::InterbotixRobotArm(useROS, argc, argv, robotName, robotModel);
-
-        std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+        std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>> recordedPositions;
         std::shared_ptr<robot_arm::JointName> currentJoint = std::make_shared<interbotix::InterbotixJointName>(interbotix::InterbotixJointName::ELBOW());
         std::chrono::system_clock::time_point switchToPrevJointTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point switchToNextJointTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point switchPrecisionModeTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point switchGripperLockTime = std::chrono::system_clock::now();
+        std::chrono::system_clock::time_point saveConfigurationTime = std::chrono::system_clock::now();
         std::unique_ptr<bool> isPreciseMode = std::make_unique<bool>(true);
         std::unique_ptr<bool> isGripperLocked = std::make_unique<bool>(true);
+        std::unique_ptr<bool> successfullySavedConfiguration = std::make_unique<bool>(false);
 
         gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, true));
         gestures::GestureGroup singleJointGestureGroup = gesturesEngine->AddGestureGroup("single_joint", 0, {});
         gestures::GestureGroup gripperGestureGroup = gesturesEngine->AddGestureGroup("gripper", 1, {});
         gestures::GestureGroup switchJointGestureGroup = gesturesEngine->AddGestureGroup("switch_joint", 2, { singleJointGestureGroup });
-        gestures::GestureGroup switchPrecisionModeGestureGroup = gesturesEngine->AddGestureGroup("switch_precision_mode", 3, { singleJointGestureGroup, switchJointGestureGroup });
+        gestures::GestureGroup switchPrecisionModeGestureGroup = gesturesEngine->AddGestureGroup("switch_precision_mode", 3, { singleJointGestureGroup,
+            switchJointGestureGroup });
+        gestures::GestureGroup configurationGestureGroup = gesturesEngine->AddGestureGroup("configuration", 4, { singleJointGestureGroup, gripperGestureGroup,
+            switchJointGestureGroup, switchPrecisionModeGestureGroup });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
             return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0);
@@ -246,17 +424,36 @@ int main(int argc, char** argv) {
         }), switchPrecisionModeGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
-        signal(SIGINT, [](int i) {
-            ExitSafely();
-        });
+        gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
+            return gesturesImpl.IsGesture(K4ABT_JOINT_HIP_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) &&
+                gesturesImpl.IsGesture(K4ABT_JOINT_HIP_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
+        }, [&saveConfigurationTime, &recordedPositions, &overwritePositionsFile, &successfullySavedConfiguration](std::chrono::milliseconds duration) {
+            std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-        signal(SIGTERM, [](int i) {
-            ExitSafely();
-        });
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - saveConfigurationTime) > std::chrono::seconds(1)) {
+                saveConfigurationTime = currentTime;
+                robot_arm_common::ConfigurationStorage configurationStorage;
+                recordedPositions.push_back(robotArm->GetJointStates());
 
-        signal(SIGQUIT, [](int i) {
-            ExitSafely();
-        });
+                if (*successfullySavedConfiguration) {
+                    overwritePositionsFile = true;
+                }
+
+                if (configurationStorage.SavePositions(recordedPositions, overwritePositionsFile)) {
+                    std::cout << "Saved recorded positions" << std::endl;
+                    successfullySavedConfiguration.reset(new bool(true));
+                } else {
+                    std::cout << "Could not save recorded positions";
+
+                    if (!overwritePositionsFile) {
+                        std::cout << ", because it isn't allowed to overwrite the file. Please make a backup or use the specific command line option." << std::endl;
+                    }
+
+                    std::cout << std::endl;
+                }
+            }
+        }), configurationGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
+            interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->Start();
 

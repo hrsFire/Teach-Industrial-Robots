@@ -61,6 +61,12 @@ void InterbotixRobotArmDirect::SendJointCommands(const std::unordered_map<JointN
 
     robotArm->arm_send_joint_commands(message);
 
+    auto gripper = newJointValues.find(InterbotixJointName::GRIPPER());
+
+    if (gripper != newJointValues.end()) {
+        SendGripperCommandUnlocked(gripper->second);
+    }
+
     JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
 }
 
@@ -76,11 +82,7 @@ void InterbotixRobotArmDirect::SendGripperCommand(double value) {
 
     JointNameImpl alteredJointName = JointNameImpl(std::make_shared<InterbotixJointName>(InterbotixJointName::GRIPPER()));
     JointHelper::CheckJointValue(alteredJointName, value, *GetRobotInfo());
-
-    std_msgs::Float64 message;
-    message.data = value;
-
-    robotArm->arm_send_gripper_command(message);
+    SendGripperCommandUnlocked(value);
 
     JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
         jointStatesLastChanged, operatingModes);
@@ -164,4 +166,11 @@ std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
     JointHelper::PrepareJointStates(&orderedJointStates, &unorderedJointStates, states.name, states.position, states.velocity, states.effort, operatingModes, dof, jointStatesLastChanged);
 
     return orderedJointStates;
+}
+
+void InterbotixRobotArmDirect::SendGripperCommandUnlocked(double value) {
+    std_msgs::Float64 message;
+    message.data = value;
+
+    robotArm->arm_send_gripper_command(message);
 }
