@@ -1,11 +1,12 @@
-#ifndef INTERBOTIX_OPERATING_MODE_HPP
-#define INTERBOTIX_OPERATING_MODE_HPP
+#ifndef ROBOT_ARM_OPERATING_MODE_HPP
+#define ROBOT_ARM_OPERATING_MODE_HPP
 
 #include <string>
 
 namespace robot_arm {
     class OperatingMode {
     public:
+        OperatingMode(std::string operatingMode);
         // All motor commands will be ignored
         static OperatingMode NONE();
         // All commands will be treated as goal positions (cannot go past 1 revolution)
@@ -34,4 +35,4 @@ namespace robot_arm {
     };
 }
 
-#endif //INTERBOTIX_OPERATING_MODE_HPP
+#endif //ROBOT_ARM_OPERATING_MODE_HPP

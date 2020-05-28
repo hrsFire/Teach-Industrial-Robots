@@ -20,7 +20,7 @@
 using namespace robot_arm;
 
 namespace interbotix {
-    class InterbotixRobotArmROS : public InterbotixRobotArmBase {
+    class InterbotixRobotArmROS : public RobotArmBase {
     public:
         InterbotixRobotArmROS(int argc, char** argv, std::string robotName);
         ~InterbotixRobotArmROS();

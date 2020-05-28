@@ -31,6 +31,8 @@ namespace interbotix {
         bool operator==(const JointName& jointName) const override;
         std::shared_ptr<JointName> Next() override;
         std::shared_ptr<JointName> Prev() override;
+        std::string Serialize() const override;
+        std::shared_ptr<robot_arm::JointName> Deserialize(std::string serializedString) const override;
     private:
         enum class Joint {
             WAIST = 0,

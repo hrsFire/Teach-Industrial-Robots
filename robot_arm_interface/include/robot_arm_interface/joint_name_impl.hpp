@@ -1,5 +1,5 @@
-#ifndef INTERBOTIX_JOINT_NAME_IMPL_HPP
-#define INTERBOTIX_JOINT_NAME_IMPL_HPP
+#ifndef ROBOT_ARM_JOINT_NAME_IMPL_HPP
+#define ROBOT_ARM_JOINT_NAME_IMPL_HPP
 
 #include <string>
 #include <memory>
@@ -14,6 +14,8 @@ namespace robot_arm {
         bool operator==(const JointName& jointName) const override;
         std::shared_ptr<JointName> Next() override;
         std::shared_ptr<JointName> Prev() override;
+        std::string Serialize() const override;
+        std::shared_ptr<JointName> Deserialize(std::string serializedString) const override;
     private:
         std::shared_ptr<JointName> jointName;
     };
@@ -26,4 +28,4 @@ namespace std {
     };
 }
 
-#endif //INTERBOTIX_JOINT_NAME_IMPL_HPP
+#endif //ROBOT_ARM_JOINT_NAME_IMPL_HPP

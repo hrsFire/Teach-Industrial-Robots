@@ -1,5 +1,5 @@
-#ifndef INTERBOTIX_ROBOT_INFO_HPP
-#define INTERBOTIX_ROBOT_INFO_HPP
+#ifndef ROBOT_ARM_ROBOT_INFO_HPP
+#define ROBOT_ARM_ROBOT_INFO_HPP
 
 #include <memory>
 #include <vector>
@@ -28,4 +28,4 @@ namespace robot_arm {
     };
 }
 
-#endif //INTERBOTIX_ROBOT_INFO_HPP
+#endif //ROBOT_ARM_ROBOT_INFO_HPP

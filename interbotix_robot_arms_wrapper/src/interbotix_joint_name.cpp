@@ -186,6 +186,16 @@ std::shared_ptr<robot_arm::JointName> InterbotixJointName::Prev() {
     return std::make_shared<InterbotixJointName>(InterbotixJointName(prevJoint, dof));
 }
 
+std::string InterbotixJointName::Serialize() const {
+    std::string jointName = *this;
+    return jointName + ";" + std::to_string(static_cast<int>(dof));
+}
+
+std::shared_ptr<robot_arm::JointName> InterbotixJointName::Deserialize(std::string serializedString) const {
+    size_t i = serializedString.find(";");
+    return std::make_shared<InterbotixJointName>(serializedString.substr(0, i), static_cast<DOF>(std::stoi(serializedString.substr(i+1, serializedString.size()))));
+}
+
 InterbotixJointName::InterbotixJointName(Joint joint, DOF dof) {
     this->joint = joint;
     this->dof = dof;

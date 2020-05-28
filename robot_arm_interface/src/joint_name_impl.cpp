@@ -19,11 +19,19 @@ bool JointNameImpl::operator==(const JointName& jointName) const {
 }
 
 std::shared_ptr<JointName> JointNameImpl::Next() {
-    return this->Next();
+    return jointName->Next();
 }
 
 std::shared_ptr<JointName> JointNameImpl::Prev() {
-    return this->Prev();
+    return jointName->Prev();
+}
+
+std::string JointNameImpl::Serialize() const {
+    return jointName->Serialize();
+}
+
+std::shared_ptr<JointName> JointNameImpl::Deserialize(std::string serializedString) const {
+    return jointName->Deserialize(serializedString);
 }
 
 size_t std::hash<JointNameImpl>::operator()(JointNameImpl const& jointName) const noexcept {

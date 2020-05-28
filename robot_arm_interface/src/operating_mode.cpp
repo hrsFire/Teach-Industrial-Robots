@@ -2,6 +2,24 @@
 
 using namespace robot_arm;
 
+OperatingMode::OperatingMode(std::string operatingMode) {
+    if (operatingMode == "none") {
+        this->mode = Mode::NONE;
+    } else if (operatingMode == "position") {
+        this->mode = Mode::POSITION;
+    } else if (operatingMode == "ext_position") {
+        this->mode = Mode::POSITION;
+    } else if (operatingMode == "velocity") {
+        this->mode = Mode::POSITION;
+    } else if (operatingMode == "current") {
+        this->mode = Mode::POSITION;
+    } else if (operatingMode == "pwm") {
+        this->mode = Mode::POSITION;
+    } else {
+        this->mode = Mode::NONE;
+    }
+}
+
 OperatingMode OperatingMode::NONE() {
     return OperatingMode(Mode::NONE);
 }

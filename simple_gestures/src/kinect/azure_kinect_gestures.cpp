@@ -81,7 +81,7 @@ bool AzureKinectGestures::IsNewDataAvailable() {
     return dataWasUsed == false && body != nullptr && &previousBody != &body;
 }
 
-bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) {
+bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) const {
     k4abt_joint_t startJoint = body->skeleton.joints[startJointIndex];
     k4abt_joint_t endJoint = body->skeleton.joints[endJointIndex];
     k4abt_joint_t joint = body->skeleton.joints[jointIndex];
@@ -108,7 +108,7 @@ bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointI
     return false;
 }
 
-bool AzureKinectGestures::IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, double minDistance, double maxDistance) {
+bool AzureKinectGestures::IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, double minDistance, double maxDistance) const {
     k4abt_joint_t joint1 = body->skeleton.joints[jointIndex1];
     k4abt_joint_t joint2 = body->skeleton.joints[jointIndex2];
 

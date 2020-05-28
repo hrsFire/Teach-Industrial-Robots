@@ -1,5 +1,5 @@
-#ifndef INTERBOTIX_JOINT_STATE_HPP
-#define INTERBOTIX_JOINT_STATE_HPP
+#ifndef ROBOT_ARM_JOINT_STATE_HPP
+#define ROBOT_ARM_JOINT_STATE_HPP
 
 #include <memory>
 #include "joint_name.hpp"
@@ -23,4 +23,4 @@ namespace robot_arm {
     };
 }
 
-#endif //INTERBOTIX_JOINT_STATE_HPP
+#endif //ROBOT_ARM_JOINT_STATE_HPP

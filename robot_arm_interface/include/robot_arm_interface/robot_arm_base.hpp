@@ -1,5 +1,5 @@
-#ifndef INTERBOTIX_INTERBOTIX_ROBOT_ARM_BASE_HPP
-#define INTERBOTIX_INTERBOTIX_ROBOT_ARM_BASE_HPP
+#ifndef ROBOT_ARM_ROBOT_ARM_BASE_HPP
+#define ROBOT_ARM_ROBOT_ARM_BASE_HPP
 
 #include <memory>
 #include <vector>
@@ -14,7 +14,7 @@
 #include "affected_joints.hpp"
 
 namespace robot_arm {
-    class InterbotixRobotArmBase {
+    class RobotArmBase {
     public:
         // Reads current joint states from all the motors
         virtual std::unordered_map<JointNameImpl, JointState> GetJointStates() = 0;
@@ -40,4 +40,4 @@ namespace robot_arm {
     };
 }
 
-#endif //INTERBOTIX_INTERBOTIX_ROBOT_ARM_BASE_HPP
+#endif //ROBOT_ARM_ROBOT_ARM_BASE_HPP

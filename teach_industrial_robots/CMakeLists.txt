@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   simple_gestures
   robot_arm_interface
+  robot_arm_common
   interbotix_robot_arms_wrapper
 )
 
@@ -125,6 +126,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
   ${simple_gestures_INCLUDE_DIRS}
   ${robot_arm_interface_INCLUDE_DIRS}
+  ${robot_arm_common_INCLUDE_DIRS}
   ${interbotix_robot_arms_wrapper_INCLUDE_DIRS}
 )
 
@@ -160,6 +162,7 @@ target_link_libraries(${PROJECT_NAME}_node
   ${k4a_LIB}
   ${k4abt_LIB}
   ${robot_arm_interface_LIBRARIES}
+  ${robot_arm_common_LIBRARIES}
   ${interbotix_robot_arms_wrapper_LIBRARIES}
 )
 

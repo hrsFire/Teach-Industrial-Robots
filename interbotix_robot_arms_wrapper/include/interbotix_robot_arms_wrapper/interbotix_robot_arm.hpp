@@ -11,7 +11,7 @@
 #include <robot_arm_interface/operating_mode.hpp>
 
 namespace interbotix {
-    class InterbotixRobotArm : public robot_arm::InterbotixRobotArmBase {
+    class InterbotixRobotArm : public robot_arm::RobotArmBase {
     public:
         InterbotixRobotArm(bool useROS, int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArm();
@@ -27,7 +27,7 @@ namespace interbotix {
         std::shared_ptr<robot_arm::RobotInfo> GetRobotInfo() override;
         double CalculateAcceleration(const robot_arm::JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) override;
     private:
-        InterbotixRobotArmBase* robotArm;
+        RobotArmBase* robotArm;
     };
 }
 

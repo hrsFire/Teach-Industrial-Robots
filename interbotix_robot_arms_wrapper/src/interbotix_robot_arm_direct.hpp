@@ -10,7 +10,7 @@
 using namespace robot_arm;
 
 namespace interbotix {
-    class InterbotixRobotArmDirect : public InterbotixRobotArmBase {
+    class InterbotixRobotArmDirect : public RobotArmBase {
     public:
         InterbotixRobotArmDirect(int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArmDirect();

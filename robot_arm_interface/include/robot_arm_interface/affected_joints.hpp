@@ -1,5 +1,5 @@
-#ifndef INTERBOTIX_AFFECTED_JOINTS_HPP
-#define INTERBOTIX_AFFECTED_JOINTS_HPP
+#ifndef ROBOT_ARM_AFFECTED_JOINTS_HPP
+#define ROBOT_ARM_AFFECTED_JOINTS_HPP
 
 namespace robot_arm {
     enum class AffectedJoints {
@@ -10,4 +10,4 @@ namespace robot_arm {
     };
 }
 
-#endif //INTERBOTIX_AFFECTED_JOINTS_HPP
+#endif //ROBOT_ARM_AFFECTED_JOINTS_HPP

@@ -5,8 +5,8 @@ namespace gestures {
     class GesturesQuery {
     public:
         // minDistance and maxDistance are specified in millimeters
-        virtual bool IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) = 0;
-        virtual bool IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, double minDistance, double maxDistance) = 0;
+        virtual bool IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) const = 0;
+        virtual bool IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, double minDistance, double maxDistance) const = 0;
     };
 }
 
