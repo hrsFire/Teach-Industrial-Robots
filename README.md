@@ -10,6 +10,10 @@ Nowadays a lot of people want to use a NUI (Natural User Interface). Therefore w
   ```console
   sudo apt install libeigen3-dev
   ```
+* RapidJSON (a JSON parser and generator for C++)
+  ```console
+  sudo apt install rapidjson-dev
+  ```
 * libk4a (Azure Kinect Sensor)
   ```console
   sudo apt install libk4a1.3-dev
