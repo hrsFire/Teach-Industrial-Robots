@@ -31,6 +31,16 @@ This project uses catkin-tools.
 sudo apt-get install python-catkin-tools
 ```
 
+## Pre launch
+1. Start roscore
+   ```console
+   roscore
+   ```
+2. Start Interbotix robot arm node (For direct access to the robot arm it is also required for initializing the parameters. If direct access to the robot arm is used this node has to be closed after the parameter initialization.)
+   ```console
+   roslaunch interbotix_sdk arm_run.launch robot_name:=wx200
+   ```
+
 ## How to launch (Terminal)
 1. Use the [quickstart](https://github.com/Interbotix/interbotix_ros_arms#quickstart) from interbotix_ros_arms, but clone from the following repository which contains a patch which allows the node to be build als a library:
    git@github.com:hrsFire/interbotix_ros_arms.git
