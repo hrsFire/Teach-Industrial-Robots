@@ -16,6 +16,7 @@ namespace kinect {
         bool IsNewDataAvailable() override;
         bool IsGesture(uint32_t startJointIndex, uint32_t endJointIndex, uint32_t jointIndex, double minDistance, double maxDistance) const override;
         bool IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, double minDistance, double maxDistance) const override;
+        bool IsJointVisible(uint32_t jointIndex) const override;
     private:
         const int64_t MAX_WAIT_TIME_FOR_OTHER_BODY = 5;
         const double DEVIATION = 3.0;

@@ -87,10 +87,7 @@ bool AzureKinectGestures::IsGesture(uint32_t startJointIndex, uint32_t endJointI
     k4abt_joint_t joint = body->skeleton.joints[jointIndex];
 
     // The confidence level needs to be at least medium. Otherwise the joint is out of range or not visible likely due to occlusion.
-    if ((startJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || startJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) &&
-            (endJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || endJoint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) &&
-            (joint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH)) {
-
+    if (IsJointVisible(startJointIndex) && IsJointVisible(endJointIndex) && IsJointVisible(jointIndex)) {
         glm::vec3 startPoint = glm::vec3(startJoint.position.xyz.x, startJoint.position.xyz.y, startJoint.position.xyz.z);
         glm::vec3 endPoint = glm::vec3(endJoint.position.xyz.x, endJoint.position.xyz.y, endJoint.position.xyz.z);
         glm::vec3 point = glm::vec3(joint.position.xyz.x, joint.position.xyz.y, joint.position.xyz.z);
@@ -113,9 +110,7 @@ bool AzureKinectGestures::IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, 
     k4abt_joint_t joint2 = body->skeleton.joints[jointIndex2];
 
     // The confidence level needs to be at least medium. Otherwise the joint is out of range or not visible likely due to occlusion.
-    if ((joint1.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint1.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH) &&
-            (joint2.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint2.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH)) {
-
+    if (IsJointVisible(jointIndex1) && IsJointVisible(jointIndex2)) {
         // Get the distance to the center of the sphere
         double distance = common::Vector3::Distance(glm::vec3(joint1.position.xyz.x, joint1.position.xyz.y, joint1.position.xyz.z),
             glm::vec3(joint2.position.xyz.x, joint2.position.xyz.y, joint2.position.xyz.z));
@@ -128,4 +123,10 @@ bool AzureKinectGestures::IsGesture(uint32_t jointIndex1, uint32_t jointIndex2, 
     }
 
     return false;
+}
+
+bool AzureKinectGestures::IsJointVisible(uint32_t jointIndex) const {
+    k4abt_joint_t joint = body->skeleton.joints[jointIndex];
+
+    return joint.confidence_level == K4ABT_JOINT_CONFIDENCE_MEDIUM || joint.confidence_level == K4ABT_JOINT_CONFIDENCE_HIGH;
 }

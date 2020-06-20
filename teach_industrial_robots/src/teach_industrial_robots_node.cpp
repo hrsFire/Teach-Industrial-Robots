@@ -52,7 +52,13 @@ void PrintHelp() {
     std::cout << "  " << "-rn, --robot-name" << "\t\t\t" << "Robot name" << std::endl;
     std::cout << "  " << "-rm, --robot-model" << "\t\t\t" << "Robot model (typically the same as the robot name)" << std::endl;
     std::cout << "  " << "-ur, --use-ros" << "\t\t\t" << "Use ROS or use a direct connection" << std::endl;
+    std::cout << "  " << "-mhaex, --move-home-at-exit" << "\t\t\t" << "Move home at exit" << std::endl;
+    std::cout << "  " << "-mhaer, --move-home-at-error" << "\t\t\t" << "Move home at error" << std::endl;
     std::cout << "  " << "--help" << "\t\t\t\t" << "This help" << std::endl;
+}
+
+bool IsLookingAtDevice(const gestures::GesturesQuery& gesturesImpl) {
+    return gesturesImpl.IsJointVisible(K4ABT_JOINT_EYE_LEFT) && gesturesImpl.IsJointVisible(K4ABT_JOINT_EYE_RIGHT);
 }
 
 int main(int argc, char** argv) {
@@ -62,12 +68,16 @@ int main(int argc, char** argv) {
     std::string robotName = "wx200";
     std::string robotModel = "wx200"; // Typically, this will be the same as robotName
     bool useROS = false;
+    bool moveHomeAtExit = false;
+    bool moveHomeAtError = false;
 
 #ifndef NDEBUG
     overwritePositionsFile = false;
-    repeatRecordedPositions = true;
-    teachPositions = false;
-    useROS = true;
+    repeatRecordedPositions = false;
+    teachPositions = true;
+    useROS = false;
+    moveHomeAtExit = true;
+    moveHomeAtError = true;
 #else
     if (argc == 1) {
         PrintHelp();
@@ -97,6 +107,10 @@ int main(int argc, char** argv) {
                     requiresValue = true;
                 } else if (key == "--use-ros" || key == "-ur") {
                     useROS = true;
+                } else if (key == "--move-home-at-exit" || key == "-mhaex") {
+                    moveHomeAtExit = true;
+                } else if (key == "--move-home-at-error" || key == "-mhaer") {
+                    moveHomeAtError = true;
                 } else if (key == "--help") {
                     PrintHelp();
                     return 0;
@@ -142,17 +156,21 @@ int main(int argc, char** argv) {
     std::cout << "#################################" << std::endl << std::endl;
 
     if (repeatRecordedPositions || teachPositions) {
-        signal(SIGINT, [](int i) {
-            ExitSafely();
-        });
+        if (moveHomeAtExit) {
+            signal(SIGINT, [](int i) {
+                ExitSafely();
+            });
 
-        signal(SIGTERM, [](int i) {
-            ExitSafely();
-        });
+            signal(SIGQUIT, [](int i) {
+                ExitSafely();
+            });
+        }
 
-        signal(SIGQUIT, [](int i) {
-            ExitSafely();
-        });
+        if (moveHomeAtError) {
+            signal(SIGTERM, [](int i) {
+                ExitSafely();
+            });
+        }
 
         robotArm = new interbotix::InterbotixRobotArm(useROS, argc, argv, robotName, robotModel);
     }
@@ -284,7 +302,8 @@ int main(int argc, char** argv) {
             switchJointGestureGroup, switchPrecisionModeGestureGroup });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0);
+            return IsLookingAtDevice(gesturesImpl) &&
+                gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0);
         }, [&currentJoint, &isPreciseMode](std::chrono::milliseconds duration) {
             std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
             double jointAngle = jointStates.at(currentJoint).GetPosition();
@@ -299,7 +318,8 @@ int main(int argc, char** argv) {
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_LEFT, K4ABT_JOINT_SHOULDER_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 65.0);
+            return IsLookingAtDevice(gesturesImpl) &&
+                gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_LEFT, K4ABT_JOINT_SHOULDER_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 65.0);
         }, [&currentJoint, &isPreciseMode](std::chrono::milliseconds duration) {
             std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
             double minJointAngle = robotInfo->joints.at(currentJoint).GetLowerLimit();
@@ -316,7 +336,7 @@ int main(int argc, char** argv) {
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
+            return IsLookingAtDevice(gesturesImpl) && gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
         }, [&isPreciseMode, &isGripperLocked](std::chrono::milliseconds duration) {
             if (*isGripperLocked) {
                 return;
@@ -335,7 +355,7 @@ int main(int argc, char** argv) {
         }), gripperGestureGroup, 0, { interbotix::InterbotixJointName::GRIPPER() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
+            return IsLookingAtDevice(gesturesImpl) && gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_CHEST, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
         }, [&isPreciseMode, &isGripperLocked](std::chrono::milliseconds duration) {
             if (*isGripperLocked) {
                 return;
@@ -354,8 +374,9 @@ int main(int argc, char** argv) {
         }), gripperGestureGroup, 1, { interbotix::InterbotixJointName::GRIPPER() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_KNEE_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) ||
-                gesturesImpl.IsGesture(K4ABT_JOINT_KNEE_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
+            return IsLookingAtDevice(gesturesImpl)&& (
+                gesturesImpl.IsGesture(K4ABT_JOINT_KNEE_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) ||
+                gesturesImpl.IsGesture(K4ABT_JOINT_KNEE_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0));
         }, [&isGripperLocked, &switchGripperLockTime](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
@@ -376,7 +397,7 @@ int main(int argc, char** argv) {
         }), gripperGestureGroup, 2, { interbotix::InterbotixJointName::GRIPPER() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_EAR_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
+            return IsLookingAtDevice(gesturesImpl) && gesturesImpl.IsGesture(K4ABT_JOINT_EAR_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
         }, [&currentJoint, &switchToPrevJointTime](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
@@ -389,7 +410,7 @@ int main(int argc, char** argv) {
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_EAR_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
+            return IsLookingAtDevice(gesturesImpl) && gesturesImpl.IsGesture(K4ABT_JOINT_EAR_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
         }, [&currentJoint, &switchToNextJointTime](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
@@ -402,8 +423,9 @@ int main(int argc, char** argv) {
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_NAVEL, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0) ||
-                gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_NAVEL, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
+            return IsLookingAtDevice(gesturesImpl) && (
+                gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_NAVEL, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0) ||
+                gesturesImpl.IsGesture(K4ABT_JOINT_SPINE_NAVEL, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0));
         }, [&currentJoint, &switchPrecisionModeTime, &isPreciseMode](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
@@ -425,7 +447,8 @@ int main(int argc, char** argv) {
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
-            return gesturesImpl.IsGesture(K4ABT_JOINT_HIP_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) &&
+            return IsLookingAtDevice(gesturesImpl) &&
+                gesturesImpl.IsGesture(K4ABT_JOINT_HIP_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) &&
                 gesturesImpl.IsGesture(K4ABT_JOINT_HIP_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
         }, [&saveConfigurationTime, &recordedPositions, &overwritePositionsFile, &successfullySavedConfiguration](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
