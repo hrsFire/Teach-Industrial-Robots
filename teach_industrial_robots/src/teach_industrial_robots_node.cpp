@@ -292,7 +292,7 @@ int main(int argc, char** argv) {
         std::unique_ptr<bool> isGripperLocked = std::make_unique<bool>(true);
         std::unique_ptr<bool> successfullySavedConfiguration = std::make_unique<bool>(false);
 
-        gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, true));
+        gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, false));
         gestures::GestureGroup singleJointGestureGroup = gesturesEngine->AddGestureGroup("single_joint", 0, {});
         gestures::GestureGroup gripperGestureGroup = gesturesEngine->AddGestureGroup("gripper", 1, {});
         gestures::GestureGroup switchJointGestureGroup = gesturesEngine->AddGestureGroup("switch_joint", 2, { singleJointGestureGroup });

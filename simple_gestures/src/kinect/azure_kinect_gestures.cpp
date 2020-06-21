@@ -43,23 +43,43 @@ void AzureKinectGestures::NextCycle() {
 
                     // Each person has it's own body ID for temporal correlation between frames and the kinematic skeleton
                     // https://docs.microsoft.com/de-de/azure/Kinect-dk/body-joints
+                    std::cout << "tmp: " << std::chrono::duration_cast<std::chrono::seconds>(timestamp - bodyTimestamp).count() << std::endl;
                     if ((allowDifferentBodies &&
-                            (std::chrono::duration_cast<std::chrono::seconds>(timestamp - bodyTimestamp).count() > MAX_WAIT_TIME_FOR_OTHER_BODY ||
-                            bodyId == tmpBody->id)) || bodyId == std::numeric_limits<uint32_t>::max()) {
-                        delete previousBody;
+                            std::chrono::duration_cast<std::chrono::seconds>(timestamp - bodyTimestamp).count() > MAX_WAIT_TIME_FOR_OTHER_BODY) ||
+                            (allowDifferentBodies && bodyId == tmpBody->id) ||
+                            (!allowDifferentBodies && numberOfBodies == 1)) {
+                        if (previousBody != nullptr) {
+                            delete previousBody;
+                        }
+
                         previousBody = body;
                         body = tmpBody;
                         bodyId = tmpBody->id;
                         bodyTimestamp = timestamp;
                         dataWasUsed = false;
                     } else {
+                        if (body != nullptr) {
+                            delete previousBody;
+                            delete body;
+                        }
+
                         body = nullptr;
                         std::cout << "This isn't the same person as before" << std::endl;
                     }
                 } else if (numberOfBodies > 1) {
+                    if (body != nullptr) {
+                        delete previousBody;
+                        delete body;
+                    }
+
                     body = nullptr;
                     std::cout << "Multiple persons have been detected" << std::endl;
                 } else {
+                    if (body != nullptr) {
+                        delete previousBody;
+                        delete body;
+                    }
+
                     body = nullptr;
                     std::cout << "No person has been detected" << std::endl;
                 }
