@@ -164,6 +164,10 @@ int main(int argc, char** argv) {
             signal(SIGQUIT, [](int i) {
                 ExitSafely();
             });
+
+            signal(SIGHUP, [](int i) {
+                ExitSafely();
+            });
         }
 
         if (moveHomeAtError) {
