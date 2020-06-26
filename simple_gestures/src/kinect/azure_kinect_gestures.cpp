@@ -43,7 +43,6 @@ void AzureKinectGestures::NextCycle() {
 
                     // Each person has it's own body ID for temporal correlation between frames and the kinematic skeleton
                     // https://docs.microsoft.com/de-de/azure/Kinect-dk/body-joints
-                    std::cout << "tmp: " << std::chrono::duration_cast<std::chrono::seconds>(timestamp - bodyTimestamp).count() << std::endl;
                     if ((allowDifferentBodies &&
                             std::chrono::duration_cast<std::chrono::seconds>(timestamp - bodyTimestamp).count() > MAX_WAIT_TIME_FOR_OTHER_BODY) ||
                             (allowDifferentBodies && bodyId == tmpBody->id) ||
