@@ -54,7 +54,7 @@ void PrintHelp() {
     std::cout << "  " << "-ur, --use-ros" << "\t\t\t" << "Use ROS or use a direct connection" << std::endl;
     std::cout << "  " << "-mhaex, --move-home-at-exit" << "\t\t\t" << "Move home at exit" << std::endl;
     std::cout << "  " << "-mhaer, --move-home-at-error" << "\t\t\t" << "Move home at error" << std::endl;
-    std::cout << "  " << "--help" << "\t\t\t\t" << "This help" << std::endl;
+    std::cout << "  " << "--help" << "\t\t\t\t" << "Shows this help" << std::endl;
 }
 
 bool IsLookingAtDevice(const gestures::GesturesQuery& gesturesImpl) {
