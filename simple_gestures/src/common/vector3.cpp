@@ -3,6 +3,7 @@
 using namespace common;
 
 float Vector3::PerpendicularDistance(glm::vec3 startPoint, glm::vec3 endPoint, glm::vec3 point) {
+    // https://math.stackexchange.com/questions/1905533/find-perpendicular-distance-from-point-to-line-in-3d
     glm::vec3 p = ProjectedPoint(startPoint, endPoint, point);
 
     return Distance(p, endPoint);
