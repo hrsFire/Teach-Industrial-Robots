@@ -60,26 +60,32 @@ void AzureKinectGestures::NextCycle() {
                         if (body != nullptr) {
                             delete previousBody;
                             delete body;
+                            previousBody = nullptr;
+                            body = nullptr;
                         }
 
-                        body = nullptr;
+                        delete tmpBody;
+                        tmpBody = nullptr;
+
                         std::cout << "This isn't the same person as before" << std::endl;
                     }
                 } else if (numberOfBodies > 1) {
                     if (body != nullptr) {
                         delete previousBody;
                         delete body;
+                        previousBody = nullptr;
+                        body = nullptr;
                     }
 
-                    body = nullptr;
                     std::cout << "Multiple persons have been detected" << std::endl;
                 } else {
                     if (body != nullptr) {
                         delete previousBody;
                         delete body;
+                        previousBody = nullptr;
+                        body = nullptr;
                     }
 
-                    body = nullptr;
                     std::cout << "No person has been detected" << std::endl;
                 }
 
