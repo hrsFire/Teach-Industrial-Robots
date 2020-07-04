@@ -1,4 +1,5 @@
 #include "interbotix_robot_arm_direct.hpp"
+#include <ros/package.h>
 
 using namespace interbotix;
 
@@ -9,7 +10,8 @@ InterbotixRobotArmDirect::InterbotixRobotArmDirect(int argc, char** argv, std::s
     /*ros::param::get("~robot_name", robot_name);
     ros::param::get("~robot_model", robot_model);*/
     // https://github.com/Interbotix/interbotix_ros_arms/blob/melodic/interbotix_sdk/launch/arm_run.launch
-    ros::param::set("~motor_configs", "/home/ubuntu/interbotix_ws/src/interbotix_ros_arms/interbotix_sdk/config/");
+    std::string interbotixSDKPath = ros::package::getPath("interbotix_sdk");
+    ros::param::set("~motor_configs", interbotixSDKPath + "/config/");
     ros::param::set("~use_default_gripper_bar", true);
     ros::param::set("~use_default_gripper_fingers", true);
     this->robotArm = new RobotArm(robotName, robotModel);
