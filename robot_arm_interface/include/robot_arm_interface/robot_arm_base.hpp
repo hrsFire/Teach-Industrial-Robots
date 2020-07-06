@@ -28,8 +28,6 @@ namespace robot_arm {
         virtual void SendGripperCommand(double value) = 0;
         // Sends joint trajectory for the gripper only
         virtual void SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) = 0;
-        // Sets the torque state
-        virtual void SetTorqueState(bool on) = 0;
         // Sets the operating mode for a specified joint
         virtual void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
             int profileVelocity, int profileAcceleration) = 0;

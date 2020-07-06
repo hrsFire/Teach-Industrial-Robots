@@ -97,14 +97,6 @@ void InterbotixRobotArmDirect::SendGripperTrajectory(const std::unordered_map<Jo
     robotArm->send_gripper_trajectory(message);
 }
 
-void InterbotixRobotArmDirect::SetTorqueState(bool on) {
-    if (on) {
-        robotArm->arm_torque_on();
-    } else {
-        robotArm->arm_torque_off();
-    }
-}
-
 void InterbotixRobotArmDirect::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
    interbotix_sdk::OperatingModesRequest req;

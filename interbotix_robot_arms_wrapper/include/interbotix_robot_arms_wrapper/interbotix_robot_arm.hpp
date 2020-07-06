@@ -21,7 +21,6 @@ namespace interbotix {
         void SendJointTrajectory(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
         void SendGripperTrajectory(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints) override;
-        void SetTorqueState(bool on) override;
         void SetOperatingMode(const robot_arm::OperatingMode& operatingMode, const robot_arm::AffectedJoints& affectedJoints, const robot_arm::JointName& jointName,
             bool useCustomProfiles, int profileVelocity, int profileAcceleration) override;
         std::shared_ptr<robot_arm::RobotInfo> GetRobotInfo() override;

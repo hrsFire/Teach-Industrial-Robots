@@ -14,8 +14,6 @@ InterbotixRobotArmROS::InterbotixRobotArmROS(int argc, char** argv, std::string 
     this->gripperCommandPublisher = this->nodeHandlePtr->advertise<std_msgs::Float64>(robotName + "/gripper/command", 100);
     this->gripperTrajectoryPublisher = this->nodeHandlePtr->advertise<trajectory_msgs::JointTrajectory>(robotName + "/gripper_controller/gripper_trajectory", 100);
 
-    this->torqueJointsOnClient = this->nodeHandlePtr->serviceClient<std_srvs::Empty>(robotName + "/torque_joints_on");
-    this->torqueJointsOffClient = this->nodeHandlePtr->serviceClient<std_srvs::Empty>(robotName + "/torque_joints_off");
     this->setOperatingModeClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::OperatingModes>(robotName + "/set_operating_modes");
     this->getRobotInfoClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::RobotInfo>(robotName + "/get_robot_info");
 
@@ -107,17 +105,6 @@ void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<Joint
     gripperTrajectoryPublisher.publish(message);
 
     // @TODO: perhaps use MoveIt! ?
-}
-
-void InterbotixRobotArmROS::SetTorqueState(bool on) {
-    std_srvs::EmptyRequest req;
-    std_srvs::EmptyResponse res;
-
-    if (on) {
-        torqueJointsOnClient.call(req, res);
-    } else {
-        torqueJointsOffClient.call(req, res);
-    }
 }
 
 void InterbotixRobotArmROS::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,

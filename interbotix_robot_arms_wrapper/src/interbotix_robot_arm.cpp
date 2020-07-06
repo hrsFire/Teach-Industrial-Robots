@@ -47,10 +47,6 @@ void InterbotixRobotArm::SendGripperTrajectory(const std::unordered_map<robot_ar
     robotArm->SendGripperTrajectory(jointTrajectoryPoints);
 }
 
-void InterbotixRobotArm::SetTorqueState(bool on) {
-    robotArm->SetTorqueState(on);
-}
-
 void InterbotixRobotArm::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
     robotArm->SetOperatingMode(operatingMode, affectedJoints, jointName, useCustomProfiles, profileVelocity,profileAcceleration);
