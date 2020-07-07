@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <scene>
+      <grid>true</grid>
+    </scene>
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- Invisible ground plane -->
+    <model name="ground">
+      <link name="body">
+        <collision name="geom">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+      <static>true</static>
+    </model>
+    <road name="my_road">
+      <width>1.5</width>
+      <point>-0.25 0 0</point>
+      <point>0.75 0 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/white_page_with_folded_corner.material</uri>
+          <name>WhitePageWithFoldedCornerTexture</name>
+        </script>
+      </material>
+    </road>
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose frame=''>0.384471 -0.978939 0.496381 0 0.403643 1.57619</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+  </world>
+</sdf>
