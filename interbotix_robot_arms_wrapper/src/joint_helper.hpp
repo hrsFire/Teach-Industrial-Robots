@@ -13,6 +13,7 @@
 #include <robot_arm_interface/operating_mode.hpp>
 #include <interbotix_sdk/OperatingModes.h>
 #include <trajectory_msgs/JointTrajectory.h>
+#include <control_msgs/FollowJointTrajectoryGoal.h>
 #include "interbotix_robot_arms_wrapper/interbotix_joint_name.hpp"
 
 namespace interbotix {
@@ -23,6 +24,8 @@ namespace interbotix {
         static int8_t GetAffectedJoints(const robot_arm::AffectedJoints& affectedJoints);
         static void CopyToJointTrajectoryMessage(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints,
             trajectory_msgs::JointTrajectory& message);
+        static void CopyToJointTrajectoryMessage(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints,
+            control_msgs::FollowJointTrajectoryGoal& message);
         static std::unordered_map<robot_arm::JointNameImpl, robot_arm::Joint> CreateJoints(const std::vector<robot_arm::JointNameImpl>& jointNames,
             const std::vector<int>& jointIDs, const std::vector<double>& lowerJointLimits, const std::vector<double> upperJointLimits, const std::vector<double>& velocityLimits);
         static void PrepareRobotInfoJoints(const std::vector<std::string>& jointNames, std::vector<robot_arm::JointNameImpl>& newJointNames,
@@ -51,6 +54,7 @@ namespace interbotix {
         // If true: The joint value is valid. Otherwise: The joint value is invalid and a corrected value is stored in jointValue.
         static bool CheckJointValue(const robot_arm::JointNameImpl& jointName, double& jointValue, const robot_arm::RobotInfo& robotInfo);
         static void CheckJointValues(std::unordered_map<robot_arm::JointNameImpl, double>& jointValues, const robot_arm::RobotInfo& robotInfo);
+        static size_t GetJointIndex(const std::vector<robot_arm::JointState> orderedJointStates, const robot_arm::JointName& jointName);
     private:
         static bool HaveJointStatesExpired(const std::chrono::high_resolution_clock::time_point& jointStatesLastChanged);
         static constexpr double GRIPPER_CHANGE = 0.002;

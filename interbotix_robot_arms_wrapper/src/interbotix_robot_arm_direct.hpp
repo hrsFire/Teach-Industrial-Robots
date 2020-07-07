@@ -5,6 +5,7 @@
 #include <interbotix_sdk/arm_obj.h>
 #include <robot_arm_interface/robot_arm_base.hpp>
 #include <interbotix_robot_arms_wrapper/interbotix_joint_name.hpp>
+#include <ros/package.h>
 #include "joint_helper.hpp"
 
 using namespace robot_arm;

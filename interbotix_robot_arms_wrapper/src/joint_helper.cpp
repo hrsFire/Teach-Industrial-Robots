@@ -10,7 +10,7 @@ std::vector<double> JointHelper::PrepareJointCommands(const std::unordered_map<r
 
     for (size_t i = 0; i < jointStates.size(); i++) {
         for (auto jointValue : jointValues) {
-            // @TODO: causes a bad cast exception if the items are switched
+            // TODO: causes a bad cast exception if the items are switched
             if (jointValue.first == *(jointStates[i].GetJointName())) {
                 sortedValues.push_back(jointValue.second);
                 break;
@@ -50,6 +50,23 @@ void JointHelper::CopyToJointTrajectoryMessage(const std::unordered_map<robot_ar
         trajectoryPoint.velocities = point.GetVelocities();
 
         message.points.push_back(trajectoryPoint);
+    }
+}
+
+void JointHelper::CopyToJointTrajectoryMessage(const std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointTrajectoryPoint>& jointTrajectoryPoints,
+        control_msgs::FollowJointTrajectoryGoal& message) {
+    for (auto jointTrajectoryPoint : jointTrajectoryPoints) {
+        message.trajectory.joint_names.push_back(jointTrajectoryPoint.first);
+
+        robot_arm::JointTrajectoryPoint& point = jointTrajectoryPoint.second;
+        trajectory_msgs::JointTrajectoryPoint trajectoryPoint;
+        trajectoryPoint.accelerations = point.GetAccelerations();
+        trajectoryPoint.effort = point.GetEfforts();
+        trajectoryPoint.positions = point.GetPositions();
+        trajectoryPoint.time_from_start = ros::Duration(point.GetSecondsFromStart());
+        trajectoryPoint.velocities = point.GetVelocities();
+
+        message.trajectory.points.push_back(trajectoryPoint);
     }
 }
 
@@ -344,6 +361,17 @@ void JointHelper::CheckJointValues(std::unordered_map<robot_arm::JointNameImpl, 
     for (auto& item : jointValues) {
         JointHelper::CheckJointValue(item.first, item.second, robotInfo);
     }
+}
+
+size_t JointHelper::GetJointIndex(const std::vector<robot_arm::JointState> orderedJointStates, const robot_arm::JointName& jointName) {
+    size_t i = 0;
+    for (i; i < orderedJointStates.size(); i++) {
+        if (*(orderedJointStates[i].GetJointName()) == jointName) {
+            break;
+        }
+    }
+
+    return i;
 }
 
 bool JointHelper::HaveJointStatesExpired(const std::chrono::high_resolution_clock::time_point& jointStatesLastChanged) {

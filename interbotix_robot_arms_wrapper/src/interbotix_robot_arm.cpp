@@ -13,7 +13,7 @@ InterbotixRobotArm::InterbotixRobotArm(bool useROS, int argc, char** argv, std::
     // https://github.com/Interbotix/interbotix_ros_arms/blob/master/interbotix_sdk/src/arm_node.cpp
 
     if (useROS) {
-        this->robotArm = new InterbotixRobotArmROS(argc, argv, robotName);
+        this->robotArm = new InterbotixRobotArmROS(argc, argv, robotName, robotModel);
     } else {
         this->robotArm = new InterbotixRobotArmDirect(argc, argv, robotName, robotModel);
     }

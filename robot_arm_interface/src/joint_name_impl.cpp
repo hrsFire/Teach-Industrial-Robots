@@ -14,7 +14,7 @@ JointNameImpl::operator std::shared_ptr<JointName>() const {
 }
 
 bool JointNameImpl::operator==(const JointName& jointName) const {
-    // @TODO: causes a bad cast exception if the items are switched
+    // TODO: causes a bad cast exception if the items are switched
     return jointName == *(this->jointName);
 }
 

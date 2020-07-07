@@ -1,14 +1,10 @@
 #include "interbotix_robot_arm_direct.hpp"
-#include <ros/package.h>
 
 using namespace interbotix;
 
 InterbotixRobotArmDirect::InterbotixRobotArmDirect(int argc, char** argv, std::string robotName, std::string robotModel) {
     ros::init(argc, argv, "interbotix_robot_arm");
 
-    // TODO: clean up
-    /*ros::param::get("~robot_name", robot_name);
-    ros::param::get("~robot_model", robot_model);*/
     // https://github.com/Interbotix/interbotix_ros_arms/blob/melodic/interbotix_sdk/launch/arm_run.launch
     std::string interbotixSDKPath = ros::package::getPath("interbotix_sdk");
     ros::param::set("~motor_configs", interbotixSDKPath + "/config/");

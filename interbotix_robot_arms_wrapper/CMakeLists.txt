@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   robot_arm_interface
+  moveit_ros_planning_interface
 )
 
 ## System dependencies are found with CMake's conventions
@@ -72,6 +73,7 @@ add_library(${PROJECT_NAME} SHARED
   src/interbotix_robot_arm_ros.cpp
   src/interbotix_joint_name.cpp
   src/joint_helper.cpp
+  src/interbotix_helper.cpp
 )
 
 ## Add cmake target dependencies of the library

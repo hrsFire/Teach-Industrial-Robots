@@ -2,37 +2,64 @@
 
 using namespace interbotix;
 
-InterbotixRobotArmROS::InterbotixRobotArmROS(int argc, char** argv, std::string robotName) {
+const std::string InterbotixRobotArmROS::PLANNING_GROUP_INTERBOTIX_GROUP = "interbotix_arm";
+const std::string InterbotixRobotArmROS::PLANNING_GROUP_GRIPPER_GROUP = "interbotix_gripper";
+
+InterbotixRobotArmROS::InterbotixRobotArmROS(int argc, char** argv, std::string robotName, std::string robotModel) {
     ros::init(argc, argv, "interbotix_robot_arm");
+    this->robotName = robotName;
+    this->robotModel = robotModel;
     this->nodeHandlePtr = ros::NodeHandlePtr(new ros::NodeHandle());
 
-    this->jointStatesSubscriber = this->nodeHandlePtr->subscribe<sensor_msgs::JointState>(robotName + "/joint_states", 100, boost::bind(JointStatesCallback, boost::ref(*this), _1));
+    // "export ROS_NAMESPACE=wx200" needs to be set before
+    moveit::planning_interface::MoveGroupInterface::Options interbotixMoveGroupOptions(PLANNING_GROUP_INTERBOTIX_GROUP, robotName + "/robot_description", ros::NodeHandle());
+    this->interbotixMoveGroup = new moveit::planning_interface::MoveGroupInterface(interbotixMoveGroupOptions);
+    moveit::planning_interface::MoveGroupInterface::Options gripperMoveGroupOptions(PLANNING_GROUP_GRIPPER_GROUP, robotName + "/robot_description", ros::NodeHandle());
+    this->gripperMoveGroup = new moveit::planning_interface::MoveGroupInterface(gripperMoveGroupOptions);
 
-    this->jointCommandPublisher = this->nodeHandlePtr->advertise<interbotix_sdk::SingleCommand>(robotName + "/single_joint/command", 100);
-    this->jointCommandsPublisher = this->nodeHandlePtr->advertise<interbotix_sdk::JointCommands>(robotName + "/joint/commands", 100);
-    this->armControllerTrajectoryPublisher = this->nodeHandlePtr->advertise<trajectory_msgs::JointTrajectory>(robotName + "/arm_controller/joint_trajectory", 100);
-    this->gripperCommandPublisher = this->nodeHandlePtr->advertise<std_msgs::Float64>(robotName + "/gripper/command", 100);
-    this->gripperTrajectoryPublisher = this->nodeHandlePtr->advertise<trajectory_msgs::JointTrajectory>(robotName + "/gripper_controller/gripper_trajectory", 100);
+    this->jointStatesSubscriber = this->nodeHandlePtr->subscribe<sensor_msgs::JointState>("/" + robotName + "/joint_states", 100, boost::bind(JointStatesCallback, boost::ref(*this), _1));
 
-    this->setOperatingModeClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::OperatingModes>(robotName + "/set_operating_modes");
-    this->getRobotInfoClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::RobotInfo>(robotName + "/get_robot_info");
+    this->setOperatingModeClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::OperatingModes>(robotName + "/" + robotName + "/set_operating_modes");
+    this->getRobotInfoClient = this->nodeHandlePtr->serviceClient<interbotix_sdk::RobotInfo>("/" + robotName + "/get_robot_info");
+
+    jointTrajectoryClient = new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>("/" + robotName + "/arm_controller/joint_trajectory");
+    gripperTrajectoryClient = new actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>("/" + robotName + "/gripper_controller/gripper_trajectory");
+
+    ros::master::V_TopicInfo topicInfos;
+    bool isTopicTestRunning = true;
+
+    while (isTopicTestRunning) {
+        if (ros::master::getTopics(topicInfos)) {
+            for (auto topicInfo : topicInfos) {
+                if (topicInfo.name.rfind("/gazebo") == 0) {
+                    this->usesGazebo = true;
+                    isTopicTestRunning = false;
+                    break;
+                }
+            }
+
+            break;
+        }
+    }
 
     this->spinner = new ros::AsyncSpinner(0);
     this->spinner->start();
 
-    // This is normally the time required to get the robot information from the subscriptions
-    ros::Duration(0.5).sleep();
-
-    while (!isArmInitialized) {
+    while (!this->isArmInitialized) {
         ROS_INFO("Try to get information about the robot arm");
+        // This is normally the time required to get the robot information from the subscriptions
         ros::Duration(0.5).sleep();
     }
-
-    GetRobotInfo();
 }
 
 InterbotixRobotArmROS::~InterbotixRobotArmROS() {
     spinner->stop();
+    delete jointTrajectoryClient;
+    delete gripperTrajectoryClient;
+    interbotixMoveGroup->stop();
+    delete interbotixMoveGroup;
+    gripperMoveGroup->stop();
+    delete gripperMoveGroup;
 }
 
 std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmROS::GetJointStates() {
@@ -47,11 +74,8 @@ void InterbotixRobotArmROS::SendJointCommand(const JointName& jointName, double 
     JointNameImpl alteredJointName = JointNameImpl(std::make_shared<InterbotixJointName>((const InterbotixJointName&) jointName));
     JointHelper::CheckJointValue(alteredJointName, value, *GetRobotInfo());
 
-    interbotix_sdk::SingleCommand message;
-    message.joint_name = jointName;
-    message.cmd = value;
-
-    jointCommandPublisher.publish(message);
+    this->interbotixMoveGroup->setJointValueTarget(jointName, value);
+    this->interbotixMoveGroup->move();
 
     JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
         jointStatesLastChanged, operatingModes);
@@ -63,29 +87,34 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
     std::unordered_map<JointNameImpl, double> newJointValues = jointValues;
     JointHelper::CheckJointValues(newJointValues, *GetRobotInfo());
 
-    interbotix_sdk::JointCommands message;
-    std::shared_ptr<RobotInfo> robotInfo = GetRobotInfo();
-    std::vector<JointState> jointStates = GetOrderedJointStates();
-    message.cmd = JointHelper::PrepareJointCommands(newJointValues, *robotInfo, jointStates);
+    std::map<std::string, double> tmpJointValues;
+    bool containsGripperValue = false;
+    double gripperValue;
 
-    jointCommandsPublisher.publish(message);
+    for (auto jointValue : jointValues) {
+        if (jointValue.first == InterbotixJointName::GRIPPER()) {
+           containsGripperValue = true;
+           gripperValue = jointValue.second; 
+        }
 
-    auto gripper = newJointValues.find(InterbotixJointName::GRIPPER());
+        tmpJointValues.emplace(jointValue.first, jointValue.second);
+    }
 
-    if (gripper != newJointValues.end()) {
-        SendGripperCommandUnlocked(gripper->second);
+    this->interbotixMoveGroup->setJointValueTarget(tmpJointValues);
+    this->interbotixMoveGroup->move();
+
+    if (containsGripperValue) {
+        SendGripperCommandUnlocked(gripperValue);
     }
 
     JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
 }
 
 void InterbotixRobotArmROS::SendJointTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
-    trajectory_msgs::JointTrajectory message;
+    control_msgs::FollowJointTrajectoryGoal message;
     JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
-    armControllerTrajectoryPublisher.publish(message);
-
-    // @TODO: perhaps use MoveIt! ?
+    jointTrajectoryClient->sendGoal(message);
 }
 
 void InterbotixRobotArmROS::SendGripperCommand(double value) {
@@ -99,12 +128,10 @@ void InterbotixRobotArmROS::SendGripperCommand(double value) {
 }
 
 void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
-    trajectory_msgs::JointTrajectory message;
+    control_msgs::FollowJointTrajectoryGoal message;
     JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
-    gripperTrajectoryPublisher.publish(message);
-
-    // @TODO: perhaps use MoveIt! ?
+    gripperTrajectoryClient->sendGoal(message);
 }
 
 void InterbotixRobotArmROS::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
@@ -129,8 +156,16 @@ void InterbotixRobotArmROS::SetOperatingMode(const OperatingMode& operatingMode,
 std::shared_ptr<RobotInfo> InterbotixRobotArmROS::GetRobotInfo() {
     interbotix_sdk::RobotInfoRequest req;
     interbotix_sdk::RobotInfoResponse res;
+    bool isSuccessful = false;
 
-    if (robotInfo == nullptr && getRobotInfoClient.call(req, res)) {
+    if (usesGazebo) {
+        // Gazebo does not publish robot arm information for interbotix robot arms. Therefore get the information from the configuration files.
+        isSuccessful = InterbotixHelper::GetRobotInfoFromConfigFiles(this->robotName, res);
+    } else if (robotInfo == nullptr) {
+        isSuccessful = getRobotInfoClient.call(req, res);
+    }
+
+    if (isSuccessful) {
         std::vector<JointNameImpl> jointNames;
         std::vector<int> jointIDs;
         std::vector<double> lowerJointLimits;
@@ -180,8 +215,9 @@ std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {
 }
 
 void InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
-    std_msgs::Float64 message;
-    message.data = value;
-
-    gripperCommandPublisher.publish(message);
+    std::map<std::string, double> jointValues;
+    jointValues.emplace("left_finger", value / 2.0);
+    jointValues.emplace("right_finger", -value / 2.0);
+    this->gripperMoveGroup->setJointValueTarget(jointValues);
+    this->gripperMoveGroup->move();
 }
