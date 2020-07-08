@@ -67,22 +67,12 @@ InterbotixRobotArmROS::~InterbotixRobotArmROS() {
 std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmROS::GetJointStates() {
     std::lock_guard<std::mutex> lock(jointStatesMutex);
 
-    if (positionedWithPose) {
-        std::vector<double> tmpJointValues = interbotixMoveGroup->getCurrentJointValues();
-        std::unordered_map<robot_arm::JointNameImpl, double> newJointValues;
-
-        for (size_t i = 0; i < orderedJointStates.size(); i++) {
-            newJointValues.emplace(orderedJointStates[i].GetJointName(), tmpJointValues[i]);
-        }
-
-        JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
-        positionedWithPose = false;
-    }
-
     return unorderedJointStates;
 }
 
 bool InterbotixRobotArmROS::GetCurrentPose(const JointName& endEffectorJointName, geometry_msgs::Pose& pose) {
+    std::lock_guard<std::mutex> lock(jointStatesMutex);
+
     if (endEffectorJointName == InterbotixJointName::GRIPPER()) {
         if (isCurrentPoseValid) {
             pose = currentPose;
@@ -196,7 +186,6 @@ void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const Join
         jointName = endEffectorJointName;
     }
 
-    positionedWithPose = true;
     interbotixMoveGroup->setPoseTarget(pose, jointName);
     moveit::planning_interface::MoveGroupInterface::Plan plan;
 

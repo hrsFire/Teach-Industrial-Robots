@@ -67,7 +67,6 @@ namespace interbotix {
         bool usesGazebo = false;
         actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* jointTrajectoryClient;
         actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* gripperTrajectoryClient;
-        bool positionedWithPose = false;
         bool isSendingMove = false;
         geometry_msgs::Pose currentPose;
         bool isCurrentPoseValid = false;
