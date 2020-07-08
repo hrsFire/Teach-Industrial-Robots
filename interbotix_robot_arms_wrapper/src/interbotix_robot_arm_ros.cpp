@@ -6,7 +6,7 @@ const std::string InterbotixRobotArmROS::PLANNING_GROUP_INTERBOTIX_GROUP = "inte
 const std::string InterbotixRobotArmROS::PLANNING_GROUP_GRIPPER_GROUP = "interbotix_gripper";
 
 InterbotixRobotArmROS::InterbotixRobotArmROS(int argc, char** argv, std::string robotName, std::string robotModel) {
-    ros::init(argc, argv, "interbotix_robot_arm");
+    ros::init(argc, argv, "interbotix_robot_arm", ros::init_options::NoSigintHandler);
     this->robotName = robotName;
     this->robotModel = robotModel;
     this->nodeHandlePtr = ros::NodeHandlePtr(new ros::NodeHandle());
