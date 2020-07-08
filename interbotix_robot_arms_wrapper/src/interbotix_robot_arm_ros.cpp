@@ -206,7 +206,6 @@ void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const Join
         jointName = endEffectorJointName;
     }
 
-    // if (interbotixMoveGroup->setPoseTarget(pose, jointName)) {
     if (interbotixMoveGroup->setJointValueTarget(pose, jointName)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
