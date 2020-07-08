@@ -27,6 +27,10 @@ std::unordered_map<robot_arm::JointNameImpl, JointState> InterbotixRobotArm::Get
     return robotArm->GetJointStates();
 }
 
+bool InterbotixRobotArm::GetCurrentPose(const robot_arm::JointName& endEffectorJointName, geometry_msgs::Pose& pose) {
+    return robotArm->GetCurrentPose(endEffectorJointName, pose);
+}
+
 void InterbotixRobotArm::SendJointCommand(const JointName& jointName, double value) {
     robotArm->SendJointCommand(jointName, value);
 }
@@ -47,6 +51,10 @@ void InterbotixRobotArm::SendGripperTrajectory(const std::unordered_map<robot_ar
     robotArm->SendGripperTrajectory(jointTrajectoryPoints);
 }
 
+void InterbotixRobotArm::SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) {
+    robotArm->SendPose(pose, endEffectorJointName);
+}
+
 void InterbotixRobotArm::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
     robotArm->SetOperatingMode(operatingMode, affectedJoints, jointName, useCustomProfiles, profileVelocity,profileAcceleration);
@@ -57,6 +65,10 @@ std::shared_ptr<RobotInfo> InterbotixRobotArm::GetRobotInfo() {
     return robotArm->GetRobotInfo();
 }
 
-double InterbotixRobotArm::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) {
-    return robotArm->CalculateAcceleration(jointName, duration, isGoingUpwards);
+double InterbotixRobotArm::CalculateAccelerationDistance(const JointName& jointName, const std::chrono::milliseconds& duration) {
+    return robotArm->CalculateAccelerationDistance(jointName, duration);
+}
+
+double InterbotixRobotArm::CalculateAccelerationDistance(const std::chrono::milliseconds& duration) {
+    return robotArm->CalculateAccelerationDistance(duration);
 }

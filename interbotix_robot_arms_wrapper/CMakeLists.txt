@@ -10,6 +10,7 @@ project(interbotix_robot_arms_wrapper)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  geometry_msgs
   robot_arm_interface
   moveit_ros_planning_interface
 )

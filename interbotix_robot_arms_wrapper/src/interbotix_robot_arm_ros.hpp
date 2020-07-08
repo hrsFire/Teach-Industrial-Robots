@@ -16,6 +16,8 @@
 #include <interbotix_sdk/OperatingModes.h>
 #include <interbotix_sdk/JointCommands.h>
 #include <interbotix_sdk/SingleCommand.h>
+#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <robot_arm_interface/robot_arm_base.hpp>
 #include <boost/bind.hpp>
 #include "joint_helper.hpp"
@@ -29,19 +31,23 @@ namespace interbotix {
         InterbotixRobotArmROS(int argc, char** argv, std::string robotName, std::string robotModel);
         ~InterbotixRobotArmROS();
         std::unordered_map<JointNameImpl, JointState> GetJointStates() override;
+        bool GetCurrentPose(const JointName& endEffectorJointName, geometry_msgs::Pose& pose) override;
         void SendJointCommand(const JointName& jointName, double value) override;
         void SendJointCommands(const std::unordered_map<JointNameImpl, double>& jointValues) override;
         void SendJointTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
         void SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) override;
+        void SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) override;
         void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
             int profileVelocity, int profileAcceleration) override;
         std::shared_ptr<RobotInfo> GetRobotInfo() override;
-        double CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) override;
+        double CalculateAccelerationDistance(const JointName& jointName, const std::chrono::milliseconds& duration) override;
+        double CalculateAccelerationDistance(const std::chrono::milliseconds& duration) override;
     private:
         static void JointStatesCallback(InterbotixRobotArmROS& self, const sensor_msgs::JointStateConstPtr& message);
         static const std::string PLANNING_GROUP_INTERBOTIX_GROUP;
         static const std::string PLANNING_GROUP_GRIPPER_GROUP;
+        static constexpr double PLANNING_TIME = 0.08;
         std::vector<JointState> GetOrderedJointStates();
         void SendGripperCommandUnlocked(double value);
         ros::NodeHandlePtr nodeHandlePtr;
@@ -61,6 +67,10 @@ namespace interbotix {
         bool usesGazebo = false;
         actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* jointTrajectoryClient;
         actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* gripperTrajectoryClient;
+        bool positionedWithPose = false;
+        bool isSendingMove = false;
+        geometry_msgs::Pose currentPose;
+        bool isCurrentPoseValid = false;
 
         ros::Subscriber jointStatesSubscriber;
 

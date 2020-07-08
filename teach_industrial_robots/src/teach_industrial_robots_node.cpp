@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <locale>
 #include <ros/ros.h>
+#include <tf2/LinearMath/Quaternion.h>
 #include <k4a/k4a.hpp>
 #include <k4abt.hpp>
 #include <simple_gestures/kinect/azure_kinect_gestures.hpp>
@@ -61,6 +62,31 @@ bool IsLookingAtDevice(const gestures::GesturesQuery& gesturesImpl) {
     return gesturesImpl.IsJointVisible(K4ABT_JOINT_EYE_LEFT) && gesturesImpl.IsJointVisible(K4ABT_JOINT_EYE_RIGHT);
 }
 
+enum TeachMode {
+    JOINT_MODE,
+    WORLD_COORDINATE_MODE
+};
+
+enum WorldCoordinate {
+    UP, // Z
+    NORTH, // Y
+    EAST // X
+};
+
+std::string GetStringForWorldCoordinate(WorldCoordinate worldCoordinate) {
+    std::string coordinateName = "";
+
+    if (worldCoordinate == WorldCoordinate::EAST) {
+        coordinateName = "EAST";
+    } else if (worldCoordinate == WorldCoordinate::NORTH) {
+        coordinateName = "NORTH";
+    } else if (worldCoordinate == WorldCoordinate::UP) {
+        coordinateName = "UP";
+    }
+
+    return coordinateName;
+}
+
 int main(int argc, char** argv) {
     bool overwritePositionsFile = false;
     bool repeatRecordedPositions = false;
@@ -75,7 +101,7 @@ int main(int argc, char** argv) {
     overwritePositionsFile = false;
     repeatRecordedPositions = false;
     teachPositions = true;
-    useROS = false;
+    useROS = true;
     moveHomeAtExit = true;
     moveHomeAtError = true;
 #else
@@ -292,9 +318,13 @@ int main(int argc, char** argv) {
         std::chrono::system_clock::time_point switchPrecisionModeTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point switchGripperLockTime = std::chrono::system_clock::now();
         std::chrono::system_clock::time_point saveConfigurationTime = std::chrono::system_clock::now();
+        std::chrono::system_clock::time_point switchTeachModeTime = std::chrono::system_clock::now();
         std::unique_ptr<bool> isPreciseMode = std::make_unique<bool>(true);
         std::unique_ptr<bool> isGripperLocked = std::make_unique<bool>(true);
         std::unique_ptr<bool> successfullySavedConfiguration = std::make_unique<bool>(false);
+        std::unique_ptr<TeachMode> currentTeachModeMode = std::make_unique<TeachMode>(TeachMode::WORLD_COORDINATE_MODE);
+        std::unique_ptr<WorldCoordinate> currentWorldCoordinate = std::make_unique<WorldCoordinate>(WorldCoordinate::EAST);
+        std::unique_ptr<robot_arm::JointNameImpl> endEffectorJointName = std::make_unique<robot_arm::JointNameImpl>(interbotix::InterbotixJointName::GRIPPER());
 
         gesturesEngine = new gestures::GesturesEngine(new kinect::AzureKinectGestures(&bodyTracker, &device, false));
         gestures::GestureGroup singleJointGestureGroup = gesturesEngine->AddGestureGroup("single_joint", 0, {});
@@ -302,40 +332,76 @@ int main(int argc, char** argv) {
         gestures::GestureGroup switchJointGestureGroup = gesturesEngine->AddGestureGroup("switch_joint", 2, { singleJointGestureGroup });
         gestures::GestureGroup switchPrecisionModeGestureGroup = gesturesEngine->AddGestureGroup("switch_precision_mode", 3, { singleJointGestureGroup,
             switchJointGestureGroup });
-        gestures::GestureGroup configurationGestureGroup = gesturesEngine->AddGestureGroup("configuration", 4, { singleJointGestureGroup, gripperGestureGroup,
+        gestures::GestureGroup switchTeachModeGestureGroup = gesturesEngine->AddGestureGroup("switch_teach_mode", 4, { singleJointGestureGroup,
+            gripperGestureGroup, switchJointGestureGroup, switchPrecisionModeGestureGroup });
+        gestures::GestureGroup configurationGestureGroup = gesturesEngine->AddGestureGroup("configuration", 5, { singleJointGestureGroup, gripperGestureGroup,
             switchJointGestureGroup, switchPrecisionModeGestureGroup });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
             return IsLookingAtDevice(gesturesImpl) &&
                 gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_RIGHT, K4ABT_JOINT_SHOULDER_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 65.0);
-        }, [&currentJoint, &isPreciseMode](std::chrono::milliseconds duration) {
-            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
-            double jointAngle = jointStates.at(currentJoint).GetPosition();
-
+        }, [&currentJoint, &isPreciseMode, &currentTeachModeMode, &currentWorldCoordinate, &endEffectorJointName](std::chrono::milliseconds duration) {
             if (*isPreciseMode) {
                 duration = std::chrono::milliseconds(0);
             }
 
-            jointAngle += robotArm->CalculateAcceleration(*currentJoint, duration, true);
-            robotArm->SendJointCommand(*currentJoint, jointAngle);
+            if (*currentTeachModeMode == TeachMode::JOINT_MODE) {
+                std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+                double jointAngle = jointStates.at(currentJoint).GetPosition();
+
+                jointAngle += robotArm->CalculateAccelerationDistance(*currentJoint, duration);
+                robotArm->SendJointCommand(*currentJoint, jointAngle);
+            } else if (*currentTeachModeMode == TeachMode::WORLD_COORDINATE_MODE) {
+                geometry_msgs::Pose pose;
+
+                if (robotArm->GetCurrentPose(*endEffectorJointName, pose)) {
+                    double coordinateChange = robotArm->CalculateAccelerationDistance(duration);
+                    if (*currentWorldCoordinate == WorldCoordinate::EAST) {
+                        pose.position.x += coordinateChange;
+                    } else if (*currentWorldCoordinate == WorldCoordinate::NORTH) {
+                        pose.position.y += coordinateChange;
+                    } else if (*currentWorldCoordinate == WorldCoordinate::UP) {
+                        pose.position.z += coordinateChange;
+                    }
+
+                    robotArm->SendPose(pose, *endEffectorJointName);
+                }
+            }
         }), singleJointGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
             return IsLookingAtDevice(gesturesImpl) &&
                 gesturesImpl.IsGesture(K4ABT_JOINT_CLAVICLE_LEFT, K4ABT_JOINT_SHOULDER_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 65.0);
-        }, [&currentJoint, &isPreciseMode](std::chrono::milliseconds duration) {
-            std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
-            double minJointAngle = robotInfo->joints.at(currentJoint).GetLowerLimit();
-            std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
-            double jointAngle = jointStates.at(currentJoint).GetPosition();
-
+        }, [&currentJoint, &isPreciseMode, &currentTeachModeMode, &currentWorldCoordinate, &endEffectorJointName](std::chrono::milliseconds duration) {
             if (*isPreciseMode) {
                 duration = std::chrono::milliseconds(0);
             }
 
-            jointAngle -= robotArm->CalculateAcceleration(*currentJoint, duration, false);
-            robotArm->SendJointCommand(*currentJoint, jointAngle);
+            if (*currentTeachModeMode == TeachMode::JOINT_MODE) {
+                std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
+                double minJointAngle = robotInfo->joints.at(currentJoint).GetLowerLimit();
+                std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
+                double jointAngle = jointStates.at(currentJoint).GetPosition();
+
+                jointAngle -= robotArm->CalculateAccelerationDistance(*currentJoint, duration);
+                robotArm->SendJointCommand(*currentJoint, jointAngle);
+            } else if (*currentTeachModeMode == TeachMode::WORLD_COORDINATE_MODE) {
+                geometry_msgs::Pose pose;
+
+                if (robotArm->GetCurrentPose(*endEffectorJointName, pose)) {
+                    double coordinateChange = robotArm->CalculateAccelerationDistance(duration);
+                    if (*currentWorldCoordinate == WorldCoordinate::EAST) {
+                        pose.position.x -= coordinateChange;
+                    } else if (*currentWorldCoordinate == WorldCoordinate::NORTH) {
+                        pose.position.y -= coordinateChange;
+                    } else if (*currentWorldCoordinate == WorldCoordinate::UP) {
+                        pose.position.z -= coordinateChange;
+                    }
+
+                    robotArm->SendPose(pose, *endEffectorJointName);
+                }
+            }
         }), singleJointGestureGroup, 1, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
@@ -354,7 +420,7 @@ int main(int argc, char** argv) {
                 duration = std::chrono::milliseconds(0);
             }
 
-            gripperDistance += robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
+            gripperDistance += robotArm->CalculateAccelerationDistance(interbotix::InterbotixJointName::GRIPPER(), duration);
             robotArm->SendGripperCommand(gripperDistance);
         }), gripperGestureGroup, 0, { interbotix::InterbotixJointName::GRIPPER() });
 
@@ -373,7 +439,7 @@ int main(int argc, char** argv) {
                 duration = std::chrono::milliseconds(0);
             }
 
-            gripperDistance -= robotArm->CalculateAcceleration(interbotix::InterbotixJointName::GRIPPER(), duration, false);
+            gripperDistance -= robotArm->CalculateAccelerationDistance(interbotix::InterbotixJointName::GRIPPER(), duration);
             robotArm->SendGripperCommand(gripperDistance);
         }), gripperGestureGroup, 1, { interbotix::InterbotixJointName::GRIPPER() });
 
@@ -384,7 +450,7 @@ int main(int argc, char** argv) {
         }, [&isGripperLocked, &switchGripperLockTime](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchGripperLockTime) > std::chrono::seconds(1)) {
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchGripperLockTime) > std::chrono::milliseconds(100)) {
                 switchGripperLockTime = currentTime;
                 isGripperLocked.reset(new bool(!(*isGripperLocked)));
 
@@ -402,26 +468,52 @@ int main(int argc, char** argv) {
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
             return IsLookingAtDevice(gesturesImpl) && gesturesImpl.IsGesture(K4ABT_JOINT_EAR_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0);
-        }, [&currentJoint, &switchToPrevJointTime](std::chrono::milliseconds duration) {
+        }, [&currentJoint, &switchToPrevJointTime, &currentTeachModeMode, &currentWorldCoordinate](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchToPrevJointTime) > std::chrono::seconds(1)) {
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchToPrevJointTime) > std::chrono::milliseconds(50)) {
                 switchToPrevJointTime = currentTime;
-                currentJoint = currentJoint->Prev();
-                std::cout << "Set previous joint: "<< (std::string) *currentJoint << std::endl;
+
+                if (*currentTeachModeMode == TeachMode::JOINT_MODE) {
+                    currentJoint = currentJoint->Prev();
+                    std::cout << "Set previous joint: "<< (std::string) *currentJoint << std::endl;
+                } else if (*currentTeachModeMode == TeachMode::WORLD_COORDINATE_MODE) {
+                    if (*currentWorldCoordinate == WorldCoordinate::EAST) {
+                        currentWorldCoordinate.reset(new WorldCoordinate(WorldCoordinate::UP));
+                    } else if (*currentWorldCoordinate == WorldCoordinate::NORTH) {
+                        currentWorldCoordinate.reset(new WorldCoordinate(WorldCoordinate::EAST));
+                    } else if (*currentWorldCoordinate == WorldCoordinate::UP) {
+                        currentWorldCoordinate.reset(new WorldCoordinate(WorldCoordinate::NORTH));
+                    }
+
+                    std::cout << "Set world coordinate: " << GetStringForWorldCoordinate(*currentWorldCoordinate) << std::endl;
+                }
             }
         }), switchJointGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
             return IsLookingAtDevice(gesturesImpl) && gesturesImpl.IsGesture(K4ABT_JOINT_EAR_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
-        }, [&currentJoint, &switchToNextJointTime](std::chrono::milliseconds duration) {
+        }, [&currentJoint, &switchToNextJointTime, &currentTeachModeMode, &currentWorldCoordinate](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchToNextJointTime) > std::chrono::seconds(1)) {
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchToNextJointTime) > std::chrono::milliseconds(50)) {
                 switchToNextJointTime = currentTime;
-                currentJoint = currentJoint->Next();
-                std::cout << "Set next joint: " << (std::string) *currentJoint << std::endl;
+
+                if (*currentTeachModeMode == TeachMode::JOINT_MODE) {
+                    currentJoint = currentJoint->Next();
+                    std::cout << "Set next joint: " << (std::string) *currentJoint << std::endl;
+                } else if (*currentTeachModeMode == TeachMode::WORLD_COORDINATE_MODE) {
+                    if (*currentWorldCoordinate == WorldCoordinate::EAST) {
+                        currentWorldCoordinate.reset(new WorldCoordinate(WorldCoordinate::NORTH));
+                    } else if (*currentWorldCoordinate == WorldCoordinate::NORTH) {
+                        currentWorldCoordinate.reset(new WorldCoordinate(WorldCoordinate::UP));
+                    } else if (*currentWorldCoordinate == WorldCoordinate::UP) {
+                        currentWorldCoordinate.reset(new WorldCoordinate(WorldCoordinate::EAST));
+                    }
+
+                    std::cout << "Set world coordinate: " << GetStringForWorldCoordinate(*currentWorldCoordinate) << std::endl;
+                }
             }
         }), switchJointGestureGroup, 1, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
@@ -433,7 +525,7 @@ int main(int argc, char** argv) {
         }, [&currentJoint, &switchPrecisionModeTime, &isPreciseMode](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchPrecisionModeTime) > std::chrono::seconds(1)) {
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchPrecisionModeTime) > std::chrono::milliseconds(100)) {
                 switchPrecisionModeTime = currentTime;
                 isPreciseMode.reset(new bool(!(*isPreciseMode)));
 
@@ -457,7 +549,7 @@ int main(int argc, char** argv) {
         }, [&saveConfigurationTime, &recordedPositions, &overwritePositionsFile, &successfullySavedConfiguration](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - saveConfigurationTime) > std::chrono::seconds(1)) {
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - saveConfigurationTime) > std::chrono::milliseconds(100)) {
                 saveConfigurationTime = currentTime;
                 robot_arm_common::ConfigurationStorage configurationStorage;
                 recordedPositions.push_back(robotArm->GetJointStates());
@@ -481,6 +573,27 @@ int main(int argc, char** argv) {
             }
         }), configurationGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
+
+        gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
+            return IsLookingAtDevice(gesturesImpl) && (
+                gesturesImpl.IsGesture(K4ABT_JOINT_ELBOW_RIGHT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) ||
+                gesturesImpl.IsGesture(K4ABT_JOINT_ELBOW_LEFT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0));
+        }, [&switchTeachModeTime, &currentTeachModeMode, &currentJoint, &currentWorldCoordinate](std::chrono::milliseconds duration) {
+            std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
+
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchTeachModeTime) > std::chrono::milliseconds(50)) {
+                switchTeachModeTime = currentTime;
+
+                if (*currentTeachModeMode == TeachMode::JOINT_MODE) {
+                    currentTeachModeMode.reset(new TeachMode(TeachMode::WORLD_COORDINATE_MODE));
+                    std::cout << "Teach Mode: World coordinate mode (" << GetStringForWorldCoordinate(*currentWorldCoordinate) << ")" << std::endl;
+                } else if (*currentTeachModeMode == TeachMode::WORLD_COORDINATE_MODE) {
+                    currentTeachModeMode.reset(new TeachMode(TeachMode::JOINT_MODE));
+                    std::string jointName = *currentJoint;
+                    std::cout << "Teach Mode: Joint Mode (" << jointName << ")" << std::endl;
+                }
+            }
+        }), switchTeachModeGestureGroup, 0, { });
 
         gesturesEngine->Start();
 

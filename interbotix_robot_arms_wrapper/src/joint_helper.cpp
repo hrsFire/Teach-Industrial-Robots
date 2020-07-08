@@ -241,8 +241,8 @@ std::unordered_map<robot_arm::JointNameImpl, robot_arm::OperatingMode> JointHelp
     return operatingModes;
 }
 
-double JointHelper::CalculateAcceleration(const robot_arm::JointName& jointName, const robot_arm::OperatingMode& operatingMode, std::chrono::milliseconds duration,
-        bool isGoingUpwards) {
+double JointHelper::CalculateAccelerationDistance(const robot_arm::JointName& jointName, const robot_arm::OperatingMode& operatingMode,
+        const std::chrono::milliseconds& duration) {
     if (operatingMode == robot_arm::OperatingMode::POSITION() || operatingMode == robot_arm::OperatingMode::POSITION_MULTIPLE_REVOLUTIONS()) {
         // Empirically determined the best values for the logarithm base for the WidowX 200 seem to be in the range 1.3 <= x <= 1.5.
         // This smooths down the movement and prevents to abrupt movements.
@@ -265,6 +265,17 @@ double JointHelper::CalculateAcceleration(const robot_arm::JointName& jointName,
     } else {
         return 0;
     }
+}
+
+double JointHelper::CalculateAccelerationDistance(const std::chrono::milliseconds& duration) {
+    // Empirically determined the best values for the logarithm base for the WidowX 200 seem to be in the range 1.3 <= x <= 1.5.
+    // This smooths down the movement and prevents to abrupt movements.
+    double base = 1.31;
+    std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds>(duration);
+    // This handles the cases for log(0) = undefined, log(1) = 0, log(x) < 0 when x < 1.0 and log(x)/log(base) <= 1 when x <= base
+    double factor = seconds >= std::chrono::seconds(0) && seconds <= std::chrono::seconds(2) && seconds.count() <= base ? 1.0 : log(seconds.count()) / log(base);
+
+    return LINEAR_MOVEMENT_CHANGE * factor;
 }
 
 InterbotixJointName::DOF JointHelper::DetermineDOF(const robot_arm::RobotInfo& robotInfo) {

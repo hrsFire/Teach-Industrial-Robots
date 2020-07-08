@@ -30,6 +30,10 @@ std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmDirect::GetJoint
     return unorderedJointStates;
 }
 
+bool InterbotixRobotArmDirect::GetCurrentPose(const JointName& endEffectorJointName, geometry_msgs::Pose& pose) {
+    return false; // TODO: implement
+}
+
 void InterbotixRobotArmDirect::SendJointCommand(const JointName& jointName, double value) {
     std::lock_guard<std::mutex> lock(jointStatesMutex);
 
@@ -93,6 +97,10 @@ void InterbotixRobotArmDirect::SendGripperTrajectory(const std::unordered_map<Jo
     robotArm->send_gripper_trajectory(message);
 }
 
+void InterbotixRobotArmDirect::SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) {
+    // TODO: implement
+}
+
 void InterbotixRobotArmDirect::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
         int profileVelocity, int profileAcceleration) {
    interbotix_sdk::OperatingModesRequest req;
@@ -145,9 +153,13 @@ std::shared_ptr<RobotInfo> InterbotixRobotArmDirect::GetRobotInfo() {
     throw "Could not retrieve the robot info";
 }
 
-double InterbotixRobotArmDirect::CalculateAcceleration(const JointName& jointName, std::chrono::milliseconds duration, bool isGoingUpwards) {
-    return JointHelper::CalculateAcceleration(jointName,
-        operatingModes.at(JointNameImpl(std::make_shared<InterbotixJointName>((const InterbotixJointName&) jointName))), duration, isGoingUpwards);
+double InterbotixRobotArmDirect::CalculateAccelerationDistance(const JointName& jointName, const std::chrono::milliseconds& duration) {
+    return JointHelper::CalculateAccelerationDistance(jointName,
+        operatingModes.at(JointNameImpl(std::make_shared<InterbotixJointName>((const InterbotixJointName&) jointName))), duration);
+}
+
+double InterbotixRobotArmDirect::CalculateAccelerationDistance(const std::chrono::milliseconds& duration) {
+    return JointHelper::CalculateAccelerationDistance(duration);
 }
 
 std::vector<JointState> InterbotixRobotArmDirect::GetOrderedJointStates() {
