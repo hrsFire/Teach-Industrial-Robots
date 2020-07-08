@@ -1,4 +1,5 @@
 #include "interbotix_robot_arm_direct.hpp"
+#include <trac_ik/trac_ik.hpp>// trac_ik_kinematics_plugin.hpp
 
 using namespace interbotix;
 
@@ -31,7 +32,7 @@ std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmDirect::GetJoint
 }
 
 bool InterbotixRobotArmDirect::GetCurrentPose(const JointName& endEffectorJointName, geometry_msgs::Pose& pose) {
-    return false; // TODO: implement
+    return false; // TODO: find an implemenation similiar to ROS ones, because otherwise the tests aren't really statistically representative
 }
 
 void InterbotixRobotArmDirect::SendJointCommand(const JointName& jointName, double value) {
@@ -98,7 +99,7 @@ void InterbotixRobotArmDirect::SendGripperTrajectory(const std::unordered_map<Jo
 }
 
 void InterbotixRobotArmDirect::SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) {
-    // TODO: implement
+     // TODO: find an implemenation similiar to ROS ones, because otherwise the tests aren't really statistically representative
 }
 
 void InterbotixRobotArmDirect::SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
