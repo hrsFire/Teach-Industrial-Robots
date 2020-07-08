@@ -49,7 +49,8 @@ namespace interbotix {
         static const std::string PLANNING_GROUP_GRIPPER_GROUP;
         static constexpr double PLANNING_TIME = 0.08;
         std::vector<JointState> GetOrderedJointStates();
-        void SendGripperCommandUnlocked(double value);
+        bool SendGripperCommandUnlocked(double value);
+        void SetCurrentJointValuesAfterPoseMode();
         ros::NodeHandlePtr nodeHandlePtr;
         ros::AsyncSpinner* spinner;
         std::mutex jointStatesMutex;
@@ -70,6 +71,7 @@ namespace interbotix {
         bool isSendingMove = false;
         geometry_msgs::Pose currentPose;
         bool isCurrentPoseValid = false;
+        bool positionedWithPose = false;
 
         ros::Subscriber jointStatesSubscriber;
 

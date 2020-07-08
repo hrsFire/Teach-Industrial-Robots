@@ -356,6 +356,7 @@ int main(int argc, char** argv) {
 
                 if (robotArm->GetCurrentPose(*endEffectorJointName, pose)) {
                     double coordinateChange = robotArm->CalculateAccelerationDistance(duration);
+
                     if (*currentWorldCoordinate == WorldCoordinate::EAST) {
                         pose.position.x += coordinateChange;
                     } else if (*currentWorldCoordinate == WorldCoordinate::NORTH) {
@@ -379,8 +380,6 @@ int main(int argc, char** argv) {
             }
 
             if (*currentTeachModeMode == TeachMode::JOINT_MODE) {
-                std::shared_ptr<robot_arm::RobotInfo> robotInfo = robotArm->GetRobotInfo();
-                double minJointAngle = robotInfo->joints.at(currentJoint).GetLowerLimit();
                 std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState> jointStates = robotArm->GetJointStates();
                 double jointAngle = jointStates.at(currentJoint).GetPosition();
 
@@ -391,6 +390,7 @@ int main(int argc, char** argv) {
 
                 if (robotArm->GetCurrentPose(*endEffectorJointName, pose)) {
                     double coordinateChange = robotArm->CalculateAccelerationDistance(duration);
+
                     if (*currentWorldCoordinate == WorldCoordinate::EAST) {
                         pose.position.x -= coordinateChange;
                     } else if (*currentWorldCoordinate == WorldCoordinate::NORTH) {
@@ -594,6 +594,10 @@ int main(int argc, char** argv) {
                 }
             }
         }), switchTeachModeGestureGroup, 0, { });
+
+#ifdef SIMULATION
+    robotArm->SendJointCommands(robotArm->GetRobotInfo()->sleepPosition);
+#endif
 
         gesturesEngine->Start();
 

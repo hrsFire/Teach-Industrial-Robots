@@ -94,16 +94,17 @@ void InterbotixRobotArmROS::SendJointCommand(const JointName& jointName, double 
     JointNameImpl alteredJointName = JointNameImpl(std::make_shared<InterbotixJointName>((const InterbotixJointName&) jointName));
     JointHelper::CheckJointValue(alteredJointName, value, *GetRobotInfo());
 
+    SetCurrentJointValuesAfterPoseMode();
     interbotixMoveGroup->setJointValueTarget(jointName, value);
     moveit::planning_interface::MoveGroupInterface::Plan plan;
 
     if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
         interbotixMoveGroup->execute(plan);
-    }
 
-    JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
-        jointStatesLastChanged, operatingModes);
-    isCurrentPoseValid = false;
+        JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
+            jointStatesLastChanged, operatingModes);
+        isCurrentPoseValid = false;
+    }
 }
 
 void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointNameImpl, double>& jointValues) {
@@ -125,18 +126,27 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
         tmpJointValues.emplace(jointValue.first, jointValue.second);
     }
 
+    SetCurrentJointValuesAfterPoseMode();
     interbotixMoveGroup->setJointValueTarget(tmpJointValues);
     moveit::planning_interface::MoveGroupInterface::Plan plan;
 
     if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
         interbotixMoveGroup->execute(plan);
+        bool isSuccessful = false;
+
+        if (containsGripperValue) {
+            if (SendGripperCommandUnlocked(gripperValue)) {
+                isSuccessful = true;
+            }
+        } else {
+            isSuccessful = true;
+        }
+
+        if (isSuccessful) {
+            JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
+        }
     }
 
-    if (containsGripperValue) {
-        SendGripperCommandUnlocked(gripperValue);
-    }
-
-    JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
     isCurrentPoseValid = false;
 }
 
@@ -155,10 +165,12 @@ void InterbotixRobotArmROS::SendGripperCommand(double value) {
 
     JointNameImpl alteredJointName = JointNameImpl(std::make_shared<InterbotixJointName>(InterbotixJointName::GRIPPER()));
     JointHelper::CheckJointValue(alteredJointName, value, *GetRobotInfo());
-    SendGripperCommandUnlocked(value);
+    SetCurrentJointValuesAfterPoseMode();
 
-    JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
-    isCurrentPoseValid = false;
+    if (SendGripperCommandUnlocked(value)) {
+        JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
+        isCurrentPoseValid = false;
+    }
 }
 
 void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
@@ -192,6 +204,7 @@ void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const Join
     if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
         interbotixMoveGroup->execute(plan);
         currentPose = pose;
+        positionedWithPose = true;
     }
 
     isSendingMove = false;
@@ -281,7 +294,7 @@ std::vector<JointState> InterbotixRobotArmROS::GetOrderedJointStates() {
     return orderedJointStates;
 }
 
-void InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
+bool InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
     std::map<std::string, double> jointValues;
     jointValues.emplace("left_finger", value / 2.0);
     jointValues.emplace("right_finger", -value / 2.0);
@@ -290,5 +303,31 @@ void InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
 
     if (gripperMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
         gripperMoveGroup->execute(plan);
+        return true;
+    }
+
+    return false;
+}
+
+void InterbotixRobotArmROS::SetCurrentJointValuesAfterPoseMode() {
+    // By switching between the pose and joint mode MoveIt or/and the interbotiX node behave strangely.
+    // The method "setJointValueTarget" should normally set the required joint and the non specified joints should be the same as before.
+    // But this doesn't work, because the other joint values are set to 0 instead of the expected current values for the joints.
+    if (positionedWithPose) {
+        std::vector<std::string> tmpJointNames = interbotixMoveGroup->getJointNames();
+        std::vector<double> tmpJointValues = interbotixMoveGroup->getCurrentJointValues();
+
+        for (size_t i = 0; i < tmpJointNames.size(); i++) {
+            interbotixMoveGroup->setJointValueTarget(tmpJointNames[i], tmpJointValues[i]);
+        }
+
+        tmpJointNames = gripperMoveGroup->getJointNames();
+        tmpJointValues = gripperMoveGroup->getCurrentJointValues();
+
+        for (size_t i = 0; i < tmpJointNames.size(); i++) {
+            gripperMoveGroup->setJointValueTarget(tmpJointNames[i], tmpJointValues[i]);
+        }
+
+        positionedWithPose = false;
     }
 }
