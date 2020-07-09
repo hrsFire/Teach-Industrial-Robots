@@ -56,6 +56,11 @@ void AzureKinectGestures::NextCycle() {
                         bodyId = tmpBody->id;
                         bodyTimestamp = timestamp;
                         dataWasUsed = false;
+
+                        if (!hasPersonBeenDetected) {
+                            std::cout << "Person has been detected" << std::endl;
+                            hasPersonBeenDetected = true;
+                        }
                     } else {
                         if (body != nullptr) {
                             delete previousBody;
@@ -86,7 +91,10 @@ void AzureKinectGestures::NextCycle() {
                         body = nullptr;
                     }
 
-                    std::cout << "No person has been detected" << std::endl;
+                    if (hasPersonBeenDetected) {
+                        std::cout << "No person has been detected" << std::endl;
+                        hasPersonBeenDetected = false;
+                    }
                 }
 
                 // Release the sensor capture

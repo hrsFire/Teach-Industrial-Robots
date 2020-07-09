@@ -27,6 +27,7 @@ namespace kinect {
         k4abt_body_t* previousBody = nullptr;
         k4abt_body_t* body = nullptr;
         uint32_t bodyId = std::numeric_limits<uint32_t>::max();
+        bool hasPersonBeenDetected = false;
         std::chrono::milliseconds captureTimeout = std::chrono::milliseconds(0);
         std::chrono::milliseconds enqueueCaptureTimeout = std::chrono::milliseconds(0);
         std::chrono::milliseconds trackerTimeout = std::chrono::milliseconds(0);
