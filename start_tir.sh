@@ -6,7 +6,7 @@
 USE_ROS_COMMUNICATION=true
 USE_SIMULATION=true  # Only usable with "USE_ROS_COMMUNICATION=true"
 LXC_USER_NAME="ubuntu"
-LXC_INSTANCE="ros-tir"
+LXC_INSTANCE="<container name>"
 ADDITIONAL_APP_PARAMETERS="--move-home-at-exit --move-home-at-error"
 TEACH_POSITIONS=true  # If "true" positions can be teached, Otherwise the positions in the file "robot_arm_positions.json" will be executed.
 SCHED_RUNTIME=50000000
