@@ -132,13 +132,13 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
     }
 
     SetCurrentJointValuesAfterPoseMode();
+    bool isSuccessful = false;
 
     if (interbotixMoveGroup->setJointValueTarget(tmpJointValues)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
         if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
             interbotixMoveGroup->execute(plan);
-            bool isSuccessful = false;
 
             if (containsGripperValue) {
                 if (SendGripperCommandUnlocked(gripperValue)) {
@@ -150,11 +150,13 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
 
             if (isSuccessful) {
                 JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
-                std::cout << "Could not set joint values" << std::endl;
             }
         }
     } else {
         interbotixMoveGroup->setJointValueTarget(interbotixMoveGroup->getCurrentJointValues());
+    }
+
+    if (!isSuccessful) {
         std::cout << "Could not set joint values" << std::endl;
     }
 
