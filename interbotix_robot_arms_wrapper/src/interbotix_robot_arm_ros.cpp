@@ -108,6 +108,7 @@ void InterbotixRobotArmROS::SendJointCommand(const JointName& jointName, double 
         }
     } else {
         interbotixMoveGroup->setJointValueTarget(interbotixMoveGroup->getCurrentJointValues());
+        std::cout << (std::string) jointName << ": Could not set joint values" << std::endl;
     }
 }
 
@@ -149,10 +150,12 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
 
             if (isSuccessful) {
                 JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
+                std::cout << "Could not set joint values" << std::endl;
             }
         }
     } else {
         interbotixMoveGroup->setJointValueTarget(interbotixMoveGroup->getCurrentJointValues());
+        std::cout << "Could not set joint values" << std::endl;
     }
 
     isCurrentPoseValid = false;
@@ -206,7 +209,7 @@ void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const Join
         jointName = endEffectorJointName;
     }
 
-    if (interbotixMoveGroup->setJointValueTarget(pose, jointName)) {
+    if (SetPose(pose, jointName)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
         if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
@@ -216,6 +219,7 @@ void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const Join
         }
     } else {
         interbotixMoveGroup->setJointValueTarget(interbotixMoveGroup->getCurrentJointValues());
+        std::cout << (std::string) endEffectorJointName << ": Could not set joint values" << std::endl;
     }
 
     isSendingMove = false;
@@ -319,6 +323,7 @@ bool InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
         }
     } else {
         gripperMoveGroup->setJointValueTarget(gripperMoveGroup->getCurrentJointValues());
+        std::cout << "Gripper: Could not set joint values" << std::endl;
     }
 
     return false;
@@ -333,4 +338,16 @@ void InterbotixRobotArmROS::SetCurrentJointValuesAfterPoseMode() {
         gripperMoveGroup->setJointValueTarget(gripperMoveGroup->getCurrentJointValues());
         positionedWithPose = false;
     }
+}
+
+bool InterbotixRobotArmROS::SetPose(const geometry_msgs::Pose& pose, const std::string& endEffectorJointName) {
+    bool isSuccessful = interbotixMoveGroup->setPositionTarget(pose.position.x, pose.position.y, pose.position.z, endEffectorJointName);
+    std::shared_ptr<RobotInfo> robotInfo = GetRobotInfo();
+
+    if (this->dof == InterbotixJointName::DOF::DOF_6) {
+        isSuccessful = isSuccessful && interbotixMoveGroup->setOrientationTarget(pose.orientation.x, pose.orientation.y, pose.orientation.z,
+            pose.orientation.w, endEffectorJointName);
+    }
+
+    return isSuccessful;
 }

@@ -324,7 +324,8 @@ int main(int argc, char** argv) {
         std::unique_ptr<bool> isPreciseMode = std::make_unique<bool>(true);
         std::unique_ptr<bool> isGripperLocked = std::make_unique<bool>(true);
         std::unique_ptr<bool> successfullySavedConfiguration = std::make_unique<bool>(false);
-        std::unique_ptr<CoordinateSystemMode> currentCoordinateSystemMode = std::make_unique<CoordinateSystemMode>(robotName == "wx200" && !useROS ? CoordinateSystemMode::JOINT_MODE : CoordinateSystemMode::WORLD_COORDINATE_MODE);
+        std::unique_ptr<CoordinateSystemMode> currentCoordinateSystemMode = std::make_unique<CoordinateSystemMode>(
+            robotName == "wx200" && !useROS ? CoordinateSystemMode::JOINT_MODE : CoordinateSystemMode::WORLD_COORDINATE_MODE);
         std::unique_ptr<WorldAxis> currentWorldAxis = std::make_unique<WorldAxis>(WorldAxis::EAST);
         std::unique_ptr<robot_arm::JointNameImpl> endEffectorJointName = std::make_unique<robot_arm::JointNameImpl>(interbotix::InterbotixJointName::GRIPPER());
 
@@ -527,7 +528,7 @@ int main(int argc, char** argv) {
         }, [&currentJoint, &switchPrecisionModeTime, &isPreciseMode](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
-            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchPrecisionModeTime) > std::chrono::milliseconds(100)) {
+            if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - switchPrecisionModeTime) > std::chrono::milliseconds(150)) {
                 switchPrecisionModeTime = currentTime;
                 isPreciseMode.reset(new bool(!(*isPreciseMode)));
 
@@ -609,9 +610,9 @@ int main(int argc, char** argv) {
         std::string tmpJointName = *currentJoint;
 
 #ifdef unix
-        std::system("clear");
+        int tmpSystemResult = std::system("clear");
 #elif defined(_WIN32)
-        std::system("cls");
+        int tmpSystemResult = std::system("cls");
 #endif
         std::cout << "Teach Mode: Joint Mode (" << tmpJointName << ")" << std::endl;
         std::cout << "Teach Mode: World coordinate system mode (" << GetStringForWorldAxis(*currentWorldAxis) << ")" << std::endl;

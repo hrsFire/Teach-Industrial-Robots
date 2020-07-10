@@ -51,6 +51,7 @@ namespace interbotix {
         std::vector<JointState> GetOrderedJointStates();
         bool SendGripperCommandUnlocked(double value);
         void SetCurrentJointValuesAfterPoseMode();
+        bool SetPose(const geometry_msgs::Pose& pose, const std::string& endEffectorJointName);
         ros::NodeHandlePtr nodeHandlePtr;
         ros::AsyncSpinner* spinner;
         std::mutex jointStatesMutex;
