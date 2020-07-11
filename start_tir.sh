@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ##############################################################
 ##  This script must be executed outside the LXC container  ##
 ##############################################################
@@ -8,7 +10,8 @@ USE_SIMULATION=true  # Only usable with "USE_ROS_COMMUNICATION=true"
 LXC_USER_NAME="ubuntu"
 LXC_INSTANCE="<container name>"
 ADDITIONAL_APP_PARAMETERS="--move-home-at-exit --move-home-at-error"
-TEACH_POSITIONS=true  # If "true" positions can be teached, Otherwise the positions in the file "robot_arm_positions.json" will be executed.
+TEACH_POSITIONS=false  # If "true" positions can be teached, Otherwise the positions in the file "robot_arm_positions.json" will be executed.
+CONFIGURATION_FILE_PATH=""  # Empty for the default file path ("/home/ubuntu/robot_arm_positions.json")
 SCHED_RUNTIME=50000000
 SCHED_DEADLINE=50000000
 SCHED_PERIOD=50000000
@@ -18,6 +21,10 @@ if [ "$TEACH_POSITIONS" = true ] ; then
     APP_MODE_PARAMETER="--teach-positions"
 else
     APP_MODE_PARAMETER="--repeat-recorded-positions"
+fi
+
+if [ "$CONFIGURATION_FILE_PATH" != "" ] ; then
+    ADDITIONAL_APP_PARAMETERS=${ADDITIONAL_APP_PARAMETERS}" --positions-file-path='"${CONFIGURATION_FILE_PATH}"'"
 fi
 
 # Set the signal handlers
