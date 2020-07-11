@@ -48,6 +48,7 @@ void ExitSafely() {
 void PrintHelp() {
     std::cout << std::endl << std::endl;
     std::cout << "Command line options:" << std::endl;
+    std::cout << "  " << "-pfp, --positions-file-path" << "\t\t" << "The file path to save or load the recorded positions" << std::endl;
     std::cout << "  " << "-opf, --overwrite-positions-file" << "\t" << "Enables to overwrite the positions file."
         << " Make a backup of the positions file, becasue otherwise this leads to data loss." << std::endl;
     std::cout << "  " << "-rrp, --repeat-recorded-positions" << "\t" << "Repeat the recorded positions from the positions file" << std::endl;
@@ -90,6 +91,7 @@ std::string GetStringForWorldAxis(WorldAxis worldAxis) {
 }
 
 int main(int argc, char** argv) {
+    std::string positionsFilePath;
     bool overwritePositionsFile = false;
     bool repeatRecordedPositions = false;
     bool teachPositions = false;
@@ -112,69 +114,82 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    bool keyFound = false;
+    bool requiresValue;
+    std::string arg;
     std::string key;
+    std::string value;
+    std::size_t index;
+    bool numberOfHyphens;
 
     for (size_t i = 1; i < argc; i++) {
-        std::string arg = argv[i];
+        arg = argv[i];
+        requiresValue = false;
+        numberOfHyphens = arg.rfind("--", 0) == 0 ? 2 : 0;
 
-        if (!keyFound) {
-            if (arg.rfind("-", 0) == 0 || arg.rfind("--", 0) == 0) {
+        if (numberOfHyphens == 0) {
+            numberOfHyphens = arg.rfind("-", 0) == 0 ? 1 : 0;
+        }
+
+        if (numberOfHyphens > 0) {
+            index = arg.find("=");
+
+            if (index == std::string::npos) {
                 key = arg;
-                bool requiresValue = false;
-
-                if (key == "--overwrite-positions-file" || key == "-opf") {
-                    overwritePositionsFile = true;
-                } else if (key == "--repeat-recorded-positions" || key == "-rrp") {
-                    repeatRecordedPositions = true;
-                } else if (key == "--teach-positions" || key == "-tp") {
-                    teachPositions = true;
-                } else if (key == "--robot-name" || key == "-rn") {
-                    requiresValue = true;
-                } else if (key == "--robot-model" || key == "-rm") {
-                    requiresValue = true;
-                } else if (key == "--use-ros" || key == "-ur") {
-                    useROS = true;
-                } else if (key == "--move-home-at-exit" || key == "-mhaex") {
-                    moveHomeAtExit = true;
-                } else if (key == "--move-home-at-error" || key == "-mhaer") {
-                    moveHomeAtError = true;
-                } else if (key == "--help") {
-                    PrintHelp();
-                    return 0;
-                } else {
-                    std::cout << std::endl << "> Invalid key: " << key << std::endl;
-                    PrintHelp();
-                    return 0;
-                }
-
-                if (requiresValue && i == argc -1) {
-                    std::cout << std::endl << "> Key requires value: " << key << std::endl;
-                    PrintHelp();
-                    return 0;
-                }
-
-                if (requiresValue) {
-                    keyFound = true;
-                }
+                value = "";
             } else {
-                keyFound == false;
-                std::cout << std::endl << "> Invalid parameter: " << arg << std::endl;
+                key = arg.substr(0, index);
+                key.erase(key.begin(), key.begin() + (numberOfHyphens -1));
+                value = arg.substr(index +1);
+            }
+
+            if (key == "--positions-file-path" || key == "-pfp") {
+                if (value.empty()) {
+                    requiresValue = true;
+                } else {
+                    positionsFilePath = value;
+                }
+            } else if (key == "--overwrite-positions-file" || key == "-opf") {
+                overwritePositionsFile = true;
+            } else if (key == "--repeat-recorded-positions" || key == "-rrp") {
+                repeatRecordedPositions = true;
+            } else if (key == "--teach-positions" || key == "-tp") {
+                teachPositions = true;
+            } else if (key == "--robot-name" || key == "-rn") {
+                if (value.empty()) {
+                    requiresValue = true;
+                } else {
+                    robotName = value;
+                }
+            } else if (key == "--robot-model" || key == "-rm") {
+                if (value.empty()) {
+                    requiresValue = true;
+                } else {
+                    robotModel = value;
+                }
+            } else if (key == "--use-ros" || key == "-ur") {
+                useROS = true;
+            } else if (key == "--move-home-at-exit" || key == "-mhaex") {
+                moveHomeAtExit = true;
+            } else if (key == "--move-home-at-error" || key == "-mhaer") {
+                moveHomeAtError = true;
+            } else if (key == "--help") {
+                PrintHelp();
+                return 0;
+            } else {
+                std::cout << std::endl << "> Invalid key: " << key << std::endl;
+                PrintHelp();
+                return 0;
+            }
+
+            if (requiresValue) {
+                std::cout << std::endl << "> Key requires value: " << key << std::endl;
                 PrintHelp();
                 return 0;
             }
         } else {
-            // Check for keys with values
-            if (key == "--robot-name" || key == "-rn") {
-                robotName = arg;
-            } else if (key == "--robot-model" || key == "-rm") {
-                robotModel = arg;
-            } else {
-                PrintHelp();
-                return 0;
-            }
-
-            keyFound = false;
+            std::cout << std::endl << "> Invalid parameter: " << arg << std::endl;
+            PrintHelp();
+            return 0;
         }
     }
 #endif //NDEBUG
@@ -210,8 +225,15 @@ int main(int argc, char** argv) {
     if (repeatRecordedPositions) {
         robot_arm_common::ConfigurationStorage configurationStorage;
         std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>> recordedPositions;
+        bool isSuccessful;
 
-        if (configurationStorage.LoadPositions(interbotix::InterbotixJointName::NONE(), recordedPositions)) {
+        if (positionsFilePath.empty()) {
+            isSuccessful = configurationStorage.LoadPositions(interbotix::InterbotixJointName::NONE(), recordedPositions);
+        } else {
+            isSuccessful = configurationStorage.LoadPositions(positionsFilePath, interbotix::InterbotixJointName::NONE(), recordedPositions);
+        }
+
+        if (isSuccessful) {
             std::cout << "Successfully loaded recorded positions" << std::endl;
             std::cout << "Start to repeat the recorded positions" << std::endl;
             int numberOfJointPositionsReached;
@@ -339,6 +361,40 @@ int main(int argc, char** argv) {
             gripperGestureGroup, switchJointGestureGroup, switchPrecisionModeGestureGroup });
         gestures::GestureGroup configurationGestureGroup = gesturesEngine->AddGestureGroup("configuration", 5, { singleJointGestureGroup, gripperGestureGroup,
             switchJointGestureGroup, switchPrecisionModeGestureGroup });
+
+        std::function<void(bool)> saveConfiguratonFile = [&positionsFilePath, &recordedPositions, &successfullySavedConfiguration,
+                &overwritePositionsFile](bool initialize) -> void {
+            robot_arm_common::ConfigurationStorage configurationStorage;
+            recordedPositions.push_back(robotArm->GetJointStates());
+            bool isSuccessful = false;
+
+            if (positionsFilePath.empty()) {
+                isSuccessful = configurationStorage.SavePositions(recordedPositions, overwritePositionsFile);
+            } else {
+                isSuccessful = configurationStorage.SavePositions(recordedPositions, positionsFilePath, overwritePositionsFile);
+            }
+
+            if (isSuccessful) {
+                if (!initialize) {
+                    std::cout << "Saved recorded positions" << std::endl;
+                }
+
+                successfullySavedConfiguration.reset(new bool(true));
+                overwritePositionsFile = true;
+            } else {
+                if (initialize) {
+                    std::cout << "Warning: Could not create file for \"recorded positions\"";
+
+                    if (!overwritePositionsFile) {
+                        std::cout << ", because it isn't allowed to overwrite the file. Please make a backup or use the specific command line option." << std::endl;
+                    }
+                } else {
+                    std::cout << "Could not save recorded positions";
+                }
+
+                std::cout << std::endl;
+            }
+        };
 
         gesturesEngine->AddGesture(gestures::Gesture([](const gestures::GesturesQuery& gesturesImpl) -> bool {
             return IsLookingAtDevice(gesturesImpl) &&
@@ -549,30 +605,12 @@ int main(int argc, char** argv) {
             return IsLookingAtDevice(gesturesImpl) &&
                 gesturesImpl.IsGesture(K4ABT_JOINT_HIP_LEFT, K4ABT_JOINT_HANDTIP_LEFT, 0, 140.0) &&
                 gesturesImpl.IsGesture(K4ABT_JOINT_HIP_RIGHT, K4ABT_JOINT_HANDTIP_RIGHT, 0, 140.0);
-        }, [&saveConfigurationTime, &recordedPositions, &overwritePositionsFile, &successfullySavedConfiguration](std::chrono::milliseconds duration) {
+        }, [&saveConfigurationTime, &recordedPositions, &overwritePositionsFile, &successfullySavedConfiguration, &saveConfiguratonFile](std::chrono::milliseconds duration) {
             std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
 
             if (duration == std::chrono::milliseconds(0) && std::chrono::duration_cast<std::chrono::seconds>(currentTime - saveConfigurationTime) > std::chrono::milliseconds(100)) {
                 saveConfigurationTime = currentTime;
-                robot_arm_common::ConfigurationStorage configurationStorage;
-                recordedPositions.push_back(robotArm->GetJointStates());
-
-                if (*successfullySavedConfiguration) {
-                    overwritePositionsFile = true;
-                }
-
-                if (configurationStorage.SavePositions(recordedPositions, overwritePositionsFile)) {
-                    std::cout << "Saved recorded positions" << std::endl;
-                    successfullySavedConfiguration.reset(new bool(true));
-                } else {
-                    std::cout << "Could not save recorded positions";
-
-                    if (!overwritePositionsFile) {
-                        std::cout << ", because it isn't allowed to overwrite the file. Please make a backup or use the specific command line option." << std::endl;
-                    }
-
-                    std::cout << std::endl;
-                }
+                saveConfiguratonFile(false);
             }
         }), configurationGestureGroup, 0, { interbotix::InterbotixJointName::WAIST(), interbotix::InterbotixJointName::SHOULDER(), interbotix::InterbotixJointName::ELBOW(),
             interbotix::InterbotixJointName::FOREARM_ROLL(), interbotix::InterbotixJointName::WRIST_ANGLE(), interbotix::InterbotixJointName::WRIST_ROTATE() });
@@ -616,6 +654,7 @@ int main(int argc, char** argv) {
 #endif
         std::cout << "Teach Mode: Joint Mode (" << tmpJointName << ")" << std::endl;
         std::cout << "Teach Mode: World coordinate system mode (" << GetStringForWorldAxis(*currentWorldAxis) << ")" << std::endl;
+        saveConfiguratonFile(true);
         std::cout << std::endl << std::endl;
         std::this_thread::sleep_for(std::chrono::seconds(5));
 

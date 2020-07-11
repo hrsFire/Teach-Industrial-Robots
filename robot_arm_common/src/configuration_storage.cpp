@@ -34,20 +34,26 @@ ConfigurationStorage::ConfigurationStorage() {
     std::cout << "Default file path for robot arm positions: " << defaultDirectoryPath << "/" << defaultFileName << std::endl;
 }
 
-bool ConfigurationStorage::SavePositions(const std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>>& allJointPositions, bool overwrite) {
+bool ConfigurationStorage::SavePositions(const std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>>& allJointPositions,
+        bool overwrite) {
     return ConfigurationStorage::SavePositions(allJointPositions, defaultDirectoryPath, defaultFileName, overwrite);
 }
 
 bool ConfigurationStorage::SavePositions(const std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>>& allJointPositions,
         std::string directoryPath, std::string fileName, bool overwrite) {
     std::string filePath = directoryPath + "/" + fileName;
+    return SavePositions(allJointPositions, filePath, overwrite);
+}
+
+bool ConfigurationStorage::SavePositions(const std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>>& allJointPositions,
+        std::string filePath, bool overwrite) {
     std::ifstream tmpFile(filePath);
 
     if (tmpFile.good() && !overwrite) {
         return false;
     }
 
-    std::cout << "Save robot arm positions to: " << directoryPath << "/" << fileName << std::endl;
+    std::cout << "Save robot arm positions to: \"" << filePath << "\"" << std::endl;
     std::ofstream file(filePath, std::ofstream::out | std::ofstream::trunc);
     bool hasError = false;
 
@@ -112,8 +118,14 @@ bool ConfigurationStorage::LoadPositions(const robot_arm::JointName& jointNameDe
 
 bool ConfigurationStorage::LoadPositions(std::string directoryPath, std::string fileName, const robot_arm::JointName& jointNameDeserializer,
         std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>>& allJointPositions) {
-    std::cout << "Load robot arm positions from: " << directoryPath << "/" << fileName << std::endl;
-    std::ifstream file(directoryPath + "/" + fileName, std::ifstream::in);
+    std::string filePath = directoryPath + "/" + fileName;
+    return LoadPositions(filePath, jointNameDeserializer, allJointPositions);
+}
+
+bool ConfigurationStorage::LoadPositions(std::string filePath, const robot_arm::JointName& jointNameDeserializer,
+            std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>>& allJointPositions) {
+    std::cout << "Load robot arm positions from: \"" << filePath << "\"" << std::endl;
+    std::ifstream file(filePath, std::ifstream::in);
     bool hasError = false;
 
     if (file.is_open()) {
