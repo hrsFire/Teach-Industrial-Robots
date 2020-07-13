@@ -643,7 +643,7 @@ int main(int argc, char** argv) {
 
 #ifdef MEASUREMENT
     robotArm->SendJointCommands(robotArm->GetRobotInfo()->sleepPosition);
-#endif
+#endif //MEASUREMENT
 
         std::string tmpJointName = *currentJoint;
 

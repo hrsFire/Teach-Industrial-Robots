@@ -2,6 +2,14 @@
 
 #include "simple_gestures/gestures/gestures_engine.hpp"
 #include "gesture_group_item.hpp"
+#include <chrono>
+#include <thread>
+
+#ifdef MEASUREMENT
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#endif //MEASUREMENT
 
 using namespace gestures;
 
@@ -76,10 +84,34 @@ void GesturesEngine::Start() {
     bool isCleanupActive = false;
     std::list<GestureGroupItem>& groups = *reinterpret_cast<std::list<GestureGroupItem>*>(this->groups);
 
+#ifdef MEASUREMENT
+    std::ofstream measurementFile("gestures_recognition_measurement.csv", std::ios::out | std::ios::trunc);
+    measurementFile << "Time" << ", " << "Duration (ms)" << std::endl;
+    std::chrono::system_clock::time_point lastTime = std::chrono::system_clock::now();
+    std::chrono::milliseconds timeDuration;
+    std::chrono::system_clock::time_point currentTime = lastTime;
+    std::time_t time;
+    std::string timeString;
+#endif //MEASUREMENT
+
     while (isRunning) {
         gesturesImpl->NextCycle();
 
         if (gesturesImpl->IsNewDataAvailable()) {
+#ifdef MEASUREMENT
+            if (currentTime == lastTime) {
+                lastTime = std::chrono::system_clock::now();
+            } else {
+                currentTime = std::chrono::system_clock::now();
+                timeDuration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime);
+                time = std::chrono::system_clock::to_time_t(currentTime);
+                timeString = std::ctime(&time);
+                measurementFile << timeString.substr(0, timeString.length() -1) << ", " << timeDuration.count() << std::endl;
+                measurementFile.flush();
+                lastTime = currentTime;
+            }
+#endif //MEASUREMENT
+
             for (GestureGroupItem& group : groups) {
                 isCleanupActive = false;
 
@@ -151,6 +183,8 @@ void GesturesEngine::Start() {
             affectedItems.clear();
             gesturesImpl->MarkDataAsUsed();
         }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 
