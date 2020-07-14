@@ -5,11 +5,11 @@
 #include <chrono>
 #include <thread>
 
-#ifdef MEASUREMENT
+#ifdef GESTURE_MEASUREMENT
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#endif //MEASUREMENT
+#endif //GESTURE_MEASUREMENT
 
 using namespace gestures;
 
@@ -84,33 +84,34 @@ void GesturesEngine::Start() {
     bool isCleanupActive = false;
     std::list<GestureGroupItem>& groups = *reinterpret_cast<std::list<GestureGroupItem>*>(this->groups);
 
-#ifdef MEASUREMENT
+#ifdef GESTURE_MEASUREMENT
     std::ofstream measurementFile("gestures_recognition_measurement.csv", std::ios::out | std::ios::trunc);
-    measurementFile << "Time" << ", " << "Duration (ms)" << std::endl;
-    std::chrono::system_clock::time_point lastTime = std::chrono::system_clock::now();
+    measurementFile << "Time [min]" << ", " << "Duration [ms]" << std::endl;
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+    std::chrono::system_clock::time_point lastTime = startTime;
     std::chrono::milliseconds timeDuration;
-    std::chrono::system_clock::time_point currentTime = lastTime;
+    std::chrono::system_clock::time_point currentTime;
     std::time_t time;
     std::string timeString;
-#endif //MEASUREMENT
+#endif //GESTURE_MEASUREMENT
 
     while (isRunning) {
         gesturesImpl->NextCycle();
 
         if (gesturesImpl->IsNewDataAvailable()) {
-#ifdef MEASUREMENT
-            if (currentTime == lastTime) {
-                lastTime = std::chrono::system_clock::now();
-            } else {
-                currentTime = std::chrono::system_clock::now();
-                timeDuration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime);
-                time = std::chrono::system_clock::to_time_t(currentTime);
-                timeString = std::ctime(&time);
-                measurementFile << timeString.substr(0, timeString.length() -1) << ", " << timeDuration.count() << std::endl;
-                measurementFile.flush();
-                lastTime = currentTime;
-            }
-#endif //MEASUREMENT
+#ifdef GESTURE_MEASUREMENT
+            currentTime = std::chrono::system_clock::now();
+            timeDuration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime);
+            time = std::chrono::system_clock::to_time_t(currentTime);
+            timeString = std::ctime(&time);
+            measurementFile << std::chrono::duration_cast<std::chrono::minutes>(currentTime - startTime).count() << ", " << timeDuration.count() << std::endl;
+            measurementFile.flush();
+
+            gesturesImpl->MarkDataAsUsed();
+            lastTime = currentTime;
+            // Skip the execution of the robot movements to test the raw performance of the gesture recognition.
+            continue;
+#endif //GESTURE_MEASUREMENT
 
             for (GestureGroupItem& group : groups) {
                 isCleanupActive = false;
