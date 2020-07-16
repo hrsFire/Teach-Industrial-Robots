@@ -7,7 +7,9 @@
 # These settings can be changed
 USE_ROS_COMMUNICATION=true
 USE_SIMULATION=true  # Only usable with "USE_ROS_COMMUNICATION=true"
-DO_MEASUREMENT=false  # Only usable with "USE_SIMULATION=false"
+DO_MEASUREMENT=false  # Only usable with "USE_SIMULATION=false" and "USE_ROS_COMMUNICATION=true"
+SIMULATE_ADDITIONAL_ROS_NODES=false  # Only usable with "DO_MEASUREMENT=true"
+ADDITIONAL_ROS_NODES_COUNT=3  # Only usable with "SIMULATE_OTHER_ROS_NODES=true"
 LXC_USER_NAME="ubuntu"
 LXC_INSTANCE="<container name>"
 ADDITIONAL_APP_PARAMETERS="--move-home-at-exit --move-home-at-error"
@@ -32,7 +34,7 @@ fi
 close_lxc () {
     printf "\nClosing LXC container ..."
     lxc stop $LXC_INSTANCE --force
-    printf "\t\t\t[SUCCESSFUL]\n"
+    printf "\t\t\t\t[SUCCESSFUL]\n"
 }
 
 # Set the signal handlers
@@ -42,9 +44,9 @@ if [ "$(lxc info $LXC_INSTANCE | grep 'Status: Stopped')" != "" ] ; then
     printf "Starting LXC Container ..."
     lxc start $LXC_INSTANCE
     sleep 3
-    printf "\t\t\t[SUCCESSFUL]\n"
+    printf "\t\t\t\t[SUCCESSFUL]\n"
 else
-    echo "LXC Container already running"
+    echo "LXC Container is already running"
 fi
 
 USER_ID=$(lxc exec $LXC_INSTANCE -- id -u $LXC_USER_NAME)
@@ -77,7 +79,7 @@ else
     kill -SIGKILL $INTERBOTIX_ARM_NODE_PID
 fi
 
-printf "\t\t\t\t\t\t[SUCCESSFUL]\n"
+printf "\t\t\t\t\t\t\t[SUCCESSFUL]\n"
 
 # Start the TIR app
 echo "Starting the TIR app ..."
@@ -88,19 +90,33 @@ sleep 3
 declare -i TIR_APP_PID=$(pidof teach_industrial_robots_node)
 
 if [ "$TIR_APP_PID" = 0 ] ; then
-    printf "\t\t\t\t\t\t[FAILED]\n"
+    printf "\t\t\t\t\t\t\t[FAILED]\n"
     printf "\n\nError: TIR app could not be started! Please check the connection to the robot and the depth camera.\n"
     close_lxc
     exit
 else
-    printf "\t\t\t\t\t\t[SUCCESSFUL]\n"
+    printf "\t\t\t\t\t\t\t[SUCCESSFUL]\n"
 fi
 
 # Set network constraints for measurement
-if [ "$DO_MEASUREMENT" = true ] && [ "$USE_SIMULATION" = false ] ; then
+if [ "$DO_MEASUREMENT" = true ] && [ "$USE_SIMULATION" = false ] && [ "$USE_ROS_COMMUNICATION" = true ] ; then
+    if [ "$SIMULATE_ADDITIONAL_ROS_NODES" = true ] ; then
+        printf "Starting simulation for additional $ADDITIONAL_ROS_NODES_COUNT ros nodes for measurement ...\n"
+
+        for (( i=1; i <= $ADDITIONAL_ROS_NODES_COUNT; i++))
+        do
+            lxc exec $LXC_INSTANCE -- sudo -S -u $LXC_USER_NAME -i bash -i -c "nohup bash -c \"cat /dev/zero | pv -L 390M | nc -u 127.0.0.1 $(expr 4444 + $i)\" &>/dev/null &"
+            sleep 2
+            lxc exec $LXC_INSTANCE -- sudo -S -u $LXC_USER_NAME -i bash -i -c "nohup nc -u -l $(expr 4444 + $i) &>/dev/null &"
+        done
+
+        printf "\t\t\t\t\t\t\t[SUCCESSFUL]\n"
+    fi
+
     printf "Setting network constraints for measurement ..."
+    sleep 3
     lxc exec $LXC_INSTANCE -- sudo -S -u $LXC_USER_NAME -i bash -i -c 'sudo tc qdisc add dev lo root handle 1: tbf rate 940Mbit burst 8192 limit 16384; sudo tc qdisc add dev lo parent 1:1 handle 10 netem corrupt 0.5% loss 0.1% delay 0.2ms 0.05ms distribution normal reorder 3% 50%'
-    printf "\t[SUCCESSFUL]\n"
+    printf "\t\t[SUCCESSFUL]\n"
 fi
 
 if [ "$TEACH_POSITIONS" = true ] ; then
@@ -142,12 +158,12 @@ if [ "$TEACH_POSITIONS" = true ] ; then
     fi
 
     if [ "$FAILED_TO_SET_SCHEDULER" = true ] ; then
-        printf "\t\t\t\t\t\t[FAILED]\n"
+        printf "\t\t\t\t\t\t\t[FAILED]\n"
         printf "\n\nError: Failed to set real time scheduler\n"
         close_lxc
         exit
     else
-        printf "\t\t\t\t\t\t[SUCCESSFUL]\n"
+        printf "\t\t\t\t\t\t\t[SUCCESSFUL]\n"
     fi
 
     # Remove traps and set the new signal handlers
