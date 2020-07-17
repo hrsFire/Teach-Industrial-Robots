@@ -20,6 +20,12 @@
 #include <interbotix_robot_arms_wrapper/interbotix_robot_arm.hpp>
 #include <interbotix_robot_arms_wrapper/interbotix_joint_name.hpp>
 
+#ifdef POSITION_MEASUREMENT
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#endif //POSITION_MEASUREMENT
+
 gestures::GesturesEngine* gesturesEngine = nullptr;
 robot_arm::RobotArmBase* robotArm = nullptr;
 std::mutex exitSafelyMutex;
@@ -335,6 +341,11 @@ int main(int argc, char** argv) {
         // A value of 1 seems to have no performance impact in CPU mode
         bodyTracker.set_temporal_smoothing(0);
 
+#ifdef POSITION_MEASUREMENT
+        std::ofstream* positionMeasurementFile = new std::ofstream("position_measurement.csv", std::ios::out | std::ios::trunc);
+        *positionMeasurementFile << "Time" << std::endl;
+#endif //POSITION_MEASUREMENT
+
         std::vector<std::unordered_map<robot_arm::JointNameImpl, robot_arm::JointState>> recordedPositions;
         std::shared_ptr<robot_arm::JointName> currentJoint = std::make_shared<interbotix::InterbotixJointName>(interbotix::InterbotixJointName::ELBOW());
         std::chrono::system_clock::time_point switchToPrevJointTime = std::chrono::system_clock::now();
@@ -363,7 +374,11 @@ int main(int argc, char** argv) {
             switchJointGestureGroup, switchPrecisionModeGestureGroup });
 
         std::function<void(bool)> saveConfiguratonFile = [&positionsFilePath, &recordedPositions, &successfullySavedConfiguration,
-                &overwritePositionsFile](bool initialize) -> void {
+                &overwritePositionsFile
+#ifdef POSITION_MEASUREMENT
+                , &positionMeasurementFile
+#endif //POSITION_MEASUREMENT
+                ](bool initialize) -> void {
             robot_arm_common::ConfigurationStorage configurationStorage;
             recordedPositions.push_back(robotArm->GetJointStates());
             bool isSuccessful = false;
@@ -377,6 +392,12 @@ int main(int argc, char** argv) {
             if (isSuccessful) {
                 if (!initialize) {
                     std::cout << "Saved recorded positions" << std::endl;
+
+#ifdef POSITION_MEASUREMENT
+                    std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+                    *positionMeasurementFile << std::ctime(&time) << std::endl;
+                    positionMeasurementFile->flush();
+#endif //POSITION_MEASUREMENT
                 }
 
                 successfullySavedConfiguration.reset(new bool(true));
