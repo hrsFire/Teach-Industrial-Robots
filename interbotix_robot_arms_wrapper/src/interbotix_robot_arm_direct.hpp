@@ -40,6 +40,9 @@ namespace interbotix {
         std::unordered_map<JointNameImpl, OperatingMode> operatingModes;
         InterbotixJointName::DOF dof;
         std::chrono::high_resolution_clock::time_point jointStatesLastChanged;
+#ifdef COMMUNICATION_MEASUREMENT
+        std::ofstream* communicationMeasurementFile = nullptr;
+#endif //COMMUNICATION_MEASUREMENT
     };
 }
 

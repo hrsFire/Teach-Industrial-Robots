@@ -1,10 +1,17 @@
 #include "interbotix_robot_arm_direct.hpp"
-#include <trac_ik/trac_ik.hpp>// trac_ik_kinematics_plugin.hpp
+
+#ifdef COMMUNICATION_MEASUREMENT
+#include "interbotix_helper.hpp"
+#endif //COMMUNICATION_MEASUREMENT
 
 using namespace interbotix;
 
 InterbotixRobotArmDirect::InterbotixRobotArmDirect(int argc, char** argv, std::string robotName, std::string robotModel) {
     ros::init(argc, argv, "interbotix_robot_arm", ros::init_options::NoSigintHandler);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    this->communicationMeasurementFile = InterbotixHelper::InitializeMeasurementFile("interbotix_robot_arm_communication_measurement.csv");
+#endif //COMMUNICATION_MEASUREMENT
 
     // https://github.com/Interbotix/interbotix_ros_arms/blob/melodic/interbotix_sdk/launch/arm_run.launch
     std::string interbotixSDKPath = ros::package::getPath("interbotix_sdk");
@@ -19,6 +26,10 @@ InterbotixRobotArmDirect::InterbotixRobotArmDirect(int argc, char** argv, std::s
 
 InterbotixRobotArmDirect::~InterbotixRobotArmDirect() {
     delete robotArm;
+
+#ifdef COMMUNICATION_MEASUREMENT
+    delete communicationMeasurementFile;
+#endif //COMMUNICATION_MEASUREMENT
 }
 
 std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmDirect::GetJointStates() {
@@ -45,7 +56,15 @@ void InterbotixRobotArmDirect::SendJointCommand(const JointName& jointName, doub
     message.joint_name = jointName;
     message.cmd = value;
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     robotArm->arm_send_single_joint_command(message);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 
     JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
         jointStatesLastChanged, operatingModes);
@@ -62,12 +81,28 @@ void InterbotixRobotArmDirect::SendJointCommands(const std::unordered_map<JointN
     interbotix_sdk::JointCommands message;
     message.cmd = JointHelper::PrepareJointCommands(newJointValues, *robotInfo, jointStates);
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     robotArm->arm_send_joint_commands(message);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 
     auto gripper = newJointValues.find(InterbotixJointName::GRIPPER());
 
     if (gripper != newJointValues.end()) {
+#ifdef COMMUNICATION_MEASUREMENT
+        startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
         SendGripperCommandUnlocked(gripper->second);
+
+#ifdef COMMUNICATION_MEASUREMENT
+        InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
     }
 
     JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
@@ -77,7 +112,15 @@ void InterbotixRobotArmDirect::SendJointTrajectory(const std::unordered_map<Join
     trajectory_msgs::JointTrajectory message;
     JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     robotArm->arm_send_joint_trajectory(message);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 }
 
 void InterbotixRobotArmDirect::SendGripperCommand(double value) {
@@ -85,7 +128,16 @@ void InterbotixRobotArmDirect::SendGripperCommand(double value) {
 
     JointNameImpl alteredJointName = JointNameImpl(std::make_shared<InterbotixJointName>(InterbotixJointName::GRIPPER()));
     JointHelper::CheckJointValue(alteredJointName, value, *GetRobotInfo());
+
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     SendGripperCommandUnlocked(value);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 
     JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
         jointStatesLastChanged, operatingModes);
@@ -95,7 +147,15 @@ void InterbotixRobotArmDirect::SendGripperTrajectory(const std::unordered_map<Jo
     trajectory_msgs::JointTrajectory message;
     JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     robotArm->send_gripper_trajectory(message);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 }
 
 void InterbotixRobotArmDirect::SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) {
@@ -114,7 +174,15 @@ void InterbotixRobotArmDirect::SetOperatingMode(const OperatingMode& operatingMo
    req.profile_velocity = profileVelocity;
    req.profile_acceleration = profileAcceleration;
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
    if (robotArm->arm_set_operating_modes(req)) {
+#ifdef COMMUNICATION_MEASUREMENT
+        InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
+
        JointHelper::SetOperatingMode(operatingModes, jointName, operatingMode);
    }
 }

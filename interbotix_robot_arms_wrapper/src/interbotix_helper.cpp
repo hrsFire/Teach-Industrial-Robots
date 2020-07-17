@@ -130,3 +130,25 @@ void InterbotixHelper::GetMotorConfigs(std::string robot_name, std::vector<doubl
         }
     }
 }
+
+#ifdef COMMUNICATION_MEASUREMENT
+std::ofstream* InterbotixHelper::InitializeMeasurementFile(const std::string& filePath) {
+    std::ofstream* measurementFile = new std::ofstream(filePath, std::ios::out | std::ios::trunc);
+    *measurementFile << "Time [TT.MM.JJJJ HH:MM:SS.zzz]" << std::endl;
+    return measurementFile;
+}
+
+void InterbotixHelper::SaveCommunicationMeasurement(const std::chrono::system_clock::time_point& timePoint, std::ofstream& measurementFile) {
+    auto tt = std::chrono::system_clock::to_time_t(timePoint);
+    std::tm* ttm = localtime(&tt);
+    char buffer[26];
+    strftime(buffer, 26, "%d.%m.%Y %H:%M:%S", ttm);
+    std::chrono::seconds::rep milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timePoint.time_since_epoch()).count() % 1000;
+    char fractionBuffer[4];
+    sprintf(fractionBuffer, "%03d", milliseconds);
+    std::string timeString = std::string(buffer) + "." + std::string(fractionBuffer);
+
+    measurementFile << timeString << std::endl;
+    measurementFile.flush();
+}
+#endif //COMMUNICATION_MEASUREMENT

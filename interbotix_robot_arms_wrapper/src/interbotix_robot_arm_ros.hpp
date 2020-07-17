@@ -78,6 +78,10 @@ namespace interbotix {
 
         ros::ServiceClient setOperatingModeClient;
         ros::ServiceClient getRobotInfoClient;
+
+#ifdef COMMUNICATION_MEASUREMENT
+        std::ofstream* communicationMeasurementFile = nullptr;
+#endif //COMMUNICATION_MEASUREMENT
     };
 }
 

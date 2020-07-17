@@ -11,6 +11,10 @@ InterbotixRobotArmROS::InterbotixRobotArmROS(int argc, char** argv, std::string 
     this->robotModel = robotModel;
     this->nodeHandlePtr = ros::NodeHandlePtr(new ros::NodeHandle());
 
+#ifdef COMMUNICATION_MEASUREMENT
+    this->communicationMeasurementFile = InterbotixHelper::InitializeMeasurementFile("interbotix_robot_arm_communication_measurement.csv");
+#endif //COMMUNICATION_MEASUREMENT
+
     // "export ROS_NAMESPACE=wx200" needs to be set before
     moveit::planning_interface::MoveGroupInterface::Options interbotixMoveGroupOptions(PLANNING_GROUP_INTERBOTIX_GROUP, robotName + "/robot_description", ros::NodeHandle());
     this->interbotixMoveGroup = new moveit::planning_interface::MoveGroupInterface(interbotixMoveGroupOptions);
@@ -62,6 +66,10 @@ InterbotixRobotArmROS::~InterbotixRobotArmROS() {
     delete interbotixMoveGroup;
     gripperMoveGroup->stop();
     delete gripperMoveGroup;
+
+#ifdef COMMUNICATION_MEASUREMENT
+    delete communicationMeasurementFile;
+#endif //COMMUNICATION_MEASUREMENT
 }
 
 std::unordered_map<JointNameImpl, JointState> InterbotixRobotArmROS::GetJointStates() {
@@ -96,15 +104,27 @@ void InterbotixRobotArmROS::SendJointCommand(const JointName& jointName, double 
 
     SetCurrentJointValuesAfterPoseMode();
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     if (interbotixMoveGroup->setJointValueTarget(jointName, value)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
         if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
-            interbotixMoveGroup->execute(plan);
+#ifdef COMMUNICATION_MEASUREMENT
+            if (interbotixMoveGroup->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#else
+            if (interbotixMoveGroup->asyncExecute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#endif //COMMUNICATION_MEASUREMENT
+                JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
+                    jointStatesLastChanged, operatingModes);
+                isCurrentPoseValid = false;
 
-            JointHelper::SetJointState(alteredJointName, value, orderedJointStates, unorderedJointStates,
-                jointStatesLastChanged, operatingModes);
-            isCurrentPoseValid = false;
+#ifdef COMMUNICATION_MEASUREMENT
+                InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
+            }
         }
     } else {
         interbotixMoveGroup->setJointValueTarget(interbotixMoveGroup->getCurrentJointValues());
@@ -134,22 +154,34 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
     SetCurrentJointValuesAfterPoseMode();
     bool isSuccessful = false;
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     if (interbotixMoveGroup->setJointValueTarget(tmpJointValues)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
         if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
-            interbotixMoveGroup->execute(plan);
+#ifdef COMMUNICATION_MEASUREMENT
+            if (interbotixMoveGroup->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#else
+            if (interbotixMoveGroup->asyncExecute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#endif //COMMUNICATION_MEASUREMENT
+#ifdef COMMUNICATION_MEASUREMENT
+                InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 
-            if (containsGripperValue) {
-                if (SendGripperCommandUnlocked(gripperValue)) {
+                if (containsGripperValue) {
+                    if (SendGripperCommandUnlocked(gripperValue)) {
+                        isSuccessful = true;
+                    }
+                } else {
                     isSuccessful = true;
                 }
-            } else {
-                isSuccessful = true;
-            }
 
-            if (isSuccessful) {
-                JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
+                if (isSuccessful) {
+                    JointHelper::SetJointStates(newJointValues, orderedJointStates, unorderedJointStates, jointStatesLastChanged, operatingModes);
+                }
             }
         }
     } else {
@@ -168,6 +200,11 @@ void InterbotixRobotArmROS::SendJointTrajectory(const std::unordered_map<JointNa
 
     control_msgs::FollowJointTrajectoryGoal message;
     JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
+
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 
     jointTrajectoryClient->sendGoal(message);
     isCurrentPoseValid = false;
@@ -192,8 +229,16 @@ void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<Joint
     control_msgs::FollowJointTrajectoryGoal message;
     JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     gripperTrajectoryClient->sendGoal(message);
     isCurrentPoseValid = false;
+
+#ifdef COMMUNICATION_MEASUREMENT
+    InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
 }
 
 void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) {
@@ -214,10 +259,23 @@ void InterbotixRobotArmROS::SendPose(const geometry_msgs::Pose& pose, const Join
     if (SetPose(pose, jointName)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
+#ifdef COMMUNICATION_MEASUREMENT
+        std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
         if (interbotixMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
-            interbotixMoveGroup->execute(plan);
-            currentPose = pose;
-            positionedWithPose = true;
+#ifdef COMMUNICATION_MEASUREMENT
+            if (interbotixMoveGroup->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#else
+            if (interbotixMoveGroup->asyncExecute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#endif //COMMUNICATION_MEASUREMENT
+                currentPose = pose;
+                positionedWithPose = true;
+
+#ifdef COMMUNICATION_MEASUREMENT
+                InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
+            }
         }
     } else {
         interbotixMoveGroup->setJointValueTarget(interbotixMoveGroup->getCurrentJointValues());
@@ -316,11 +374,24 @@ bool InterbotixRobotArmROS::SendGripperCommandUnlocked(double value) {
     jointValues.emplace("left_finger", value / 2.0);
     jointValues.emplace("right_finger", -value / 2.0);
 
+#ifdef COMMUNICATION_MEASUREMENT
+    std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();
+#endif //COMMUNICATION_MEASUREMENT
+
     if (gripperMoveGroup->setJointValueTarget(jointValues)) {
         moveit::planning_interface::MoveGroupInterface::Plan plan;
 
         if (gripperMoveGroup->plan(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
-            gripperMoveGroup->execute(plan);
+#ifdef COMMUNICATION_MEASUREMENT
+            if (interbotixMoveGroup->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#else
+            if (interbotixMoveGroup->asyncExecute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+#endif //COMMUNICATION_MEASUREMENT
+#ifdef COMMUNICATION_MEASUREMENT
+                InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
+#endif //COMMUNICATION_MEASUREMENT
+            }
+
             return true;
         }
     } else {
