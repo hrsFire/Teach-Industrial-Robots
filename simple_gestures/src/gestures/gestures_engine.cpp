@@ -91,8 +91,6 @@ void GesturesEngine::Start() {
     std::chrono::system_clock::time_point lastTime = startTime;
     std::chrono::milliseconds timeDuration;
     std::chrono::system_clock::time_point currentTime;
-    std::time_t time;
-    std::string timeString;
 #endif //GESTURE_MEASUREMENT
 
     while (isRunning) {
@@ -102,8 +100,6 @@ void GesturesEngine::Start() {
 #ifdef GESTURE_MEASUREMENT
             currentTime = std::chrono::system_clock::now();
             timeDuration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastTime);
-            time = std::chrono::system_clock::to_time_t(currentTime);
-            timeString = std::ctime(&time);
             measurementFile << std::chrono::duration_cast<std::chrono::minutes>(currentTime - startTime).count() << ", " << timeDuration.count() << std::endl;
             measurementFile.flush();
 
