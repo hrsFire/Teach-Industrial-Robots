@@ -165,7 +165,7 @@ void InterbotixRobotArmROS::SendJointCommands(const std::unordered_map<JointName
 #ifdef COMMUNICATION_MEASUREMENT
             if (interbotixMoveGroup->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
 #else
-            if (interbotixMoveGroup->asyncExecute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
+            if (interbotixMoveGroup->execute(plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS) {
 #endif //COMMUNICATION_MEASUREMENT
 #ifdef COMMUNICATION_MEASUREMENT
                 InterbotixHelper::SaveCommunicationMeasurement(startTime, *communicationMeasurementFile);
