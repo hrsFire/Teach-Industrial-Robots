@@ -295,7 +295,9 @@ int main(int argc, char** argv) {
             std::cout << "Failed to load the recorded positions" << std::endl;
         }
 
-        ExitSafely();
+        if (moveHomeAtExit) {
+            ExitSafely();
+        }
 
         return 0;
     } else if (!teachPositions) {
