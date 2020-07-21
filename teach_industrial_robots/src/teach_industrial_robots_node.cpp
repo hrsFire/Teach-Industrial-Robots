@@ -397,7 +397,7 @@ int main(int argc, char** argv) {
 
 #ifdef POSITION_MEASUREMENT
                     std::time_t time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-                    *positionMeasurementFile << std::ctime(&time) << std::endl;
+                    *positionMeasurementFile << std::ctime(&time);
                     positionMeasurementFile->flush();
 #endif //POSITION_MEASUREMENT
                 }
