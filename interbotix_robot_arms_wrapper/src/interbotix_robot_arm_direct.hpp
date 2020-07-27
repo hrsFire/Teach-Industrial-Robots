@@ -22,7 +22,7 @@ namespace interbotix {
         void SendJointCommands(const std::unordered_map<JointNameImpl, double>& jointValues) override;
         void SendJointTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) override;
         void SendGripperCommand(double value) override;
-        void SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) override;
+        void SendGripperTrajectory(const std::vector<JointTrajectoryPoint>& trajectoryPoints) override;
         void SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) override;
         void SetOperatingMode(const OperatingMode& operatingMode, const AffectedJoints& affectedJoints, const JointName& jointName, bool useCustomProfiles,
             int profileVelocity, int profileAcceleration) override;

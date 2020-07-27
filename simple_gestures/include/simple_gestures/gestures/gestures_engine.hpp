@@ -14,18 +14,47 @@
 #endif //NDEBUG
 
 namespace gestures {
+    /**
+     * This class manages gestures and executes the actions when the gestures are recognized.
+     */
     class GesturesEngine {
     public:
+        /**
+         * Default constructor for the gestures engine.
+         * @param gesturesImpl  A custom gesture.
+         */
         GesturesEngine(GesturesBase* gesturesImpl);
+        /**
+         * Destructor for the gestures engine.
+         */
         ~GesturesEngine();
-        // excludedGroups: Describes the gesture groups which can't be executed with this gesture group. If a gesture in a gesture group was
-        //                 already executed in this gestures cycle this gesture group will not be executed and therefore will be skipped.
+        /**
+         * Defines and adds a gesture group to the gestures engine.
+         * @param name            The name of the gestures group.
+         * @param priority        The priority of the gestures group. If the priority is the same as an existing one the new gestures group will be added before the existing one.
+         * @param excludedGroups  The groups which should be checked before executing this gestures group. Therefore, if an excluded group has already been executed before, this gesture will not be executed.
+         * @return The gestures group which was added to the gestures engine.
+         */
         GestureGroup AddGestureGroup(std::string name, uint priority, std::list<GestureGroup> excludedGroups);
-        // affectedItems: Describes the items which are affected through the gesture. If an item was previously affected in the current gestures
-        //                cycle a further action for the gesture which would also affect the item will not be executed. This prevents gestures
-        //                from intervering with each other which would most likely lead to conflicting behaviour.
-        bool AddGesture(Gesture gesture, GestureGroup group, uint priorityInGroup, std::vector<std::string> affectedItems, bool preventConflicts = true);
+        /**
+         * Adds a gesture with a specific gestures group to the gestures engine.
+         * @param gesture           The gesture to add to the gestures engine.
+         * @param group             The group where the gesture should be added in the gestures engine.
+         * @param priorityInGroup   The priority of the gesture in the gestures group.
+         * @param affectedItems     The items which are affected by the execution of the gesture. Any string is valid as an item key. This prevents gestures from intervering with each other which would most likely lead to conflicting behaviour.
+         * @param preventConflicts  Specifies whether the gestures engine should prevent the execution of the gesture if a gesture with the same affected items has already been executed before.
+         * @return void
+         */
+        void AddGesture(Gesture gesture, GestureGroup group, uint priorityInGroup, std::vector<std::string> affectedItems, bool preventConflicts = true);
+        /**
+         * Starts the gestures engine. This method call blocks the current thread.
+         * @return void
+         */
         void Start();
+        /**
+         * Stops the gestures engine.
+         * @return void
+         */
         void Stop();
     private:
         bool isRunning = false;

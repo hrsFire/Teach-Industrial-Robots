@@ -47,8 +47,8 @@ void InterbotixRobotArm::SendGripperCommand(double value) {
     robotArm->SendGripperCommand(value);
 }
 
-void InterbotixRobotArm::SendGripperTrajectory(const std::unordered_map<robot_arm::JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
-    robotArm->SendGripperTrajectory(jointTrajectoryPoints);
+void InterbotixRobotArm::SendGripperTrajectory(const std::vector<JointTrajectoryPoint>& trajectoryPoints) {
+    robotArm->SendGripperTrajectory(trajectoryPoints);
 }
 
 void InterbotixRobotArm::SendPose(const geometry_msgs::Pose& pose, const JointName& endEffectorJointName) {

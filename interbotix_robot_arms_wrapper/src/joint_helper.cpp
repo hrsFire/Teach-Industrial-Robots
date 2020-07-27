@@ -70,6 +70,40 @@ void JointHelper::CopyToJointTrajectoryMessage(const std::unordered_map<robot_ar
     }
 }
 
+void JointHelper::CopyToGripperJointTrajectoryMessage(const std::vector<robot_arm::JointTrajectoryPoint>& trajectoryPoints,
+        trajectory_msgs::JointTrajectory& message) {
+    for (auto trajectoryPointItem : trajectoryPoints) {
+        message.joint_names.push_back(InterbotixJointName::GRIPPER());
+
+        robot_arm::JointTrajectoryPoint& point = trajectoryPointItem;
+        trajectory_msgs::JointTrajectoryPoint trajectoryPoint;
+        trajectoryPoint.accelerations = point.GetAccelerations();
+        trajectoryPoint.effort = point.GetEfforts();
+        trajectoryPoint.positions = point.GetPositions();
+        trajectoryPoint.time_from_start = ros::Duration(point.GetSecondsFromStart());
+        trajectoryPoint.velocities = point.GetVelocities();
+
+        message.points.push_back(trajectoryPoint);
+    }
+}
+
+void JointHelper::CopyToGripperJointTrajectoryMessage(const std::vector<robot_arm::JointTrajectoryPoint>& trajectoryPoints,
+        control_msgs::FollowJointTrajectoryGoal& message) {
+    for (auto trajectoryPointItem : trajectoryPoints) {
+        message.trajectory.joint_names.push_back(InterbotixJointName::GRIPPER());
+
+        robot_arm::JointTrajectoryPoint& point = trajectoryPointItem;
+        trajectory_msgs::JointTrajectoryPoint trajectoryPoint;
+        trajectoryPoint.accelerations = point.GetAccelerations();
+        trajectoryPoint.effort = point.GetEfforts();
+        trajectoryPoint.positions = point.GetPositions();
+        trajectoryPoint.time_from_start = ros::Duration(point.GetSecondsFromStart());
+        trajectoryPoint.velocities = point.GetVelocities();
+
+        message.trajectory.points.push_back(trajectoryPoint);
+    }
+}
+
 std::unordered_map<robot_arm::JointNameImpl, robot_arm::Joint> JointHelper::CreateJoints(const std::vector<robot_arm::JointNameImpl>& jointNames,
         const std::vector<int>& jointIDs, const std::vector<double>& lowerJointLimits, const std::vector<double> upperJointLimits,
         const std::vector<double>& velocityLimits) {

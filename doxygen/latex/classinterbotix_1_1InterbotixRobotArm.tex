@@ -1,0 +1,322 @@
+\hypertarget{classinterbotix_1_1InterbotixRobotArm}{}\doxysection{interbotix\+::Interbotix\+Robot\+Arm Class Reference}
+\label{classinterbotix_1_1InterbotixRobotArm}\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+
+
+{\ttfamily \#include $<$interbotix\+\_\+robot\+\_\+arm.\+hpp$>$}
+
+
+
+Inheritance diagram for interbotix\+::Interbotix\+Robot\+Arm\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{classinterbotix_1_1InterbotixRobotArm__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for interbotix\+::Interbotix\+Robot\+Arm\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=246pt]{classinterbotix_1_1InterbotixRobotArm__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_aec7851ded9413d5abadffec97e28389a}{Interbotix\+Robot\+Arm}} (bool use\+R\+OS, int argc, char $\ast$$\ast$argv, std\+::string robot\+Name, std\+::string robot\+Model)
+\item 
+\mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_ac44d6537e06a6b81985459fc0d186bfd}{$\sim$\+Interbotix\+Robot\+Arm}} ()
+\item 
+std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$ \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a9b03b50c05e098cd296893a851d99b56}{Get\+Joint\+States}} () override
+\item 
+bool \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a5ecce8a1c2c6ffe938a9eddccf3d7e7d}{Get\+Current\+Pose}} (const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&end\+Effector\+Joint\+Name, geometry\+\_\+msgs\+::\+Pose \&pose) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a71a3924d1c67ac8302f50e98d529c6e2}{Send\+Joint\+Command}} (const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&joint\+Name, double value) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_aec598b541faadd51b59e070d17dd9ff3}{Send\+Joint\+Commands}} (const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, double $>$ \&joint\+Values) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a2c5573029a4c4eebc1e6b4b6ce41df5c}{Send\+Joint\+Trajectory}} (const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint}{robot\+\_\+arm\+::\+Joint\+Trajectory\+Point}} $>$ \&joint\+Trajectory\+Points) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a5f96e4cd4d655dc3f454053ea87527e2}{Send\+Gripper\+Command}} (double value) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a7084eba2c6cc1dd17ee389fbb4f6ba1c}{Send\+Gripper\+Trajectory}} (const std\+::vector$<$ \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint}{robot\+\_\+arm\+::\+Joint\+Trajectory\+Point}} $>$ \&joint\+Trajectory\+Points) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a9eecc2364a0f7458cca06ac10ab3301d}{Send\+Pose}} (const geometry\+\_\+msgs\+::\+Pose \&pose, const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&end\+Effector\+Joint\+Name) override
+\item 
+void \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a6d026a7f1fb9ef701ce07da3b212b4b4}{Set\+Operating\+Mode}} (const \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{robot\+\_\+arm\+::\+Operating\+Mode}} \&operating\+Mode, const \mbox{\hyperlink{namespacerobot__arm_a1d2f1566623c3fd3587090b19abff057}{robot\+\_\+arm\+::\+Affected\+Joints}} \&affected\+Joints, const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&joint\+Name, bool use\+Custom\+Profiles, int profile\+Velocity, int profile\+Acceleration) override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo}{robot\+\_\+arm\+::\+Robot\+Info}} $>$ \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a94f8dcf61e9d14fd49d7405ea0392508}{Get\+Robot\+Info}} () override
+\item 
+double \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_aec7a78f4f6765ae64aa574bb094aaee1}{Calculate\+Acceleration\+Distance}} (const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&joint\+Name, const std\+::chrono\+::milliseconds \&duration) override
+\item 
+double \mbox{\hyperlink{classinterbotix_1_1InterbotixRobotArm_a1bbe4e07a21085138f0a5eb7e13b6da1}{Calculate\+Acceleration\+Distance}} (const std\+::chrono\+::milliseconds \&duration) override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides a thin abstraction layer for the R\+OS and direct communication of an InterbotiX robot model. 
+
+Definition at line 18 of file interbotix\+\_\+robot\+\_\+arm.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_aec7851ded9413d5abadffec97e28389a}\label{classinterbotix_1_1InterbotixRobotArm_aec7851ded9413d5abadffec97e28389a}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!InterbotixRobotArm@{InterbotixRobotArm}}
+\index{InterbotixRobotArm@{InterbotixRobotArm}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{InterbotixRobotArm()}{InterbotixRobotArm()}}
+{\footnotesize\ttfamily interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Interbotix\+Robot\+Arm (\begin{DoxyParamCaption}\item[{bool}]{use\+R\+OS,  }\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv,  }\item[{std\+::string}]{robot\+Name,  }\item[{std\+::string}]{robot\+Model }\end{DoxyParamCaption})}
+
+Default constructor for creating an InterbotiX robot arm instance which can communicate via R\+OS or directly with an InterbotiX robot arm model. 
+\begin{DoxyParams}{Parameters}
+{\em use\+R\+OS} & Specifies if R\+OS should be used. \\
+\hline
+{\em argc} & The number of input arguments. \\
+\hline
+{\em argv} & The input arguments. \\
+\hline
+{\em robot\+Name} & The name of the robot model. \\
+\hline
+{\em robot\+Model} & The robot model for the robot. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_ac44d6537e06a6b81985459fc0d186bfd}\label{classinterbotix_1_1InterbotixRobotArm_ac44d6537e06a6b81985459fc0d186bfd}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!````~InterbotixRobotArm@{$\sim$InterbotixRobotArm}}
+\index{````~InterbotixRobotArm@{$\sim$InterbotixRobotArm}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{$\sim$InterbotixRobotArm()}{~InterbotixRobotArm()}}
+{\footnotesize\ttfamily interbotix\+::\+Interbotix\+Robot\+Arm\+::$\sim$\+Interbotix\+Robot\+Arm (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Destructor for the InterbotiX robot arm instance. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_aec7a78f4f6765ae64aa574bb094aaee1}\label{classinterbotix_1_1InterbotixRobotArm_aec7a78f4f6765ae64aa574bb094aaee1}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!CalculateAccelerationDistance@{CalculateAccelerationDistance}}
+\index{CalculateAccelerationDistance@{CalculateAccelerationDistance}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{CalculateAccelerationDistance()}{CalculateAccelerationDistance()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Calculate\+Acceleration\+Distance (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{joint\+Name,  }\item[{const std\+::chrono\+::milliseconds \&}]{duration }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Calculates the distance for the given joint with an internally available acceleration and the given duration. The robot arm takes care of the specific operating mode. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em joint\+Name} & The joint name whose distance should be calculated. \\
+\hline
+\mbox{\texttt{ in}}  & {\em duration} & The duration in milliseconds of the movement so far. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The distance which was internally calculated with a valid acceleration. The distance is in radians if the position mode is set. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a437c24b9b5099e3652e906c596b970ba}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a1bbe4e07a21085138f0a5eb7e13b6da1}\label{classinterbotix_1_1InterbotixRobotArm_a1bbe4e07a21085138f0a5eb7e13b6da1}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!CalculateAccelerationDistance@{CalculateAccelerationDistance}}
+\index{CalculateAccelerationDistance@{CalculateAccelerationDistance}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{CalculateAccelerationDistance()}{CalculateAccelerationDistance()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Calculate\+Acceleration\+Distance (\begin{DoxyParamCaption}\item[{const std\+::chrono\+::milliseconds \&}]{duration }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Calculates the distance for the given joint with an internally available acceleration and the given duration for a linear movement. The robot arm takes care of the specific operating mode. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em duration} & The duration in milliseconds of the movement so far. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The distance which was internally calculated with a valid acceleration. The distance is in meters. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_aa25933fcfb88ba70b703bcab110e9030}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a5ecce8a1c2c6ffe938a9eddccf3d7e7d}\label{classinterbotix_1_1InterbotixRobotArm_a5ecce8a1c2c6ffe938a9eddccf3d7e7d}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!GetCurrentPose@{GetCurrentPose}}
+\index{GetCurrentPose@{GetCurrentPose}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{GetCurrentPose()}{GetCurrentPose()}}
+{\footnotesize\ttfamily bool interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Get\+Current\+Pose (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{end\+Effector\+Joint\+Name,  }\item[{geometry\+\_\+msgs\+::\+Pose \&}]{pose }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Gets the current pose of the given joint name of the end effector. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em end\+Effector\+Joint\+Name} & The joint name of the end effector whose pose should be retrieved. \\
+\hline
+\mbox{\texttt{ out}}  & {\em pose} & Retrieved pose of the end effector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the pose could have been retrieved. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a9541436c45ece8ef961b26e6abe29ad0}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a9b03b50c05e098cd296893a851d99b56}\label{classinterbotix_1_1InterbotixRobotArm_a9b03b50c05e098cd296893a851d99b56}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!GetJointStates@{GetJointStates}}
+\index{GetJointStates@{GetJointStates}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{GetJointStates()}{GetJointStates()}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}}$>$ interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Get\+Joint\+States (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Reads the current joint states from all the motors. \begin{DoxyReturn}{Returns}
+A hash map with all joints and their joint states. The joint name is the key for the specific joint state. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_ab0a2c020f8ec66250baf336c469e6bd6}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a94f8dcf61e9d14fd49d7405ea0392508}\label{classinterbotix_1_1InterbotixRobotArm_a94f8dcf61e9d14fd49d7405ea0392508}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!GetRobotInfo@{GetRobotInfo}}
+\index{GetRobotInfo@{GetRobotInfo}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{GetRobotInfo()}{GetRobotInfo()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1RobotInfo}{robot\+\_\+arm\+::\+Robot\+Info}}$>$ interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Get\+Robot\+Info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Gets detailed information about the robot arm. \begin{DoxyReturn}{Returns}
+The detailed information about the robot arm. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a9ad47d28dd5f1e5594a4fbe627dc96f5}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a5f96e4cd4d655dc3f454053ea87527e2}\label{classinterbotix_1_1InterbotixRobotArm_a5f96e4cd4d655dc3f454053ea87527e2}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SendGripperCommand@{SendGripperCommand}}
+\index{SendGripperCommand@{SendGripperCommand}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SendGripperCommand()}{SendGripperCommand()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Send\+Gripper\+Command (\begin{DoxyParamCaption}\item[{double}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sends any type of gripper command to the gripper which was previously configured with an operating mode. 
+\begin{DoxyParams}{Parameters}
+{\em value} & The value which should be set for the gripper. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_aa6c4f886e8d2518ea962de9743bb0190}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a7084eba2c6cc1dd17ee389fbb4f6ba1c}\label{classinterbotix_1_1InterbotixRobotArm_a7084eba2c6cc1dd17ee389fbb4f6ba1c}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SendGripperTrajectory@{SendGripperTrajectory}}
+\index{SendGripperTrajectory@{SendGripperTrajectory}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SendGripperTrajectory()}{SendGripperTrajectory()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Send\+Gripper\+Trajectory (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint}{robot\+\_\+arm\+::\+Joint\+Trajectory\+Point}} $>$ \&}]{trajectory\+Points }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sends a gripper trajectory to the robot arm. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em trajectory\+Points} & The specific trajectory points. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_aa37b018c6fc694d536407e0c9c03f0ee}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a71a3924d1c67ac8302f50e98d529c6e2}\label{classinterbotix_1_1InterbotixRobotArm_a71a3924d1c67ac8302f50e98d529c6e2}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SendJointCommand@{SendJointCommand}}
+\index{SendJointCommand@{SendJointCommand}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SendJointCommand()}{SendJointCommand()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Send\+Joint\+Command (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{joint\+Name,  }\item[{double}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sends any type of command to a specified joint which was previously configured with an operating mode. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em joint\+Name} & The joint name whose value should be changed. \\
+\hline
+ & {\em value} & The value which should be set for the given joint. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a948ab0f3ddf49f6269e0f2a90769226e}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_aec598b541faadd51b59e070d17dd9ff3}\label{classinterbotix_1_1InterbotixRobotArm_aec598b541faadd51b59e070d17dd9ff3}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SendJointCommands@{SendJointCommands}}
+\index{SendJointCommands@{SendJointCommands}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SendJointCommands()}{SendJointCommands()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Send\+Joint\+Commands (\begin{DoxyParamCaption}\item[{const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, double $>$ \&}]{joint\+Values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sends any type of commands to the specified joints which were previously configured with an operating mode. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em joint\+Values} & The joint names and their values which should be changed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a2277a64d1270a5f0e9c62046074aedd4}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a2c5573029a4c4eebc1e6b4b6ce41df5c}\label{classinterbotix_1_1InterbotixRobotArm_a2c5573029a4c4eebc1e6b4b6ce41df5c}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SendJointTrajectory@{SendJointTrajectory}}
+\index{SendJointTrajectory@{SendJointTrajectory}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SendJointTrajectory()}{SendJointTrajectory()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Send\+Joint\+Trajectory (\begin{DoxyParamCaption}\item[{const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint}{robot\+\_\+arm\+::\+Joint\+Trajectory\+Point}} $>$ \&}]{joint\+Trajectory\+Points }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sends a joint trajectory to the robot arm. This excludes the gripper value. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em joint\+Trajectory\+Points} & The joint names and their specific joint trajectory point. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a4e0c6119f307e09c327358c8963e4bce}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a9eecc2364a0f7458cca06ac10ab3301d}\label{classinterbotix_1_1InterbotixRobotArm_a9eecc2364a0f7458cca06ac10ab3301d}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SendPose@{SendPose}}
+\index{SendPose@{SendPose}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SendPose()}{SendPose()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Send\+Pose (\begin{DoxyParamCaption}\item[{const geometry\+\_\+msgs\+::\+Pose \&}]{pose,  }\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{end\+Effector\+Joint\+Name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sends the pose for the specified end effector. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em pose} & The pose which should be archieved with the end effector. \\
+\hline
+\mbox{\texttt{ in}}  & {\em end\+Effector\+Joint\+Name} & The joint name for the end effector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a1c1c4e46c0cfa185138db66c7009dd7a}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixRobotArm_a6d026a7f1fb9ef701ce07da3b212b4b4}\label{classinterbotix_1_1InterbotixRobotArm_a6d026a7f1fb9ef701ce07da3b212b4b4}} 
+\index{interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}!SetOperatingMode@{SetOperatingMode}}
+\index{SetOperatingMode@{SetOperatingMode}!interbotix::InterbotixRobotArm@{interbotix::InterbotixRobotArm}}
+\doxysubsubsection{\texorpdfstring{SetOperatingMode()}{SetOperatingMode()}}
+{\footnotesize\ttfamily void interbotix\+::\+Interbotix\+Robot\+Arm\+::\+Set\+Operating\+Mode (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{robot\+\_\+arm\+::\+Operating\+Mode}} \&}]{operating\+Mode,  }\item[{const \mbox{\hyperlink{namespacerobot__arm_a1d2f1566623c3fd3587090b19abff057}{robot\+\_\+arm\+::\+Affected\+Joints}} \&}]{affected\+Joints,  }\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{joint\+Name,  }\item[{bool}]{use\+Custom\+Profiles,  }\item[{int}]{profile\+Velocity,  }\item[{int}]{profile\+Acceleration }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Sets the operating mode and if necessary a custom profile for a specified joint. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em operating\+Mode} & The operating mode which should be set for the joint. \\
+\hline
+\mbox{\texttt{ in}}  & {\em affected\+Joints} & The affected joints whose operating mode should be set. \\
+\hline
+\mbox{\texttt{ in}}  & {\em joint\+Name} & The joint name whose operating mode should be set if the affected joint is set to S\+I\+N\+G\+L\+E\+\_\+\+J\+O\+I\+NT. \\
+\hline
+ & {\em use\+Custom\+Profiles} & Specifies if a custom profile should be used. \\
+\hline
+ & {\em profile\+Velocity} & Sets the velocity for the custom profile if the use\+Custom\+Profiles parameter is set to True. \\
+\hline
+ & {\em profile\+Acceleration} & Sets the acceleration for the custom profile if the use\+Custom\+Profiles parameter is set to True. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1RobotArmBase_a47128786a71dd992640df5fcdcde8d17}{robot\+\_\+arm\+::\+Robot\+Arm\+Base}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+interbotix\+\_\+robot\+\_\+arms\+\_\+wrapper/include/interbotix\+\_\+robot\+\_\+arms\+\_\+wrapper/interbotix\+\_\+robot\+\_\+arm.\+hpp\end{DoxyCompactItemize}

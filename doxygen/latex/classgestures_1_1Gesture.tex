@@ -1,0 +1,45 @@
+\hypertarget{classgestures_1_1Gesture}{}\doxysection{gestures\+::Gesture Class Reference}
+\label{classgestures_1_1Gesture}\index{gestures::Gesture@{gestures::Gesture}}
+
+
+{\ttfamily \#include $<$gesture.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classgestures_1_1Gesture_a8f6b028aa4ecf66b087eb45c2f04b507}{Gesture}} (std\+::function$<$ bool(const \mbox{\hyperlink{classgestures_1_1GesturesQuery}{Gestures\+Query}} \&)$>$ check\+Gesture, std\+::function$<$ void(std\+::chrono\+::milliseconds duration)$>$ action)
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classgestures_1_1Gesture_acffdd7da196196254f7ff700581d931b}\label{classgestures_1_1Gesture_acffdd7da196196254f7ff700581d931b}} 
+class {\bfseries Gestures\+Engine}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class offers the possibility to link a gesture with an action. 
+
+Definition at line 12 of file gesture.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classgestures_1_1Gesture_a8f6b028aa4ecf66b087eb45c2f04b507}\label{classgestures_1_1Gesture_a8f6b028aa4ecf66b087eb45c2f04b507}} 
+\index{gestures::Gesture@{gestures::Gesture}!Gesture@{Gesture}}
+\index{Gesture@{Gesture}!gestures::Gesture@{gestures::Gesture}}
+\doxysubsubsection{\texorpdfstring{Gesture()}{Gesture()}}
+{\footnotesize\ttfamily gestures\+::\+Gesture\+::\+Gesture (\begin{DoxyParamCaption}\item[{std\+::function$<$ bool(const \mbox{\hyperlink{classgestures_1_1GesturesQuery}{Gestures\+Query}} \&)$>$}]{check\+Gesture,  }\item[{std\+::function$<$ void(std\+::chrono\+::milliseconds duration)$>$}]{action }\end{DoxyParamCaption})}
+
+Default constructor for a custom gesture which is linked with an action. 
+\begin{DoxyParams}{Parameters}
+{\em check\+Gesture} & A function which evaluates to True if the gesture has been recognized. \\
+\hline
+{\em action} & The action to activate when the custom check\+Gesture function has returned True. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+simple\+\_\+gestures/include/simple\+\_\+gestures/gestures/gesture.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,71 @@
+Nowadays a lot of people want to use a N\+UI (Natural User Interface). Therefore we want to adapt this idea to the area of teaching industrial robots with gestures.\hypertarget{index_autotoc_md1}{}\doxysection{Required libraries}\label{index_autotoc_md1}
+
+\begin{DoxyItemize}
+\item G\+LM (Open\+GL mathematics) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt install libglm-\/dev}
+\end{DoxyCode}
+
+\item Eigen3 (a high-\/level C++ library of template headers for linear algebra, matrix and vector operations, geometrical transformations, numerical solvers and related algorithms) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt install libeigen3-\/dev}
+\end{DoxyCode}
+
+\item Rapid\+J\+S\+ON (a J\+S\+ON parser and generator for C++) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt install rapidjson-\/dev}
+\end{DoxyCode}
+
+\item libk4a (Azure Kinect Sensor) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt install libk4a1.3-\/dev}
+\end{DoxyCode}
+
+\item libk4abt (Azure Kinect Body Tracking) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt install libk4abt1.0-\/dev}
+\end{DoxyCode}
+
+\item interbotix\+\_\+ros\+\_\+arms\textbackslash{} A modified version of \href{https://github.com/Interbotix/interbotix_ros_arms}{\texttt{ interbotix\+\_\+ros\+\_\+arms}} hosted on \href{https://github.com/hrsFire/interbotix_ros_arms}{\texttt{ https\+://github.\+com/hrs\+Fire/interbotix\+\_\+ros\+\_\+arms}}
+\end{DoxyItemize}\hypertarget{index_autotoc_md2}{}\doxysection{Build Tool}\label{index_autotoc_md2}
+This project uses catkin-\/tools. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo apt-\/get install python-\/catkin-\/tools}
+\end{DoxyCode}
+\hypertarget{index_autotoc_md3}{}\doxysection{Pre launch}\label{index_autotoc_md3}
+
+\begin{DoxyEnumerate}
+\item Start roscore 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{roscore}
+\end{DoxyCode}
+
+\item Start Interbotix robot arm node (For direct access to the robot arm it is also required for initializing the parameters. If direct access to the robot arm is used this node has to be closed after the parameter initialization.) 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{roslaunch interbotix\_sdk arm\_run.launch robot\_name:=wx200}
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md4}{}\doxysection{How to launch (\+Terminal)}\label{index_autotoc_md4}
+
+\begin{DoxyEnumerate}
+\item Use the \href{https://github.com/Interbotix/interbotix_ros_arms\#quickstart}{\texttt{ quickstart}} from interbotix\+\_\+ros\+\_\+arms, but clone from the following repository which contains a patch which allows the node to be build als a library\+: \href{mailto:git@github.com}{\texttt{ git@github.\+com}}\+:hrs\+Fire/interbotix\+\_\+ros\+\_\+arms.\+git
+\item Clone this project in the src directory of a R\+OS workspace
+\item Use catkin\+\_\+make to compile the packages in the the R\+OS workspace
+\item Source now the R\+OS workspace again
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item Run the app\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{rosrun teach\_industrial\_robots teach\_industrial\_robots\_node}
+\end{DoxyCode}
+
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md5}{}\doxysection{How to launch (\+V\+S Code)}\label{index_autotoc_md5}
+
+\begin{DoxyEnumerate}
+\item Clone the interbotix\+\_\+ros\+\_\+arms as stated in \char`\"{}\+How to launch (\+Terminal)\char`\"{}
+\item Use catkin\+\_\+make to compile the packages in the the R\+OS workspace for the first time. Afterwards the code can be compiled in VS Code.
+\item Source now the R\+OS workspace again
+\item Launch VS Code
+\item Use the shortcut \char`\"{}ctrl+shift+\+B\char`\"{} to build the project and all of its dependencies.
+\item Start the project with the shortcut \char`\"{}\+F5\char`\"{} for debug mode or \char`\"{}ctrl+\+F5\char`\"{} for launching the app without debugging support. 
+\end{DoxyEnumerate}

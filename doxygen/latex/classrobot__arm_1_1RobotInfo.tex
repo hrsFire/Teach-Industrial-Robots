@@ -1,0 +1,125 @@
+\hypertarget{classrobot__arm_1_1RobotInfo}{}\doxysection{robot\+\_\+arm\+::Robot\+Info Class Reference}
+\label{classrobot__arm_1_1RobotInfo}\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+
+
+{\ttfamily \#include $<$robot\+\_\+info.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1RobotInfo_afe2b917da6157ca4a948a970af1dabfc}{Robot\+Info}} (std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1Joint}{Joint}} $>$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a2877913c95d9d5110ba676d175143f69}{joints}}, bool \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_aa3e9a38c552eddab9f65b53a66f2b6a7}{use\+Gripper}}, std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double $>$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a34866d4c4a4e9b3451839d199c5123f8}{home\+Position}}, std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double $>$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_af018018a71ab12a81681dae35b6bc2d5}{sleep\+Position}}, int \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a22d1314d3c5c7827b3ab074cd5ffa665}{number\+Of\+Joints}}, int \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a0150b88c41ba72a6f124cdcb9c096ed1}{number\+Of\+Single\+Joints}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1Joint}{Joint}} $>$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a2877913c95d9d5110ba676d175143f69}{joints}}
+\item 
+const bool \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_aa3e9a38c552eddab9f65b53a66f2b6a7}{use\+Gripper}}
+\item 
+const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double $>$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a34866d4c4a4e9b3451839d199c5123f8}{home\+Position}}
+\item 
+const std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double $>$ \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_af018018a71ab12a81681dae35b6bc2d5}{sleep\+Position}}
+\item 
+const int \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a22d1314d3c5c7827b3ab074cd5ffa665}{number\+Of\+Joints}}
+\item 
+const int \mbox{\hyperlink{classrobot__arm_1_1RobotInfo_a0150b88c41ba72a6f124cdcb9c096ed1}{number\+Of\+Single\+Joints}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides detailed information about the robot model. 
+
+Definition at line 16 of file robot\+\_\+info.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_afe2b917da6157ca4a948a970af1dabfc}\label{classrobot__arm_1_1RobotInfo_afe2b917da6157ca4a948a970af1dabfc}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!RobotInfo@{RobotInfo}}
+\index{RobotInfo@{RobotInfo}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{RobotInfo()}{RobotInfo()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Robot\+Info\+::\+Robot\+Info (\begin{DoxyParamCaption}\item[{std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1Joint}{Joint}} $>$}]{joints,  }\item[{bool}]{use\+Gripper,  }\item[{std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double $>$}]{home\+Position,  }\item[{std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double $>$}]{sleep\+Position,  }\item[{int}]{number\+Of\+Joints,  }\item[{int}]{number\+Of\+Single\+Joints }\end{DoxyParamCaption})}
+
+Default constructor for the detailed information about the robot model. 
+\begin{DoxyParams}{Parameters}
+{\em joints} & The joint names and their detailed information for the robot model. \\
+\hline
+{\em use\+Gripper} & Specifies if the robot model uses a gripper. \\
+\hline
+{\em home\+Position} & The home position for the robot model. \\
+\hline
+{\em sleep\+Position} & The sleep position for the robot model. \\
+\hline
+{\em number\+Of\+Joints} & The number of joints for the robot model excluding the gripper. \\
+\hline
+{\em number\+Of\+Single\+Joints} & The number of single joints for the robot model including the gripper. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_a34866d4c4a4e9b3451839d199c5123f8}\label{classrobot__arm_1_1RobotInfo_a34866d4c4a4e9b3451839d199c5123f8}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!homePosition@{homePosition}}
+\index{homePosition@{homePosition}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{homePosition}{homePosition}}
+{\footnotesize\ttfamily const std\+::unordered\+\_\+map$<$\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double$>$ robot\+\_\+arm\+::\+Robot\+Info\+::home\+Position}
+
+The home position for the robot model used to command all joints (excluding gripper) to 0 radians. 
+
+Definition at line 40 of file robot\+\_\+info.\+hpp.
+
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_a2877913c95d9d5110ba676d175143f69}\label{classrobot__arm_1_1RobotInfo_a2877913c95d9d5110ba676d175143f69}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!joints@{joints}}
+\index{joints@{joints}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{joints}{joints}}
+{\footnotesize\ttfamily const std\+::unordered\+\_\+map$<$\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1Joint}{Joint}}$>$ robot\+\_\+arm\+::\+Robot\+Info\+::joints}
+
+Specifies the joint names of the robot model. 
+
+Definition at line 32 of file robot\+\_\+info.\+hpp.
+
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_a22d1314d3c5c7827b3ab074cd5ffa665}\label{classrobot__arm_1_1RobotInfo_a22d1314d3c5c7827b3ab074cd5ffa665}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!numberOfJoints@{numberOfJoints}}
+\index{numberOfJoints@{numberOfJoints}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{numberOfJoints}{numberOfJoints}}
+{\footnotesize\ttfamily const int robot\+\_\+arm\+::\+Robot\+Info\+::number\+Of\+Joints}
+
+The number of joints for the robot model excluding the gripper. 
+
+Definition at line 48 of file robot\+\_\+info.\+hpp.
+
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_a0150b88c41ba72a6f124cdcb9c096ed1}\label{classrobot__arm_1_1RobotInfo_a0150b88c41ba72a6f124cdcb9c096ed1}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!numberOfSingleJoints@{numberOfSingleJoints}}
+\index{numberOfSingleJoints@{numberOfSingleJoints}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{numberOfSingleJoints}{numberOfSingleJoints}}
+{\footnotesize\ttfamily const int robot\+\_\+arm\+::\+Robot\+Info\+::number\+Of\+Single\+Joints}
+
+The number of single joints for the robot model including the gripper. 
+
+Definition at line 52 of file robot\+\_\+info.\+hpp.
+
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_af018018a71ab12a81681dae35b6bc2d5}\label{classrobot__arm_1_1RobotInfo_af018018a71ab12a81681dae35b6bc2d5}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!sleepPosition@{sleepPosition}}
+\index{sleepPosition@{sleepPosition}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{sleepPosition}{sleepPosition}}
+{\footnotesize\ttfamily const std\+::unordered\+\_\+map$<$\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{Joint\+Name\+Impl}}, double$>$ robot\+\_\+arm\+::\+Robot\+Info\+::sleep\+Position}
+
+The sleep position for the robot model. Used to command all joints (excluding gripper) to a specific position in radians so that the arm does not crash when the driver is turned off (which turns off all motors). 
+
+Definition at line 44 of file robot\+\_\+info.\+hpp.
+
+\mbox{\Hypertarget{classrobot__arm_1_1RobotInfo_aa3e9a38c552eddab9f65b53a66f2b6a7}\label{classrobot__arm_1_1RobotInfo_aa3e9a38c552eddab9f65b53a66f2b6a7}} 
+\index{robot\_arm::RobotInfo@{robot\_arm::RobotInfo}!useGripper@{useGripper}}
+\index{useGripper@{useGripper}!robot\_arm::RobotInfo@{robot\_arm::RobotInfo}}
+\doxysubsubsection{\texorpdfstring{useGripper}{useGripper}}
+{\footnotesize\ttfamily const bool robot\+\_\+arm\+::\+Robot\+Info\+::use\+Gripper}
+
+Specifies if the robot model uses a gripper. 
+
+Definition at line 36 of file robot\+\_\+info.\+hpp.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+interface/include/robot\+\_\+arm\+\_\+interface/robot\+\_\+info.\+hpp\end{DoxyCompactItemize}

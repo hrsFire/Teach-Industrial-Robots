@@ -48,7 +48,7 @@ GestureGroup GesturesEngine::AddGestureGroup(std::string name, uint priority, st
     }
 }
 
-bool GesturesEngine::AddGesture(Gesture gesture, GestureGroup group, uint priorityInGroup, std::vector<std::string> affectedItems, bool preventConflicts) {
+void GesturesEngine::AddGesture(Gesture gesture, GestureGroup group, uint priorityInGroup, std::vector<std::string> affectedItems, bool preventConflicts) {
     bool wasAdded = false;
     std::list<GestureGroupItem>::iterator gestureGroupItr;
     GestureItem gestureItem = GestureItem(gesture, affectedItems, preventConflicts);
@@ -57,22 +57,14 @@ bool GesturesEngine::AddGesture(Gesture gesture, GestureGroup group, uint priori
     // Search for a group which is already available
     for (gestureGroupItr = groups.begin(); gestureGroupItr != groups.end() && gestureGroupItr->name != (std::string) group; gestureGroupItr++);
 
-    if (gestureGroupItr != groups.end()) {
-        // The group is already available. Therefore insert the gesture at the correct position.
-        std::list<GestureItem>::iterator gestureItemItr;
-        uint i = 0;
-        for (gestureItemItr = gestureGroupItr->gestures.begin(); i < priorityInGroup && gestureItemItr != gestureGroupItr->gestures.end(); gestureItemItr++);
+    std::list<GestureItem>::iterator gestureItemItr;
+    uint i = 0;
+    for (gestureItemItr = gestureGroupItr->gestures.begin(); i < priorityInGroup && gestureItemItr != gestureGroupItr->gestures.end(); gestureItemItr++);
 
-        if (gestureItemItr != gestureGroupItr->gestures.end()) {
-            gestureGroupItr->gestures.insert(gestureItemItr, gestureItem);
-        } else {
-            gestureGroupItr->gestures.push_back(gestureItem);
-        }
-
-        return true;
+    if (gestureItemItr != gestureGroupItr->gestures.end()) {
+        gestureGroupItr->gestures.insert(gestureItemItr, gestureItem);
     } else {
-        // The group isn't available yet
-        return false;
+        gestureGroupItr->gestures.push_back(gestureItem);
     }
 }
 

@@ -1,0 +1,120 @@
+\hypertarget{classgestures_1_1GesturesBase}{}\doxysection{gestures\+::Gestures\+Base Class Reference}
+\label{classgestures_1_1GesturesBase}\index{gestures::GesturesBase@{gestures::GesturesBase}}
+
+
+{\ttfamily \#include $<$gestures\+\_\+base.\+hpp$>$}
+
+
+
+Inheritance diagram for gestures\+::Gestures\+Base\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classgestures_1_1GesturesBase__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for gestures\+::Gestures\+Base\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{classgestures_1_1GesturesBase__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{classgestures_1_1GesturesBase_a9c885c5c858588f251198e8c02154c70}{$\sim$\+Gestures\+Base}} ()
+\item 
+virtual void \mbox{\hyperlink{classgestures_1_1GesturesBase_af6ce84922ca93a577bff94b4fd5d033f}{Next\+Cycle}} ()=0
+\item 
+virtual bool \mbox{\hyperlink{classgestures_1_1GesturesBase_afbddb747879f4d709866dec8394ca923}{Is\+New\+Data\+Available}} ()=0
+\item 
+virtual void \mbox{\hyperlink{classgestures_1_1GesturesBase_ae71f3e6e1c48fc93f4ebfa0a83466f0e}{Mark\+Data\+As\+Used}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{classgestures_1_1GesturesBase_a032c0f92c4e9965c694687c2f06ed44d}{data\+Was\+Used}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides the possibility to define a custom gesture. 
+
+Definition at line 10 of file gestures\+\_\+base.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classgestures_1_1GesturesBase_a9c885c5c858588f251198e8c02154c70}\label{classgestures_1_1GesturesBase_a9c885c5c858588f251198e8c02154c70}} 
+\index{gestures::GesturesBase@{gestures::GesturesBase}!````~GesturesBase@{$\sim$GesturesBase}}
+\index{````~GesturesBase@{$\sim$GesturesBase}!gestures::GesturesBase@{gestures::GesturesBase}}
+\doxysubsubsection{\texorpdfstring{$\sim$GesturesBase()}{~GesturesBase()}}
+{\footnotesize\ttfamily virtual gestures\+::\+Gestures\+Base\+::$\sim$\+Gestures\+Base (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Destructor for a custom gesture. 
+
+Definition at line 15 of file gestures\+\_\+base.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classgestures_1_1GesturesBase_afbddb747879f4d709866dec8394ca923}\label{classgestures_1_1GesturesBase_afbddb747879f4d709866dec8394ca923}} 
+\index{gestures::GesturesBase@{gestures::GesturesBase}!IsNewDataAvailable@{IsNewDataAvailable}}
+\index{IsNewDataAvailable@{IsNewDataAvailable}!gestures::GesturesBase@{gestures::GesturesBase}}
+\doxysubsubsection{\texorpdfstring{IsNewDataAvailable()}{IsNewDataAvailable()}}
+{\footnotesize\ttfamily virtual bool gestures\+::\+Gestures\+Base\+::\+Is\+New\+Data\+Available (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Checks if new depth data is available. \begin{DoxyReturn}{Returns}
+True if new depth data is available. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_abea7e6dd6e390291c334866c222f5567}{kinect\+::\+Azure\+Kinect\+Gestures}}.
+
+\mbox{\Hypertarget{classgestures_1_1GesturesBase_ae71f3e6e1c48fc93f4ebfa0a83466f0e}\label{classgestures_1_1GesturesBase_ae71f3e6e1c48fc93f4ebfa0a83466f0e}} 
+\index{gestures::GesturesBase@{gestures::GesturesBase}!MarkDataAsUsed@{MarkDataAsUsed}}
+\index{MarkDataAsUsed@{MarkDataAsUsed}!gestures::GesturesBase@{gestures::GesturesBase}}
+\doxysubsubsection{\texorpdfstring{MarkDataAsUsed()}{MarkDataAsUsed()}}
+{\footnotesize\ttfamily virtual void gestures\+::\+Gestures\+Base\+::\+Mark\+Data\+As\+Used (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+Marks the data that they have already been used. \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Definition at line 31 of file gestures\+\_\+base.\+hpp.
+
+\mbox{\Hypertarget{classgestures_1_1GesturesBase_af6ce84922ca93a577bff94b4fd5d033f}\label{classgestures_1_1GesturesBase_af6ce84922ca93a577bff94b4fd5d033f}} 
+\index{gestures::GesturesBase@{gestures::GesturesBase}!NextCycle@{NextCycle}}
+\index{NextCycle@{NextCycle}!gestures::GesturesBase@{gestures::GesturesBase}}
+\doxysubsubsection{\texorpdfstring{NextCycle()}{NextCycle()}}
+{\footnotesize\ttfamily virtual void gestures\+::\+Gestures\+Base\+::\+Next\+Cycle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Checks if new depth data is available and prepares the depth data. \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_ab5ec34443a722b13cefabc76fa35b342}{kinect\+::\+Azure\+Kinect\+Gestures}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classgestures_1_1GesturesBase_a032c0f92c4e9965c694687c2f06ed44d}\label{classgestures_1_1GesturesBase_a032c0f92c4e9965c694687c2f06ed44d}} 
+\index{gestures::GesturesBase@{gestures::GesturesBase}!dataWasUsed@{dataWasUsed}}
+\index{dataWasUsed@{dataWasUsed}!gestures::GesturesBase@{gestures::GesturesBase}}
+\doxysubsubsection{\texorpdfstring{dataWasUsed}{dataWasUsed}}
+{\footnotesize\ttfamily bool gestures\+::\+Gestures\+Base\+::data\+Was\+Used = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+Specifies if the depth data was already been used. 
+
+Definition at line 38 of file gestures\+\_\+base.\+hpp.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+simple\+\_\+gestures/include/simple\+\_\+gestures/gestures/gestures\+\_\+base.\+hpp\end{DoxyCompactItemize}

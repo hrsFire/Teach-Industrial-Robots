@@ -1,0 +1,89 @@
+\hypertarget{classkinect_1_1AzureKinect}{}\doxysection{kinect\+::Azure\+Kinect Class Reference}
+\label{classkinect_1_1AzureKinect}\index{kinect::AzureKinect@{kinect::AzureKinect}}
+
+
+{\ttfamily \#include $<$azure\+\_\+kinect.\+hpp$>$}
+
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{classkinect_1_1AzureKinect_a4f48d9b1e104b3c9ee83212954b0ba9c}{Start\+Sensors}} (k4a\+::device \&device, k4a\+\_\+device\+\_\+configuration\+\_\+t \&device\+Config)
+\item 
+static bool \mbox{\hyperlink{classkinect_1_1AzureKinect_a790df6a641eb1d3899389d87b5649e02}{Start\+Body\+Tracking}} (k4a\+::device \&device, const k4a\+\_\+device\+\_\+configuration\+\_\+t \&device\+Config, k4abt\+::tracker \&body\+Tracker)
+\item 
+static void \mbox{\hyperlink{classkinect_1_1AzureKinect_a3c5d3f1de83517db913c9f0d828d610a}{Print\+Confidence\+Level}} (k4abt\+\_\+joint\+\_\+t joint)
+\item 
+static void \mbox{\hyperlink{classkinect_1_1AzureKinect_a14839e055aae285683652545b9b449b4}{Destroy}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides common tasks for interacting with the Azure Kinect. 
+
+Definition at line 15 of file azure\+\_\+kinect.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classkinect_1_1AzureKinect_a14839e055aae285683652545b9b449b4}\label{classkinect_1_1AzureKinect_a14839e055aae285683652545b9b449b4}} 
+\index{kinect::AzureKinect@{kinect::AzureKinect}!Destroy@{Destroy}}
+\index{Destroy@{Destroy}!kinect::AzureKinect@{kinect::AzureKinect}}
+\doxysubsubsection{\texorpdfstring{Destroy()}{Destroy()}}
+{\footnotesize\ttfamily static void kinect\+::\+Azure\+Kinect\+::\+Destroy (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Resets the usage of this helper class. \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classkinect_1_1AzureKinect_a3c5d3f1de83517db913c9f0d828d610a}\label{classkinect_1_1AzureKinect_a3c5d3f1de83517db913c9f0d828d610a}} 
+\index{kinect::AzureKinect@{kinect::AzureKinect}!PrintConfidenceLevel@{PrintConfidenceLevel}}
+\index{PrintConfidenceLevel@{PrintConfidenceLevel}!kinect::AzureKinect@{kinect::AzureKinect}}
+\doxysubsubsection{\texorpdfstring{PrintConfidenceLevel()}{PrintConfidenceLevel()}}
+{\footnotesize\ttfamily static void kinect\+::\+Azure\+Kinect\+::\+Print\+Confidence\+Level (\begin{DoxyParamCaption}\item[{k4abt\+\_\+joint\+\_\+t}]{joint }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Prints the confidence level of a joint to the console. 
+\begin{DoxyParams}{Parameters}
+{\em joint} & The joint whose confidence level should be printed to the console. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classkinect_1_1AzureKinect_a790df6a641eb1d3899389d87b5649e02}\label{classkinect_1_1AzureKinect_a790df6a641eb1d3899389d87b5649e02}} 
+\index{kinect::AzureKinect@{kinect::AzureKinect}!StartBodyTracking@{StartBodyTracking}}
+\index{StartBodyTracking@{StartBodyTracking}!kinect::AzureKinect@{kinect::AzureKinect}}
+\doxysubsubsection{\texorpdfstring{StartBodyTracking()}{StartBodyTracking()}}
+{\footnotesize\ttfamily static bool kinect\+::\+Azure\+Kinect\+::\+Start\+Body\+Tracking (\begin{DoxyParamCaption}\item[{k4a\+::device \&}]{device,  }\item[{const k4a\+\_\+device\+\_\+configuration\+\_\+t \&}]{device\+Config,  }\item[{k4abt\+::tracker \&}]{body\+Tracker }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Starts the body tracking of the Azure Kinect. 
+\begin{DoxyParams}{Parameters}
+{\em device} & A device handler for the Azure Kinect. \\
+\hline
+{\em device\+Config} & The configuration which should be used to start the sensors of the Azure Kinect. \\
+\hline
+{\em body\+Tracker} & A handler for the Azure Kinect body tracking. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the Azure Kinect body tracking could be started. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classkinect_1_1AzureKinect_a4f48d9b1e104b3c9ee83212954b0ba9c}\label{classkinect_1_1AzureKinect_a4f48d9b1e104b3c9ee83212954b0ba9c}} 
+\index{kinect::AzureKinect@{kinect::AzureKinect}!StartSensors@{StartSensors}}
+\index{StartSensors@{StartSensors}!kinect::AzureKinect@{kinect::AzureKinect}}
+\doxysubsubsection{\texorpdfstring{StartSensors()}{StartSensors()}}
+{\footnotesize\ttfamily static bool kinect\+::\+Azure\+Kinect\+::\+Start\+Sensors (\begin{DoxyParamCaption}\item[{k4a\+::device \&}]{device,  }\item[{k4a\+\_\+device\+\_\+configuration\+\_\+t \&}]{device\+Config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Starts the sensors of the Azure Kinect. 
+\begin{DoxyParams}{Parameters}
+{\em device} & A device handler for the Azure Kinect. \\
+\hline
+{\em device\+Config} & The configuration which should be used to start the sensors of the Azure Kinect. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the Azure Kinect sensors could be started. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+simple\+\_\+gestures/include/simple\+\_\+gestures/kinect/azure\+\_\+kinect.\+hpp\end{DoxyCompactItemize}

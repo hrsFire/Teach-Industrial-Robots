@@ -1,0 +1,114 @@
+\hypertarget{classgestures_1_1GesturesEngine}{}\doxysection{gestures\+::Gestures\+Engine Class Reference}
+\label{classgestures_1_1GesturesEngine}\index{gestures::GesturesEngine@{gestures::GesturesEngine}}
+
+
+{\ttfamily \#include $<$gestures\+\_\+engine.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classgestures_1_1GesturesEngine_a838eb0053b4f5f446573e36f6244a286}{Gestures\+Engine}} (\mbox{\hyperlink{classgestures_1_1GesturesBase}{Gestures\+Base}} $\ast$gestures\+Impl)
+\item 
+\mbox{\hyperlink{classgestures_1_1GesturesEngine_a040749c9d3351edd9eaeb171e6199e97}{$\sim$\+Gestures\+Engine}} ()
+\item 
+\mbox{\hyperlink{classgestures_1_1GestureGroup}{Gesture\+Group}} \mbox{\hyperlink{classgestures_1_1GesturesEngine_abd5ef903593801ac401a15cf6aea1c23}{Add\+Gesture\+Group}} (std\+::string name, uint priority, std\+::list$<$ \mbox{\hyperlink{classgestures_1_1GestureGroup}{Gesture\+Group}} $>$ excluded\+Groups)
+\item 
+void \mbox{\hyperlink{classgestures_1_1GesturesEngine_ada797f389caf63f676166eddf8d72552}{Add\+Gesture}} (\mbox{\hyperlink{classgestures_1_1Gesture}{Gesture}} gesture, \mbox{\hyperlink{classgestures_1_1GestureGroup}{Gesture\+Group}} group, uint priority\+In\+Group, std\+::vector$<$ std\+::string $>$ affected\+Items, bool prevent\+Conflicts=true)
+\item 
+void \mbox{\hyperlink{classgestures_1_1GesturesEngine_a4bc743dfc836710f912076a225632a3f}{Start}} ()
+\item 
+void \mbox{\hyperlink{classgestures_1_1GesturesEngine_a0f11892e224270cb4b289c57934f7e09}{Stop}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class manages gestures and executes the actions when the gestures are recognized. 
+
+Definition at line 20 of file gestures\+\_\+engine.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classgestures_1_1GesturesEngine_a838eb0053b4f5f446573e36f6244a286}\label{classgestures_1_1GesturesEngine_a838eb0053b4f5f446573e36f6244a286}} 
+\index{gestures::GesturesEngine@{gestures::GesturesEngine}!GesturesEngine@{GesturesEngine}}
+\index{GesturesEngine@{GesturesEngine}!gestures::GesturesEngine@{gestures::GesturesEngine}}
+\doxysubsubsection{\texorpdfstring{GesturesEngine()}{GesturesEngine()}}
+{\footnotesize\ttfamily gestures\+::\+Gestures\+Engine\+::\+Gestures\+Engine (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classgestures_1_1GesturesBase}{Gestures\+Base}} $\ast$}]{gestures\+Impl }\end{DoxyParamCaption})}
+
+Default constructor for the gestures engine. 
+\begin{DoxyParams}{Parameters}
+{\em gestures\+Impl} & A custom gesture. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classgestures_1_1GesturesEngine_a040749c9d3351edd9eaeb171e6199e97}\label{classgestures_1_1GesturesEngine_a040749c9d3351edd9eaeb171e6199e97}} 
+\index{gestures::GesturesEngine@{gestures::GesturesEngine}!````~GesturesEngine@{$\sim$GesturesEngine}}
+\index{````~GesturesEngine@{$\sim$GesturesEngine}!gestures::GesturesEngine@{gestures::GesturesEngine}}
+\doxysubsubsection{\texorpdfstring{$\sim$GesturesEngine()}{~GesturesEngine()}}
+{\footnotesize\ttfamily gestures\+::\+Gestures\+Engine\+::$\sim$\+Gestures\+Engine (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Destructor for the gestures engine. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classgestures_1_1GesturesEngine_ada797f389caf63f676166eddf8d72552}\label{classgestures_1_1GesturesEngine_ada797f389caf63f676166eddf8d72552}} 
+\index{gestures::GesturesEngine@{gestures::GesturesEngine}!AddGesture@{AddGesture}}
+\index{AddGesture@{AddGesture}!gestures::GesturesEngine@{gestures::GesturesEngine}}
+\doxysubsubsection{\texorpdfstring{AddGesture()}{AddGesture()}}
+{\footnotesize\ttfamily void gestures\+::\+Gestures\+Engine\+::\+Add\+Gesture (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classgestures_1_1Gesture}{Gesture}}}]{gesture,  }\item[{\mbox{\hyperlink{classgestures_1_1GestureGroup}{Gesture\+Group}}}]{group,  }\item[{uint}]{priority\+In\+Group,  }\item[{std\+::vector$<$ std\+::string $>$}]{affected\+Items,  }\item[{bool}]{prevent\+Conflicts = {\ttfamily true} }\end{DoxyParamCaption})}
+
+Adds a gesture with a specific gestures group to the gestures engine. 
+\begin{DoxyParams}{Parameters}
+{\em gesture} & The gesture to add to the gestures engine. \\
+\hline
+{\em group} & The group where the gesture should be added in the gestures engine. \\
+\hline
+{\em priority\+In\+Group} & The priority of the gesture in the gestures group. \\
+\hline
+{\em affected\+Items} & The items which are affected by the execution of the gesture. Any string is valid as an item key. This prevents gestures from intervering with each other which would most likely lead to conflicting behaviour. \\
+\hline
+{\em prevent\+Conflicts} & Specifies whether the gestures engine should prevent the execution of the gesture if a gesture with the same affected items has already been executed before. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classgestures_1_1GesturesEngine_abd5ef903593801ac401a15cf6aea1c23}\label{classgestures_1_1GesturesEngine_abd5ef903593801ac401a15cf6aea1c23}} 
+\index{gestures::GesturesEngine@{gestures::GesturesEngine}!AddGestureGroup@{AddGestureGroup}}
+\index{AddGestureGroup@{AddGestureGroup}!gestures::GesturesEngine@{gestures::GesturesEngine}}
+\doxysubsubsection{\texorpdfstring{AddGestureGroup()}{AddGestureGroup()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classgestures_1_1GestureGroup}{Gesture\+Group}} gestures\+::\+Gestures\+Engine\+::\+Add\+Gesture\+Group (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{uint}]{priority,  }\item[{std\+::list$<$ \mbox{\hyperlink{classgestures_1_1GestureGroup}{Gesture\+Group}} $>$}]{excluded\+Groups }\end{DoxyParamCaption})}
+
+Defines and adds a gesture group to the gestures engine. 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the gestures group. \\
+\hline
+{\em priority} & The priority of the gestures group. If the priority is the same as an existing one the new gestures group will be added before the existing one. \\
+\hline
+{\em excluded\+Groups} & The groups which should be checked before executing this gestures group. Therefore, if an excluded group has already been executed before, this gesture will not be executed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The gestures group which was added to the gestures engine. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classgestures_1_1GesturesEngine_a4bc743dfc836710f912076a225632a3f}\label{classgestures_1_1GesturesEngine_a4bc743dfc836710f912076a225632a3f}} 
+\index{gestures::GesturesEngine@{gestures::GesturesEngine}!Start@{Start}}
+\index{Start@{Start}!gestures::GesturesEngine@{gestures::GesturesEngine}}
+\doxysubsubsection{\texorpdfstring{Start()}{Start()}}
+{\footnotesize\ttfamily void gestures\+::\+Gestures\+Engine\+::\+Start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Starts the gestures engine. This method call blocks the current thread. \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classgestures_1_1GesturesEngine_a0f11892e224270cb4b289c57934f7e09}\label{classgestures_1_1GesturesEngine_a0f11892e224270cb4b289c57934f7e09}} 
+\index{gestures::GesturesEngine@{gestures::GesturesEngine}!Stop@{Stop}}
+\index{Stop@{Stop}!gestures::GesturesEngine@{gestures::GesturesEngine}}
+\doxysubsubsection{\texorpdfstring{Stop()}{Stop()}}
+{\footnotesize\ttfamily void gestures\+::\+Gestures\+Engine\+::\+Stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Stops the gestures engine. \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+simple\+\_\+gestures/include/simple\+\_\+gestures/gestures/gestures\+\_\+engine.\+hpp\end{DoxyCompactItemize}

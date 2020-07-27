@@ -1,0 +1,169 @@
+\hypertarget{classrobot__arm_1_1JointNameImpl}{}\doxysection{robot\+\_\+arm\+::Joint\+Name\+Impl Class Reference}
+\label{classrobot__arm_1_1JointNameImpl}\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+
+
+{\ttfamily \#include $<$joint\+\_\+name\+\_\+impl.\+hpp$>$}
+
+
+
+Inheritance diagram for robot\+\_\+arm\+::Joint\+Name\+Impl\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=226pt]{classrobot__arm_1_1JointNameImpl__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for robot\+\_\+arm\+::Joint\+Name\+Impl\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=226pt]{classrobot__arm_1_1JointNameImpl__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_aa673ec097f1188b4e2b7f51a3a53d075}{Joint\+Name\+Impl}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ joint\+Name)
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_a7aea7ac364954a5e63a28d4b9e51cd3d}{operator std\+::string}} () const override
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_ac7eabf813a0fe796885ff992dbf99af1}{operator std\+::shared\+\_\+ptr$<$ Joint\+Name $>$}} () const
+\item 
+bool \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_aca57d6cae5d3f5345e8c3041ad1567fa}{operator==}} (const \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} \&joint\+Name) const override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_ac03c02afb2cd4e014862b4fc7072dd75}{Next}} () override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_af67282e57aaaebcf01610752f3af0ffb}{Prev}} () override
+\item 
+std\+::string \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_a9188a799c6bcff474d19c501c0e23c69}{Serialize}} () const override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl_a8b86ec3311682ba1f02c975b38eaf4c1}{Deserialize}} (std\+::string serialized\+String) const override
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides a default implementation for an abstract joint name. 
+
+Definition at line 12 of file joint\+\_\+name\+\_\+impl.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_aa673ec097f1188b4e2b7f51a3a53d075}\label{classrobot__arm_1_1JointNameImpl_aa673ec097f1188b4e2b7f51a3a53d075}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!JointNameImpl@{JointNameImpl}}
+\index{JointNameImpl@{JointNameImpl}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{JointNameImpl()}{JointNameImpl()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::\+Joint\+Name\+Impl (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$}]{joint\+Name }\end{DoxyParamCaption})}
+
+Default constructor for a joint. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Name} & The name for the joint. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_a8b86ec3311682ba1f02c975b38eaf4c1}\label{classrobot__arm_1_1JointNameImpl_a8b86ec3311682ba1f02c975b38eaf4c1}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!Deserialize@{Deserialize}}
+\index{Deserialize@{Deserialize}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{Deserialize()}{Deserialize()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}}$>$ robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::\+Deserialize (\begin{DoxyParamCaption}\item[{std\+::string}]{serialized\+String }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns a shared point to an abstract joint name for the given string representation. 
+\begin{DoxyParams}{Parameters}
+{\em serialized\+String} & String representation for the joint name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Serialized string representation for the joint name. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a7e2943c3667ef2afaf6f193f1e87d9e7}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_ac03c02afb2cd4e014862b4fc7072dd75}\label{classrobot__arm_1_1JointNameImpl_ac03c02afb2cd4e014862b4fc7072dd75}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!Next@{Next}}
+\index{Next@{Next}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{Next()}{Next()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}}$>$ robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::\+Next (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns a shared pointer to an abstract joint name for the logical next joint of the robot arm. \begin{DoxyReturn}{Returns}
+Shared pointer to an abstract joint name for the logical next joint of the robot arm. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a78b690c346905f770c506e59f67d6c35}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_ac7eabf813a0fe796885ff992dbf99af1}\label{classrobot__arm_1_1JointNameImpl_ac7eabf813a0fe796885ff992dbf99af1}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!operator std::shared\_ptr$<$ JointName $>$@{operator std::shared\_ptr$<$ JointName $>$}}
+\index{operator std::shared\_ptr$<$ JointName $>$@{operator std::shared\_ptr$<$ JointName $>$}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{operator std::shared\_ptr$<$ JointName $>$()}{operator std::shared\_ptr< JointName >()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::operator std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Casts the joint name implementation to a shared pointer to an abstract joint name . \begin{DoxyReturn}{Returns}
+Shared pointer to an abstract joint name.. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_a7aea7ac364954a5e63a28d4b9e51cd3d}\label{classrobot__arm_1_1JointNameImpl_a7aea7ac364954a5e63a28d4b9e51cd3d}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!operator std::string@{operator std::string}}
+\index{operator std::string@{operator std::string}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{operator std::string()}{operator std::string()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::operator std\+::string (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Casts the joint name to a string representation. \begin{DoxyReturn}{Returns}
+String representation for the joint name. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a863417289e15b0e3e4ad45d4fbf3cfb0}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_aca57d6cae5d3f5345e8c3041ad1567fa}\label{classrobot__arm_1_1JointNameImpl_aca57d6cae5d3f5345e8c3041ad1567fa}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!operator==@{operator==}}
+\index{operator==@{operator==}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} \&}]{joint\+Name }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Compares two joint names. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em joint\+Name} & An abstract joint name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Bool value for joint name comparison. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a949d687456e4d4b39713a309a59cbcd1}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_af67282e57aaaebcf01610752f3af0ffb}\label{classrobot__arm_1_1JointNameImpl_af67282e57aaaebcf01610752f3af0ffb}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!Prev@{Prev}}
+\index{Prev@{Prev}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{Prev()}{Prev()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}}$>$ robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::\+Prev (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns a shared pointer to an abstract joint name for the logical previous joint of the robot arm. \begin{DoxyReturn}{Returns}
+Shared pointer to an abstract joint name for the logical previous joint of the robot arm. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a3b54f17f3e742f895abbcbada7f2a5f7}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classrobot__arm_1_1JointNameImpl_a9188a799c6bcff474d19c501c0e23c69}\label{classrobot__arm_1_1JointNameImpl_a9188a799c6bcff474d19c501c0e23c69}} 
+\index{robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!robot\_arm::JointNameImpl@{robot\_arm::JointNameImpl}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily std\+::string robot\+\_\+arm\+::\+Joint\+Name\+Impl\+::\+Serialize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns the serialized string representation of the joint name. \begin{DoxyReturn}{Returns}
+Serialized string representation of the joint name. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_adf7e502c1911dd69d98b4bda66b9f176}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+interface/include/robot\+\_\+arm\+\_\+interface/joint\+\_\+name\+\_\+impl.\+hpp\end{DoxyCompactItemize}

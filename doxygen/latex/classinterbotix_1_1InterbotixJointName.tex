@@ -1,0 +1,295 @@
+\hypertarget{classinterbotix_1_1InterbotixJointName}{}\doxysection{interbotix\+::Interbotix\+Joint\+Name Class Reference}
+\label{classinterbotix_1_1InterbotixJointName}\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+
+
+{\ttfamily \#include $<$interbotix\+\_\+joint\+\_\+name.\+hpp$>$}
+
+
+
+Inheritance diagram for interbotix\+::Interbotix\+Joint\+Name\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{classinterbotix_1_1InterbotixJointName__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for interbotix\+::Interbotix\+Joint\+Name\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{classinterbotix_1_1InterbotixJointName__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}{D\+OF}} \{ {\bfseries D\+O\+F\+\_\+4} = 4, 
+{\bfseries D\+O\+F\+\_\+5} = 5, 
+{\bfseries D\+O\+F\+\_\+6} = 6
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a00e06a32bc5c1b6c9dc844d06cefa2a3}{Interbotix\+Joint\+Name}} (std\+::string joint, \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}{D\+OF}} dof)
+\item 
+\mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a2767621de8359685ed2fdcb30f65cdf1}{operator std\+::string}} () const override
+\item 
+\mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a81ae1f928545af5d9b42b058da084348}{operator robot\+\_\+arm\+::\+Joint\+Name\+Impl}} () const
+\item 
+bool \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a2cf636dd02bc81862c1a8358a32d30ec}{operator==}} (const Joint\+Name \&joint\+Name) const override
+\item 
+std\+::shared\+\_\+ptr$<$ Joint\+Name $>$ \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a7d2d2041948be7f165255cab45f36fda}{Next}} () override
+\item 
+std\+::shared\+\_\+ptr$<$ Joint\+Name $>$ \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_aa69b50dee985c1a08dc83b51775db8f0}{Prev}} () override
+\item 
+std\+::string \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a9ab926a4aee21f4e2e0fea673b6c105b}{Serialize}} () const override
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} $>$ \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_ad6bf0b5d98504a0702e781dfacba6756}{Deserialize}} (std\+::string serialized\+String) const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a86dcea93e73a9017d5c84cded489f8ac}{W\+A\+I\+ST}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a9293e0de5a763462d193430e414c6162}{S\+H\+O\+U\+L\+D\+ER}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_ae753005aced88530d22613c93a82cd60}{E\+L\+B\+OW}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a12529f22ade469aff6a870dcd5878b85}{F\+O\+R\+E\+A\+R\+M\+\_\+\+R\+O\+LL}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a94997a272823af31fc78816c12d24c4c}{W\+R\+I\+S\+T\+\_\+\+A\+N\+G\+LE}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_af1e419d6ce5c0ac34b700cb5bb1ad6c3}{W\+R\+I\+S\+T\+\_\+\+R\+O\+T\+A\+TE}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a73cc259890c8fcd6075b3628c0e6090a}{G\+R\+I\+P\+P\+ER}} ()
+\item 
+static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_adea8496f047e0f113b78015fcac4a799}{N\+O\+NE}} ()
+\item 
+static void \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_ad46d55354e2c235c8694b4cb5c7ed44c}{Set\+Default\+D\+OF}} (\mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}{D\+OF}} dof)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides specific joint names for the different InterbotiX robot arm models. 
+
+Definition at line 16 of file interbotix\+\_\+joint\+\_\+name.\+hpp.
+
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}\label{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!DOF@{DOF}}
+\index{DOF@{DOF}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{DOF}{DOF}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}{interbotix\+::\+Interbotix\+Joint\+Name\+::\+D\+OF}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+The degrees of freedom for the numerous InterbotiX robot arm models. 
+
+Definition at line 21 of file interbotix\+\_\+joint\+\_\+name.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a00e06a32bc5c1b6c9dc844d06cefa2a3}\label{classinterbotix_1_1InterbotixJointName_a00e06a32bc5c1b6c9dc844d06cefa2a3}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!InterbotixJointName@{InterbotixJointName}}
+\index{InterbotixJointName@{InterbotixJointName}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{InterbotixJointName()}{InterbotixJointName()}}
+{\footnotesize\ttfamily interbotix\+::\+Interbotix\+Joint\+Name\+::\+Interbotix\+Joint\+Name (\begin{DoxyParamCaption}\item[{std\+::string}]{joint,  }\item[{\mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}{D\+OF}}}]{dof }\end{DoxyParamCaption})}
+
+Default constructor for creating an InterbotiX joint name. 
+\begin{DoxyParams}{Parameters}
+{\em joint} & The joint name for the joint of the InterbotiX robot arm. \\
+\hline
+{\em dof} & The degrees of freedom which are supported by the InterbotiX robot arm. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_ad6bf0b5d98504a0702e781dfacba6756}\label{classinterbotix_1_1InterbotixJointName_ad6bf0b5d98504a0702e781dfacba6756}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!Deserialize@{Deserialize}}
+\index{Deserialize@{Deserialize}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{Deserialize()}{Deserialize()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}}$>$ interbotix\+::\+Interbotix\+Joint\+Name\+::\+Deserialize (\begin{DoxyParamCaption}\item[{std\+::string}]{serialized\+String }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns a shared point to an abstract joint name for the given string representation. 
+\begin{DoxyParams}{Parameters}
+{\em serialized\+String} & String representation for the joint name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Serialized string representation for the joint name. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a7e2943c3667ef2afaf6f193f1e87d9e7}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_ae753005aced88530d22613c93a82cd60}\label{classinterbotix_1_1InterbotixJointName_ae753005aced88530d22613c93a82cd60}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!ELBOW@{ELBOW}}
+\index{ELBOW@{ELBOW}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{ELBOW()}{ELBOW()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+E\+L\+B\+OW (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}elbow\char`\"{} joint name of the InterbotiX robot arm. \begin{DoxyReturn}{Returns}
+The \char`\"{}elbow\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a12529f22ade469aff6a870dcd5878b85}\label{classinterbotix_1_1InterbotixJointName_a12529f22ade469aff6a870dcd5878b85}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!FOREARM\_ROLL@{FOREARM\_ROLL}}
+\index{FOREARM\_ROLL@{FOREARM\_ROLL}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{FOREARM\_ROLL()}{FOREARM\_ROLL()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+F\+O\+R\+E\+A\+R\+M\+\_\+\+R\+O\+LL (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}forearm roll\char`\"{} joint name of the InterbotiX robot arm. (Only available with 6 D\+OF) \begin{DoxyReturn}{Returns}
+The \char`\"{}forearm roll\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a73cc259890c8fcd6075b3628c0e6090a}\label{classinterbotix_1_1InterbotixJointName_a73cc259890c8fcd6075b3628c0e6090a}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!GRIPPER@{GRIPPER}}
+\index{GRIPPER@{GRIPPER}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{GRIPPER()}{GRIPPER()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+G\+R\+I\+P\+P\+ER (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}gripper\char`\"{} joint name of the InterbotiX robot arm. \begin{DoxyReturn}{Returns}
+The \char`\"{}gripper\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a7d2d2041948be7f165255cab45f36fda}\label{classinterbotix_1_1InterbotixJointName_a7d2d2041948be7f165255cab45f36fda}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!Next@{Next}}
+\index{Next@{Next}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{Next()}{Next()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$Joint\+Name$>$ interbotix\+::\+Interbotix\+Joint\+Name\+::\+Next (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns a shared pointer to an abstract joint name for the logical next joint of the robot arm. \begin{DoxyReturn}{Returns}
+Shared pointer to an abstract joint name for the logical next joint of the robot arm. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a78b690c346905f770c506e59f67d6c35}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_adea8496f047e0f113b78015fcac4a799}\label{classinterbotix_1_1InterbotixJointName_adea8496f047e0f113b78015fcac4a799}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!NONE@{NONE}}
+\index{NONE@{NONE}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{NONE()}{NONE()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+N\+O\+NE (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns an invalid joint name. \begin{DoxyReturn}{Returns}
+An invalid joint name. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a81ae1f928545af5d9b42b058da084348}\label{classinterbotix_1_1InterbotixJointName_a81ae1f928545af5d9b42b058da084348}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!operator robot\_arm::JointNameImpl@{operator robot\_arm::JointNameImpl}}
+\index{operator robot\_arm::JointNameImpl@{operator robot\_arm::JointNameImpl}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{operator robot\_arm::JointNameImpl()}{operator robot\_arm::JointNameImpl()}}
+{\footnotesize\ttfamily interbotix\+::\+Interbotix\+Joint\+Name\+::operator \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Casts the current joint name to a joint name implementation instance. \begin{DoxyReturn}{Returns}
+A joint name implementation instance. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a2767621de8359685ed2fdcb30f65cdf1}\label{classinterbotix_1_1InterbotixJointName_a2767621de8359685ed2fdcb30f65cdf1}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!operator std::string@{operator std::string}}
+\index{operator std::string@{operator std::string}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{operator std::string()}{operator std::string()}}
+{\footnotesize\ttfamily interbotix\+::\+Interbotix\+Joint\+Name\+::operator std\+::string (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Casts the joint name to a string representation. \begin{DoxyReturn}{Returns}
+String representation for the joint name. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a863417289e15b0e3e4ad45d4fbf3cfb0}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a2cf636dd02bc81862c1a8358a32d30ec}\label{classinterbotix_1_1InterbotixJointName_a2cf636dd02bc81862c1a8358a32d30ec}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!operator==@{operator==}}
+\index{operator==@{operator==}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool interbotix\+::\+Interbotix\+Joint\+Name\+::operator== (\begin{DoxyParamCaption}\item[{const Joint\+Name \&}]{joint\+Name }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}}
+
+Compares two joint names. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Name} & An abstract joint name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Bool value for the joint name comparison. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_aa69b50dee985c1a08dc83b51775db8f0}\label{classinterbotix_1_1InterbotixJointName_aa69b50dee985c1a08dc83b51775db8f0}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!Prev@{Prev}}
+\index{Prev@{Prev}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{Prev()}{Prev()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$Joint\+Name$>$ interbotix\+::\+Interbotix\+Joint\+Name\+::\+Prev (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns a shared pointer to an abstract joint name for the logical previous joint of the robot arm. \begin{DoxyReturn}{Returns}
+Shared pointer to an abstract joint name for the logical previous joint of the robot arm. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_a3b54f17f3e742f895abbcbada7f2a5f7}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a9ab926a4aee21f4e2e0fea673b6c105b}\label{classinterbotix_1_1InterbotixJointName_a9ab926a4aee21f4e2e0fea673b6c105b}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily std\+::string interbotix\+::\+Interbotix\+Joint\+Name\+::\+Serialize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Returns the serialized string representation of the joint name. \begin{DoxyReturn}{Returns}
+Serialized string representation of the joint name. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classrobot__arm_1_1JointName_adf7e502c1911dd69d98b4bda66b9f176}{robot\+\_\+arm\+::\+Joint\+Name}}.
+
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_ad46d55354e2c235c8694b4cb5c7ed44c}\label{classinterbotix_1_1InterbotixJointName_ad46d55354e2c235c8694b4cb5c7ed44c}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!SetDefaultDOF@{SetDefaultDOF}}
+\index{SetDefaultDOF@{SetDefaultDOF}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{SetDefaultDOF()}{SetDefaultDOF()}}
+{\footnotesize\ttfamily static void interbotix\+::\+Interbotix\+Joint\+Name\+::\+Set\+Default\+D\+OF (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classinterbotix_1_1InterbotixJointName_a8be58634730ba518530d88e5223c417a}{D\+OF}}}]{dof }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Sets the default D\+OF for the used InterbotiX robot arm. 
+\begin{DoxyParams}{Parameters}
+{\em dof} & The degrees of freedom which are supported by the InterbotiX robot arm. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a9293e0de5a763462d193430e414c6162}\label{classinterbotix_1_1InterbotixJointName_a9293e0de5a763462d193430e414c6162}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!SHOULDER@{SHOULDER}}
+\index{SHOULDER@{SHOULDER}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{SHOULDER()}{SHOULDER()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+S\+H\+O\+U\+L\+D\+ER (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}shoulder\char`\"{} joint name of the InterbotiX robot arm. \begin{DoxyReturn}{Returns}
+The \char`\"{}shoulder\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a86dcea93e73a9017d5c84cded489f8ac}\label{classinterbotix_1_1InterbotixJointName_a86dcea93e73a9017d5c84cded489f8ac}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!WAIST@{WAIST}}
+\index{WAIST@{WAIST}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{WAIST()}{WAIST()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+W\+A\+I\+ST (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}waist\char`\"{} joint name of the InterbotiX robot arm. \begin{DoxyReturn}{Returns}
+The \char`\"{}waist\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_a94997a272823af31fc78816c12d24c4c}\label{classinterbotix_1_1InterbotixJointName_a94997a272823af31fc78816c12d24c4c}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!WRIST\_ANGLE@{WRIST\_ANGLE}}
+\index{WRIST\_ANGLE@{WRIST\_ANGLE}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{WRIST\_ANGLE()}{WRIST\_ANGLE()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+W\+R\+I\+S\+T\+\_\+\+A\+N\+G\+LE (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}wrist angle\char`\"{} joint name of the InterbotiX robot arm. \begin{DoxyReturn}{Returns}
+The \char`\"{}wrist angle\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classinterbotix_1_1InterbotixJointName_af1e419d6ce5c0ac34b700cb5bb1ad6c3}\label{classinterbotix_1_1InterbotixJointName_af1e419d6ce5c0ac34b700cb5bb1ad6c3}} 
+\index{interbotix::InterbotixJointName@{interbotix::InterbotixJointName}!WRIST\_ROTATE@{WRIST\_ROTATE}}
+\index{WRIST\_ROTATE@{WRIST\_ROTATE}!interbotix::InterbotixJointName@{interbotix::InterbotixJointName}}
+\doxysubsubsection{\texorpdfstring{WRIST\_ROTATE()}{WRIST\_ROTATE()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classinterbotix_1_1InterbotixJointName}{Interbotix\+Joint\+Name}} interbotix\+::\+Interbotix\+Joint\+Name\+::\+W\+R\+I\+S\+T\+\_\+\+R\+O\+T\+A\+TE (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}wrist rotate\char`\"{} joint name of the InterbotiX robot arm. (Only available with 5 or 6 D\+OF) \begin{DoxyReturn}{Returns}
+The \char`\"{}wrist rotate\char`\"{} joint name of the InterbotiX robot arm. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+interbotix\+\_\+robot\+\_\+arms\+\_\+wrapper/include/interbotix\+\_\+robot\+\_\+arms\+\_\+wrapper/interbotix\+\_\+joint\+\_\+name.\+hpp\end{DoxyCompactItemize}

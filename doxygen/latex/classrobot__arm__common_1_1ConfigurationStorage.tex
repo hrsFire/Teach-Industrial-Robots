@@ -1,0 +1,155 @@
+\hypertarget{classrobot__arm__common_1_1ConfigurationStorage}{}\doxysection{robot\+\_\+arm\+\_\+common\+::Configuration\+Storage Class Reference}
+\label{classrobot__arm__common_1_1ConfigurationStorage}\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+
+
+{\ttfamily \#include $<$configuration\+\_\+storage.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_adb613b9fa8807d202b7d829f5dba6858}{Configuration\+Storage}} ()
+\item 
+bool \mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_a42d199ed69523eab0712748062d303be}{Save\+Positions}} (const std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&all\+Joint\+Positions, bool overwrite=false)
+\item 
+bool \mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_a31d9538494d0e106951742de74d86556}{Save\+Positions}} (const std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&all\+Joint\+Positions, std\+::string directory\+Path, std\+::string file\+Name, bool overwrite=false)
+\item 
+bool \mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_af361edcdab330f712b00e001b5588b97}{Save\+Positions}} (const std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&all\+Joint\+Positions, std\+::string file\+Path, bool overwrite=false)
+\item 
+bool \mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_a7315079d91d9d2397b75061f80500a31}{Load\+Positions}} (const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&joint\+Name\+Deserializer, std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&all\+Joint\+Positions)
+\item 
+bool \mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_a39c5a5a9ae456f9880cc45cad5a4ab68}{Load\+Positions}} (std\+::string directory\+Path, std\+::string file\+Name, const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&joint\+Name\+Deserializer, std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&all\+Joint\+Positions)
+\item 
+bool \mbox{\hyperlink{classrobot__arm__common_1_1ConfigurationStorage_a1151d9dd6387cd4c1083b7f4e81f35d7}{Load\+Positions}} (std\+::string file\+Path, const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&joint\+Name\+Deserializer, std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&all\+Joint\+Positions)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides the possibility to store and load configuration files. 
+
+Definition at line 19 of file configuration\+\_\+storage.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_adb613b9fa8807d202b7d829f5dba6858}\label{classrobot__arm__common_1_1ConfigurationStorage_adb613b9fa8807d202b7d829f5dba6858}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!ConfigurationStorage@{ConfigurationStorage}}
+\index{ConfigurationStorage@{ConfigurationStorage}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{ConfigurationStorage()}{ConfigurationStorage()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Configuration\+Storage (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Default constructor for the configuration storage. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_a7315079d91d9d2397b75061f80500a31}\label{classrobot__arm__common_1_1ConfigurationStorage_a7315079d91d9d2397b75061f80500a31}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!LoadPositions@{LoadPositions}}
+\index{LoadPositions@{LoadPositions}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{LoadPositions()}{LoadPositions()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Load\+Positions (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{joint\+Name\+Deserializer,  }\item[{std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&}]{all\+Joint\+Positions }\end{DoxyParamCaption})}
+
+Loads the joint positions from the default configuration file. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Name\+Deserializer} & The joint name deserializer which should be used to deserialize the configuration file. \\
+\hline
+{\em all\+Joint\+Positions} & All joint names and their corresponding joint positions. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the configuration file could be loaded. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_a39c5a5a9ae456f9880cc45cad5a4ab68}\label{classrobot__arm__common_1_1ConfigurationStorage_a39c5a5a9ae456f9880cc45cad5a4ab68}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!LoadPositions@{LoadPositions}}
+\index{LoadPositions@{LoadPositions}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{LoadPositions()}{LoadPositions()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Load\+Positions (\begin{DoxyParamCaption}\item[{std\+::string}]{directory\+Path,  }\item[{std\+::string}]{file\+Name,  }\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{joint\+Name\+Deserializer,  }\item[{std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&}]{all\+Joint\+Positions }\end{DoxyParamCaption})}
+
+Loads the joint positions from the configuration file from the given file path. 
+\begin{DoxyParams}{Parameters}
+{\em directory\+Path} & The directory path from where the configuration file should be loaded. \\
+\hline
+{\em file\+Name} & The file name which is used to load the configuration file. \\
+\hline
+{\em joint\+Name\+Deserializer} & The joint name deserializer which should be used to deserialize the configuration file. \\
+\hline
+{\em all\+Joint\+Positions} & All joint names and their corresponding joint positions. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the configuration file could be loaded. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_a1151d9dd6387cd4c1083b7f4e81f35d7}\label{classrobot__arm__common_1_1ConfigurationStorage_a1151d9dd6387cd4c1083b7f4e81f35d7}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!LoadPositions@{LoadPositions}}
+\index{LoadPositions@{LoadPositions}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{LoadPositions()}{LoadPositions()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Load\+Positions (\begin{DoxyParamCaption}\item[{std\+::string}]{file\+Path,  }\item[{const \mbox{\hyperlink{classrobot__arm_1_1JointName}{robot\+\_\+arm\+::\+Joint\+Name}} \&}]{joint\+Name\+Deserializer,  }\item[{std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&}]{all\+Joint\+Positions }\end{DoxyParamCaption})}
+
+Loads the joint positions from the configuration file from the given file path. 
+\begin{DoxyParams}{Parameters}
+{\em file\+Path} & The file path from where the configuration file should be loaded. \\
+\hline
+{\em joint\+Name\+Deserializer} & The joint name deserializer which should be used to deserialize the configuration file. \\
+\hline
+{\em all\+Joint\+Positions} & All joint names and their corresponding joint positions. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the configuration file could be loaded. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_a42d199ed69523eab0712748062d303be}\label{classrobot__arm__common_1_1ConfigurationStorage_a42d199ed69523eab0712748062d303be}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!SavePositions@{SavePositions}}
+\index{SavePositions@{SavePositions}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{SavePositions()}{SavePositions()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Save\+Positions (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&}]{all\+Joint\+Positions,  }\item[{bool}]{overwrite = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Saves the joint positions to the default configuration file. 
+\begin{DoxyParams}{Parameters}
+{\em all\+Joint\+Positions} & All joint names and their corresponding joint positions. \\
+\hline
+{\em overwrite} & Specifies if the configuration file should be overwritten. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the configuration file could be saved. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_a31d9538494d0e106951742de74d86556}\label{classrobot__arm__common_1_1ConfigurationStorage_a31d9538494d0e106951742de74d86556}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!SavePositions@{SavePositions}}
+\index{SavePositions@{SavePositions}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{SavePositions()}{SavePositions()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Save\+Positions (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&}]{all\+Joint\+Positions,  }\item[{std\+::string}]{directory\+Path,  }\item[{std\+::string}]{file\+Name,  }\item[{bool}]{overwrite = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Saves the joint positions to the configuration file with the given file path. 
+\begin{DoxyParams}{Parameters}
+{\em all\+Joint\+Positions} & All joint names and their corresponding joint positions. \\
+\hline
+{\em overwrite} & Specifies if the configuration file should be overwritten. \\
+\hline
+{\em directory\+Path} & The directory path where the configuration file should be saved. \\
+\hline
+{\em file\+Name} & The file name which is used to store the configuration file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the configuration file could be saved. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm__common_1_1ConfigurationStorage_af361edcdab330f712b00e001b5588b97}\label{classrobot__arm__common_1_1ConfigurationStorage_af361edcdab330f712b00e001b5588b97}} 
+\index{robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}!SavePositions@{SavePositions}}
+\index{SavePositions@{SavePositions}!robot\_arm\_common::ConfigurationStorage@{robot\_arm\_common::ConfigurationStorage}}
+\doxysubsubsection{\texorpdfstring{SavePositions()}{SavePositions()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+\_\+common\+::\+Configuration\+Storage\+::\+Save\+Positions (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{classrobot__arm_1_1JointNameImpl}{robot\+\_\+arm\+::\+Joint\+Name\+Impl}}, \mbox{\hyperlink{classrobot__arm_1_1JointState}{robot\+\_\+arm\+::\+Joint\+State}} $>$$>$ \&}]{all\+Joint\+Positions,  }\item[{std\+::string}]{file\+Path,  }\item[{bool}]{overwrite = {\ttfamily false} }\end{DoxyParamCaption})}
+
+Saves the joint positions to the configuration file with the given file path. 
+\begin{DoxyParams}{Parameters}
+{\em all\+Joint\+Positions} & All joint names and their corresponding joint positions. \\
+\hline
+{\em overwrite} & Specifies if the configuration file should be overwritten. \\
+\hline
+{\em file\+Path} & The file path where the configuration file should be saved. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the configuration file could be saved. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+common/include/robot\+\_\+arm\+\_\+common/configuration\+\_\+storage.\+hpp\end{DoxyCompactItemize}

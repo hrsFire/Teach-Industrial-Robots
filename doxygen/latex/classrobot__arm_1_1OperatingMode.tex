@@ -1,0 +1,136 @@
+\hypertarget{classrobot__arm_1_1OperatingMode}{}\doxysection{robot\+\_\+arm\+::Operating\+Mode Class Reference}
+\label{classrobot__arm_1_1OperatingMode}\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+
+
+{\ttfamily \#include $<$operating\+\_\+mode.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1OperatingMode_a9c95dd916130053c8f3f87f06f4085eb}{Operating\+Mode}} (std\+::string operating\+Mode)
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1OperatingMode_a94a72ced70d483349c19ee53a7e3b47a}{operator std\+::string}} () const
+\item 
+bool \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_aee0d6ad6eeeae45072d229fc2f43bed2}{operator==}} (const \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \&operating\+Mode) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_aeae29e9ed00f60490740154574c97072}{N\+O\+NE}} ()
+\item 
+static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_adba438838ea383850126b5d4ace41241}{P\+O\+S\+I\+T\+I\+ON}} ()
+\item 
+static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_a987c65fe6536ce555154801b4ff78637}{P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+M\+U\+L\+T\+I\+P\+L\+E\+\_\+\+R\+E\+V\+O\+L\+U\+T\+I\+O\+NS}} ()
+\item 
+static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_ab92a9f05d9f6be3200248290e03297f0}{V\+E\+L\+O\+C\+I\+TY}} ()
+\item 
+static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_a9ee4cda18e7b521bb107a311b2681161}{C\+U\+R\+R\+E\+NT}} ()
+\item 
+static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1OperatingMode_af4f3c90ae7425e8903a278b9f400dc18}{P\+WM}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides all available operating modes for the different robot arm models. 
+
+Definition at line 10 of file operating\+\_\+mode.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_a9c95dd916130053c8f3f87f06f4085eb}\label{classrobot__arm_1_1OperatingMode_a9c95dd916130053c8f3f87f06f4085eb}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!OperatingMode@{OperatingMode}}
+\index{OperatingMode@{OperatingMode}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{OperatingMode()}{OperatingMode()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Operating\+Mode\+::\+Operating\+Mode (\begin{DoxyParamCaption}\item[{std\+::string}]{operating\+Mode }\end{DoxyParamCaption})}
+
+Default constructor for an operating mode for different robot arm models. 
+\begin{DoxyParams}{Parameters}
+{\em operating\+Mode} & The specific operating mode. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_a9ee4cda18e7b521bb107a311b2681161}\label{classrobot__arm_1_1OperatingMode_a9ee4cda18e7b521bb107a311b2681161}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!CURRENT@{CURRENT}}
+\index{CURRENT@{CURRENT}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{CURRENT()}{CURRENT()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Operating\+Mode\+::\+C\+U\+R\+R\+E\+NT (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}current\char`\"{} operating mode. All commands will be treated as current \mbox{[}mA\mbox{]} goals. \begin{DoxyReturn}{Returns}
+The \char`\"{}current\char`\"{} operating mode. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_aeae29e9ed00f60490740154574c97072}\label{classrobot__arm_1_1OperatingMode_aeae29e9ed00f60490740154574c97072}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!NONE@{NONE}}
+\index{NONE@{NONE}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{NONE()}{NONE()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Operating\+Mode\+::\+N\+O\+NE (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns an invalid operating mode. All motor commands will be ignored. \begin{DoxyReturn}{Returns}
+An invalid operating mode. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_a94a72ced70d483349c19ee53a7e3b47a}\label{classrobot__arm_1_1OperatingMode_a94a72ced70d483349c19ee53a7e3b47a}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!operator std::string@{operator std::string}}
+\index{operator std::string@{operator std::string}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{operator std::string()}{operator std::string()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Operating\+Mode\+::operator std\+::string (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Casts the operating mode to a string representation. \begin{DoxyReturn}{Returns}
+String representation for the operating mode. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_aee0d6ad6eeeae45072d229fc2f43bed2}\label{classrobot__arm_1_1OperatingMode_aee0d6ad6eeeae45072d229fc2f43bed2}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!operator==@{operator==}}
+\index{operator==@{operator==}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily bool robot\+\_\+arm\+::\+Operating\+Mode\+::operator== (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \&}]{operating\+Mode }\end{DoxyParamCaption}) const}
+
+Compares two operating modes. 
+\begin{DoxyParams}{Parameters}
+{\em operating\+Mode} & An operating mode. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Bool value for the operating mode comparison. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_adba438838ea383850126b5d4ace41241}\label{classrobot__arm_1_1OperatingMode_adba438838ea383850126b5d4ace41241}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!POSITION@{POSITION}}
+\index{POSITION@{POSITION}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{POSITION()}{POSITION()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Operating\+Mode\+::\+P\+O\+S\+I\+T\+I\+ON (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}position\char`\"{} operating mode. All commands will be treated as position goals. The joint cannot go past one revolution. \begin{DoxyReturn}{Returns}
+The \char`\"{}position\char`\"{} operating mode. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_a987c65fe6536ce555154801b4ff78637}\label{classrobot__arm_1_1OperatingMode_a987c65fe6536ce555154801b4ff78637}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!POSITION\_MULTIPLE\_REVOLUTIONS@{POSITION\_MULTIPLE\_REVOLUTIONS}}
+\index{POSITION\_MULTIPLE\_REVOLUTIONS@{POSITION\_MULTIPLE\_REVOLUTIONS}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{POSITION\_MULTIPLE\_REVOLUTIONS()}{POSITION\_MULTIPLE\_REVOLUTIONS()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Operating\+Mode\+::\+P\+O\+S\+I\+T\+I\+O\+N\+\_\+\+M\+U\+L\+T\+I\+P\+L\+E\+\_\+\+R\+E\+V\+O\+L\+U\+T\+I\+O\+NS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}position with multiple revolutions\char`\"{} operating mode. All commands will be treated as position goals. Multiple revolutions are allowed for the joint. \begin{DoxyReturn}{Returns}
+The \char`\"{}position with multiple revolutions\char`\"{} operating mode. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_af4f3c90ae7425e8903a278b9f400dc18}\label{classrobot__arm_1_1OperatingMode_af4f3c90ae7425e8903a278b9f400dc18}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!PWM@{PWM}}
+\index{PWM@{PWM}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{PWM()}{PWM()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Operating\+Mode\+::\+P\+WM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}pwm\char`\"{} operating mode. All commands will be treated as pwm (pulse width modulation) goals. \begin{DoxyReturn}{Returns}
+The \char`\"{}pwm\char`\"{} operating mode. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1OperatingMode_ab92a9f05d9f6be3200248290e03297f0}\label{classrobot__arm_1_1OperatingMode_ab92a9f05d9f6be3200248290e03297f0}} 
+\index{robot\_arm::OperatingMode@{robot\_arm::OperatingMode}!VELOCITY@{VELOCITY}}
+\index{VELOCITY@{VELOCITY}!robot\_arm::OperatingMode@{robot\_arm::OperatingMode}}
+\doxysubsubsection{\texorpdfstring{VELOCITY()}{VELOCITY()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Operating\+Mode\+::\+V\+E\+L\+O\+C\+I\+TY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Returns the \char`\"{}velocity\char`\"{} operating mode. All commands will be treated as velocity \mbox{[}rad/s\mbox{]} goals. \begin{DoxyReturn}{Returns}
+The \char`\"{}velocity\char`\"{} operating mode. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+interface/include/robot\+\_\+arm\+\_\+interface/operating\+\_\+mode.\+hpp\end{DoxyCompactItemize}

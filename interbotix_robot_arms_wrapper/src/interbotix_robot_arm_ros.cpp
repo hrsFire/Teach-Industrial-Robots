@@ -223,11 +223,11 @@ void InterbotixRobotArmROS::SendGripperCommand(double value) {
     }
 }
 
-void InterbotixRobotArmROS::SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
+void InterbotixRobotArmROS::SendGripperTrajectory(const std::vector<JointTrajectoryPoint>& trajectoryPoints) {
     std::lock_guard<std::mutex> lock(jointStatesMutex);
 
     control_msgs::FollowJointTrajectoryGoal message;
-    JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
+    JointHelper::CopyToGripperJointTrajectoryMessage(trajectoryPoints, message);
 
 #ifdef COMMUNICATION_MEASUREMENT
     std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();

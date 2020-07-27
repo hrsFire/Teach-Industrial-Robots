@@ -143,9 +143,9 @@ void InterbotixRobotArmDirect::SendGripperCommand(double value) {
         jointStatesLastChanged, operatingModes);
 }
 
-void InterbotixRobotArmDirect::SendGripperTrajectory(const std::unordered_map<JointNameImpl, JointTrajectoryPoint>& jointTrajectoryPoints) {
+void InterbotixRobotArmDirect::SendGripperTrajectory(const std::vector<JointTrajectoryPoint>& trajectoryPoints) {
     trajectory_msgs::JointTrajectory message;
-    JointHelper::CopyToJointTrajectoryMessage(jointTrajectoryPoints, message);
+    JointHelper::CopyToGripperJointTrajectoryMessage(trajectoryPoints, message);
 
 #ifdef COMMUNICATION_MEASUREMENT
     std::chrono::system_clock::time_point startTime = std::chrono::system_clock::now();

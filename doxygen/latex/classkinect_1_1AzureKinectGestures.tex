@@ -1,0 +1,175 @@
+\hypertarget{classkinect_1_1AzureKinectGestures}{}\doxysection{kinect\+::Azure\+Kinect\+Gestures Class Reference}
+\label{classkinect_1_1AzureKinectGestures}\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+
+
+{\ttfamily \#include $<$azure\+\_\+kinect\+\_\+gestures.\+hpp$>$}
+
+
+
+Inheritance diagram for kinect\+::Azure\+Kinect\+Gestures\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classkinect_1_1AzureKinectGestures__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for kinect\+::Azure\+Kinect\+Gestures\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classkinect_1_1AzureKinectGestures__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classkinect_1_1AzureKinectGestures_addd5bc01111ce1ca66e59cd2b7c9a1e1}{Azure\+Kinect\+Gestures}} (k4abt\+::tracker $\ast$body\+Tracker, k4a\+::device $\ast$device, bool allow\+Different\+Bodies)
+\item 
+\mbox{\hyperlink{classkinect_1_1AzureKinectGestures_adccfe9350e8fed78c77fca306c171102}{$\sim$\+Azure\+Kinect\+Gestures}} () override
+\item 
+void \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_ab5ec34443a722b13cefabc76fa35b342}{Next\+Cycle}} () override
+\item 
+bool \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_abea7e6dd6e390291c334866c222f5567}{Is\+New\+Data\+Available}} () override
+\item 
+bool \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_aede233b1f3c7ba73088f0ee45a465cb0}{Is\+Gesture}} (uint32\+\_\+t start\+Joint\+Index, uint32\+\_\+t end\+Joint\+Index, uint32\+\_\+t joint\+Index, double min\+Distance, double max\+Distance) const override
+\item 
+bool \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_ae44387f072a9c51795ae13b0b3701fdf}{Is\+Gesture}} (uint32\+\_\+t joint\+Index1, uint32\+\_\+t joint\+Index2, double min\+Distance, double max\+Distance) const override
+\item 
+bool \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_ab93c5650d597591d8536afa2f0736836}{Is\+Joint\+Visible}} (uint32\+\_\+t joint\+Index) const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+This class provides an implementation of the gesture recognition abstraction layer for the Azure Kinect. 
+
+Definition at line 14 of file azure\+\_\+kinect\+\_\+gestures.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_addd5bc01111ce1ca66e59cd2b7c9a1e1}\label{classkinect_1_1AzureKinectGestures_addd5bc01111ce1ca66e59cd2b7c9a1e1}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!AzureKinectGestures@{AzureKinectGestures}}
+\index{AzureKinectGestures@{AzureKinectGestures}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{AzureKinectGestures()}{AzureKinectGestures()}}
+{\footnotesize\ttfamily kinect\+::\+Azure\+Kinect\+Gestures\+::\+Azure\+Kinect\+Gestures (\begin{DoxyParamCaption}\item[{k4abt\+::tracker $\ast$}]{body\+Tracker,  }\item[{k4a\+::device $\ast$}]{device,  }\item[{bool}]{allow\+Different\+Bodies }\end{DoxyParamCaption})}
+
+Default constructor for the gesture recognition abstraction layer for the Azure Kinect. The given device and body tracking handler will be managed by this class afterwards. 
+\begin{DoxyParams}{Parameters}
+{\em body\+Tracker} & A handler for the Azure Kinect body tracking. \\
+\hline
+{\em device} & A device handler for the Azure Kinect. \\
+\hline
+{\em allow\+Different\+Bodies} & Specifies if more than two bodies are allowed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_adccfe9350e8fed78c77fca306c171102}\label{classkinect_1_1AzureKinectGestures_adccfe9350e8fed78c77fca306c171102}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!````~AzureKinectGestures@{$\sim$AzureKinectGestures}}
+\index{````~AzureKinectGestures@{$\sim$AzureKinectGestures}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{$\sim$AzureKinectGestures()}{~AzureKinectGestures()}}
+{\footnotesize\ttfamily kinect\+::\+Azure\+Kinect\+Gestures\+::$\sim$\+Azure\+Kinect\+Gestures (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}}
+
+Destructor for the gesture recognition abstraction layer for the Azure Kinect. The given device and body tracking handler will be destroyed. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_ae44387f072a9c51795ae13b0b3701fdf}\label{classkinect_1_1AzureKinectGestures_ae44387f072a9c51795ae13b0b3701fdf}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!IsGesture@{IsGesture}}
+\index{IsGesture@{IsGesture}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{IsGesture()}{IsGesture()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily bool kinect\+::\+Azure\+Kinect\+Gestures\+::\+Is\+Gesture (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{joint\+Index1,  }\item[{uint32\+\_\+t}]{joint\+Index2,  }\item[{double}]{min\+Distance,  }\item[{double}]{max\+Distance }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Checks if a joint is intersecting with another joint. This is implemented by checking the distance from one point to another. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Index1} & The ID of the joint which should be used as the first point. \\
+\hline
+{\em joint\+Index2} & The ID of the joint which should be used as the second point. \\
+\hline
+{\em min\+Distance} & The minimum distance from one point to the other one. The distance is specified in millimeters. \\
+\hline
+{\em max\+Distance} & The maximum distance from one point to the other one. The distance is specified in millimeters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the gesture was recognized. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classgestures_1_1GesturesQuery_a58f3387eeccfe6f135c44d22d218c519}{gestures\+::\+Gestures\+Query}}.
+
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_aede233b1f3c7ba73088f0ee45a465cb0}\label{classkinect_1_1AzureKinectGestures_aede233b1f3c7ba73088f0ee45a465cb0}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!IsGesture@{IsGesture}}
+\index{IsGesture@{IsGesture}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{IsGesture()}{IsGesture()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily bool kinect\+::\+Azure\+Kinect\+Gestures\+::\+Is\+Gesture (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{start\+Joint\+Index,  }\item[{uint32\+\_\+t}]{end\+Joint\+Index,  }\item[{uint32\+\_\+t}]{joint\+Index,  }\item[{double}]{min\+Distance,  }\item[{double}]{max\+Distance }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Checks if a joint is intersecting with two other joints. This is implemented by checking if a point is intersecting with a line.. 
+\begin{DoxyParams}{Parameters}
+{\em start\+Joint\+Index} & The ID of the joint which should be used as the start point of the line. \\
+\hline
+{\em end\+Joint\+Index} & The ID of the joint which should be used as the end point of the line. \\
+\hline
+{\em joint\+Index} & The ID of the joint which should be used as the point which intersects with the line. \\
+\hline
+{\em min\+Distance} & The minimum distance from the line to the intersecting point. The distance is specified in millimeters. \\
+\hline
+{\em max\+Distance} & The maximum distance from the line to the intersecting point. The distance is specified in millimeters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the gesture was recognized. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classgestures_1_1GesturesQuery_a5793a49ea32fc943972fa137d87b5d75}{gestures\+::\+Gestures\+Query}}.
+
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_ab93c5650d597591d8536afa2f0736836}\label{classkinect_1_1AzureKinectGestures_ab93c5650d597591d8536afa2f0736836}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!IsJointVisible@{IsJointVisible}}
+\index{IsJointVisible@{IsJointVisible}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{IsJointVisible()}{IsJointVisible()}}
+{\footnotesize\ttfamily bool kinect\+::\+Azure\+Kinect\+Gestures\+::\+Is\+Joint\+Visible (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{joint\+Index }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Checks if a joint is visible for the gesture recognition system. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Index} & The ID of the joint which should be used to check if the joint is visible. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the joint is visible. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classgestures_1_1GesturesQuery_a17fbc6dd8397693f87588715a7bb19e5}{gestures\+::\+Gestures\+Query}}.
+
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_abea7e6dd6e390291c334866c222f5567}\label{classkinect_1_1AzureKinectGestures_abea7e6dd6e390291c334866c222f5567}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!IsNewDataAvailable@{IsNewDataAvailable}}
+\index{IsNewDataAvailable@{IsNewDataAvailable}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{IsNewDataAvailable()}{IsNewDataAvailable()}}
+{\footnotesize\ttfamily bool kinect\+::\+Azure\+Kinect\+Gestures\+::\+Is\+New\+Data\+Available (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Checks if new depth data is available. \begin{DoxyReturn}{Returns}
+True if new depth data is available. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classgestures_1_1GesturesBase_afbddb747879f4d709866dec8394ca923}{gestures\+::\+Gestures\+Base}}.
+
+\mbox{\Hypertarget{classkinect_1_1AzureKinectGestures_ab5ec34443a722b13cefabc76fa35b342}\label{classkinect_1_1AzureKinectGestures_ab5ec34443a722b13cefabc76fa35b342}} 
+\index{kinect::AzureKinectGestures@{kinect::AzureKinectGestures}!NextCycle@{NextCycle}}
+\index{NextCycle@{NextCycle}!kinect::AzureKinectGestures@{kinect::AzureKinectGestures}}
+\doxysubsubsection{\texorpdfstring{NextCycle()}{NextCycle()}}
+{\footnotesize\ttfamily void kinect\+::\+Azure\+Kinect\+Gestures\+::\+Next\+Cycle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+Checks if new depth data is available and prepares the depth data. \begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classgestures_1_1GesturesBase_af6ce84922ca93a577bff94b4fd5d033f}{gestures\+::\+Gestures\+Base}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+simple\+\_\+gestures/include/simple\+\_\+gestures/kinect/azure\+\_\+kinect\+\_\+gestures.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,103 @@
+\hypertarget{classrobot__arm_1_1JointState}{}\doxysection{robot\+\_\+arm\+::Joint\+State Class Reference}
+\label{classrobot__arm_1_1JointState}\index{robot\_arm::JointState@{robot\_arm::JointState}}
+
+
+{\ttfamily \#include $<$joint\+\_\+state.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1JointState_a6d72aa35b09aa4eba93a165c9ba12a08}{Joint\+State}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ joint\+Name, double position, double velocity, double effort, \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} operating\+Mode)
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ \mbox{\hyperlink{classrobot__arm_1_1JointState_a80b3c96dbcc1ce4057ffcf40f97c8be8}{Get\+Joint\+Name}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1JointState_ac9e3fa03aeb0d2dd352529339b328d89}{Get\+Position}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1JointState_a935cee9a4e294ee0e4982e455111456e}{Get\+Velocity}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1JointState_a937fb99c1e987dde3f9cb0c1751b34a6}{Get\+Effort}} () const
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} \mbox{\hyperlink{classrobot__arm_1_1JointState_a741ab8e9a2818880bf804b2855c3c53a}{Get\+Operating\+Mode}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides the state of a joint. 
+
+Definition at line 12 of file joint\+\_\+state.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1JointState_a6d72aa35b09aa4eba93a165c9ba12a08}\label{classrobot__arm_1_1JointState_a6d72aa35b09aa4eba93a165c9ba12a08}} 
+\index{robot\_arm::JointState@{robot\_arm::JointState}!JointState@{JointState}}
+\index{JointState@{JointState}!robot\_arm::JointState@{robot\_arm::JointState}}
+\doxysubsubsection{\texorpdfstring{JointState()}{JointState()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Joint\+State\+::\+Joint\+State (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$}]{joint\+Name,  }\item[{double}]{position,  }\item[{double}]{velocity,  }\item[{double}]{effort,  }\item[{\mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}}}]{operating\+Mode }\end{DoxyParamCaption})}
+
+Default constructor for a joint state 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Name} & The name for the joint. \\
+\hline
+{\em position} & The position for the joint. \\
+\hline
+{\em velocity} & The velocity for the joint. \\
+\hline
+{\em effort} & The effor for the joint. \\
+\hline
+{\em operating\+Mode} & The operating mode for the joint. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1JointState_a937fb99c1e987dde3f9cb0c1751b34a6}\label{classrobot__arm_1_1JointState_a937fb99c1e987dde3f9cb0c1751b34a6}} 
+\index{robot\_arm::JointState@{robot\_arm::JointState}!GetEffort@{GetEffort}}
+\index{GetEffort@{GetEffort}!robot\_arm::JointState@{robot\_arm::JointState}}
+\doxysubsubsection{\texorpdfstring{GetEffort()}{GetEffort()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+State\+::\+Get\+Effort (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the effort for the joint. \begin{DoxyReturn}{Returns}
+The effort for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointState_a80b3c96dbcc1ce4057ffcf40f97c8be8}\label{classrobot__arm_1_1JointState_a80b3c96dbcc1ce4057ffcf40f97c8be8}} 
+\index{robot\_arm::JointState@{robot\_arm::JointState}!GetJointName@{GetJointName}}
+\index{GetJointName@{GetJointName}!robot\_arm::JointState@{robot\_arm::JointState}}
+\doxysubsubsection{\texorpdfstring{GetJointName()}{GetJointName()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}}$>$ robot\+\_\+arm\+::\+Joint\+State\+::\+Get\+Joint\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the joint name for the joint. \begin{DoxyReturn}{Returns}
+A shared pointer to a joint name. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointState_a741ab8e9a2818880bf804b2855c3c53a}\label{classrobot__arm_1_1JointState_a741ab8e9a2818880bf804b2855c3c53a}} 
+\index{robot\_arm::JointState@{robot\_arm::JointState}!GetOperatingMode@{GetOperatingMode}}
+\index{GetOperatingMode@{GetOperatingMode}!robot\_arm::JointState@{robot\_arm::JointState}}
+\doxysubsubsection{\texorpdfstring{GetOperatingMode()}{GetOperatingMode()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classrobot__arm_1_1OperatingMode}{Operating\+Mode}} robot\+\_\+arm\+::\+Joint\+State\+::\+Get\+Operating\+Mode (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the operating mode for the joint. \begin{DoxyReturn}{Returns}
+The operating mode for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointState_ac9e3fa03aeb0d2dd352529339b328d89}\label{classrobot__arm_1_1JointState_ac9e3fa03aeb0d2dd352529339b328d89}} 
+\index{robot\_arm::JointState@{robot\_arm::JointState}!GetPosition@{GetPosition}}
+\index{GetPosition@{GetPosition}!robot\_arm::JointState@{robot\_arm::JointState}}
+\doxysubsubsection{\texorpdfstring{GetPosition()}{GetPosition()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+State\+::\+Get\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the position for the joint. \begin{DoxyReturn}{Returns}
+The position for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointState_a935cee9a4e294ee0e4982e455111456e}\label{classrobot__arm_1_1JointState_a935cee9a4e294ee0e4982e455111456e}} 
+\index{robot\_arm::JointState@{robot\_arm::JointState}!GetVelocity@{GetVelocity}}
+\index{GetVelocity@{GetVelocity}!robot\_arm::JointState@{robot\_arm::JointState}}
+\doxysubsubsection{\texorpdfstring{GetVelocity()}{GetVelocity()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+State\+::\+Get\+Velocity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the velocity for the joint. \begin{DoxyReturn}{Returns}
+The velocity for the joint. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+interface/include/robot\+\_\+arm\+\_\+interface/joint\+\_\+state.\+hpp\end{DoxyCompactItemize}

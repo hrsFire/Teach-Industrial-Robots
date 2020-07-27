@@ -1,0 +1,107 @@
+\hypertarget{classgestures_1_1GesturesQuery}{}\doxysection{gestures\+::Gestures\+Query Class Reference}
+\label{classgestures_1_1GesturesQuery}\index{gestures::GesturesQuery@{gestures::GesturesQuery}}
+
+
+{\ttfamily \#include $<$gestures\+\_\+query.\+hpp$>$}
+
+
+
+Inheritance diagram for gestures\+::Gestures\+Query\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=235pt]{classgestures_1_1GesturesQuery__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual bool \mbox{\hyperlink{classgestures_1_1GesturesQuery_a5793a49ea32fc943972fa137d87b5d75}{Is\+Gesture}} (uint32\+\_\+t start\+Joint\+Index, uint32\+\_\+t end\+Joint\+Index, uint32\+\_\+t joint\+Index, double min\+Distance, double max\+Distance) const =0
+\item 
+virtual bool \mbox{\hyperlink{classgestures_1_1GesturesQuery_a58f3387eeccfe6f135c44d22d218c519}{Is\+Gesture}} (uint32\+\_\+t joint\+Index1, uint32\+\_\+t joint\+Index2, double min\+Distance, double max\+Distance) const =0
+\item 
+virtual bool \mbox{\hyperlink{classgestures_1_1GesturesQuery_a17fbc6dd8397693f87588715a7bb19e5}{Is\+Joint\+Visible}} (uint32\+\_\+t joint\+Index) const =0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class offers an interface for implementing gesture recognition without the burden of fiddling around with the low-\/level implementation of a gesture recognition system. This also abstracts away the low-\/level implementation and offers a way to switch between different gesture recognition systems. 
+
+Definition at line 8 of file gestures\+\_\+query.\+hpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classgestures_1_1GesturesQuery_a58f3387eeccfe6f135c44d22d218c519}\label{classgestures_1_1GesturesQuery_a58f3387eeccfe6f135c44d22d218c519}} 
+\index{gestures::GesturesQuery@{gestures::GesturesQuery}!IsGesture@{IsGesture}}
+\index{IsGesture@{IsGesture}!gestures::GesturesQuery@{gestures::GesturesQuery}}
+\doxysubsubsection{\texorpdfstring{IsGesture()}{IsGesture()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily virtual bool gestures\+::\+Gestures\+Query\+::\+Is\+Gesture (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{joint\+Index1,  }\item[{uint32\+\_\+t}]{joint\+Index2,  }\item[{double}]{min\+Distance,  }\item[{double}]{max\+Distance }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Checks if a joint is intersecting with another joint. This is implemented by checking the distance from one point to another. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Index1} & The ID of the joint which should be used as the first point. \\
+\hline
+{\em joint\+Index2} & The ID of the joint which should be used as the second point. \\
+\hline
+{\em min\+Distance} & The minimum distance from one point to the other one. The distance is specified in millimeters. \\
+\hline
+{\em max\+Distance} & The maximum distance from one point to the other one. The distance is specified in millimeters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the gesture was recognized. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_ae44387f072a9c51795ae13b0b3701fdf}{kinect\+::\+Azure\+Kinect\+Gestures}}.
+
+\mbox{\Hypertarget{classgestures_1_1GesturesQuery_a5793a49ea32fc943972fa137d87b5d75}\label{classgestures_1_1GesturesQuery_a5793a49ea32fc943972fa137d87b5d75}} 
+\index{gestures::GesturesQuery@{gestures::GesturesQuery}!IsGesture@{IsGesture}}
+\index{IsGesture@{IsGesture}!gestures::GesturesQuery@{gestures::GesturesQuery}}
+\doxysubsubsection{\texorpdfstring{IsGesture()}{IsGesture()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily virtual bool gestures\+::\+Gestures\+Query\+::\+Is\+Gesture (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{start\+Joint\+Index,  }\item[{uint32\+\_\+t}]{end\+Joint\+Index,  }\item[{uint32\+\_\+t}]{joint\+Index,  }\item[{double}]{min\+Distance,  }\item[{double}]{max\+Distance }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Checks if a joint is intersecting with two other joints. This is implemented by checking if a point is intersecting with a line.. 
+\begin{DoxyParams}{Parameters}
+{\em start\+Joint\+Index} & The ID of the joint which should be used as the start point of the line. \\
+\hline
+{\em end\+Joint\+Index} & The ID of the joint which should be used as the end point of the line. \\
+\hline
+{\em joint\+Index} & The ID of the joint which should be used as the point which intersects with the line. \\
+\hline
+{\em min\+Distance} & The minimum distance from the line to the intersecting point. The distance is specified in millimeters. \\
+\hline
+{\em max\+Distance} & The maximum distance from the line to the intersecting point. The distance is specified in millimeters. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the gesture was recognized. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_aede233b1f3c7ba73088f0ee45a465cb0}{kinect\+::\+Azure\+Kinect\+Gestures}}.
+
+\mbox{\Hypertarget{classgestures_1_1GesturesQuery_a17fbc6dd8397693f87588715a7bb19e5}\label{classgestures_1_1GesturesQuery_a17fbc6dd8397693f87588715a7bb19e5}} 
+\index{gestures::GesturesQuery@{gestures::GesturesQuery}!IsJointVisible@{IsJointVisible}}
+\index{IsJointVisible@{IsJointVisible}!gestures::GesturesQuery@{gestures::GesturesQuery}}
+\doxysubsubsection{\texorpdfstring{IsJointVisible()}{IsJointVisible()}}
+{\footnotesize\ttfamily virtual bool gestures\+::\+Gestures\+Query\+::\+Is\+Joint\+Visible (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{joint\+Index }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Checks if a joint is visible for the gesture recognition system. 
+\begin{DoxyParams}{Parameters}
+{\em joint\+Index} & The ID of the joint which should be used to check if the joint is visible. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the joint is visible. Otherwise False is returned. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classkinect_1_1AzureKinectGestures_ab93c5650d597591d8536afa2f0736836}{kinect\+::\+Azure\+Kinect\+Gestures}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+simple\+\_\+gestures/include/simple\+\_\+gestures/gestures/gestures\+\_\+query.\+hpp\end{DoxyCompactItemize}

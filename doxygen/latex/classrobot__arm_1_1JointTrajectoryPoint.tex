@@ -1,0 +1,103 @@
+\hypertarget{classrobot__arm_1_1JointTrajectoryPoint}{}\doxysection{robot\+\_\+arm\+::Joint\+Trajectory\+Point Class Reference}
+\label{classrobot__arm_1_1JointTrajectoryPoint}\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+
+
+{\ttfamily \#include $<$joint\+\_\+trajectory\+\_\+point.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint_ad88f22874b7f898955ff8e05e645dac9}{Joint\+Trajectory\+Point}} (std\+::vector$<$ double $>$ positions, std\+::vector$<$ double $>$ velocities, std\+::vector$<$ double $>$ accelerations, std\+::vector$<$ double $>$ efforts, double seconds\+From\+Start)
+\item 
+const std\+::vector$<$ double $>$ \& \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint_a4d3be8583a1488f1c318f1251457d006}{Get\+Positions}} ()
+\item 
+const std\+::vector$<$ double $>$ \& \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint_a11cabcdf65bc26f63e9232fa9f3180e4}{Get\+Velocities}} ()
+\item 
+const std\+::vector$<$ double $>$ \& \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint_a2104db284e75fc008412f484f99fbde7}{Get\+Accelerations}} ()
+\item 
+const std\+::vector$<$ double $>$ \& \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint_a4acb524ce0e4e3ccfc36fb1b463e6b2e}{Get\+Efforts}} ()
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1JointTrajectoryPoint_ab245186c59f49f834bd73fd364822440}{Get\+Seconds\+From\+Start}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides a joint trajectory point for all ordered joint names of the robot arm. 
+
+Definition at line 10 of file joint\+\_\+trajectory\+\_\+point.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1JointTrajectoryPoint_ad88f22874b7f898955ff8e05e645dac9}\label{classrobot__arm_1_1JointTrajectoryPoint_ad88f22874b7f898955ff8e05e645dac9}} 
+\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}!JointTrajectoryPoint@{JointTrajectoryPoint}}
+\index{JointTrajectoryPoint@{JointTrajectoryPoint}!robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+\doxysubsubsection{\texorpdfstring{JointTrajectoryPoint()}{JointTrajectoryPoint()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Joint\+Trajectory\+Point\+::\+Joint\+Trajectory\+Point (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{positions,  }\item[{std\+::vector$<$ double $>$}]{velocities,  }\item[{std\+::vector$<$ double $>$}]{accelerations,  }\item[{std\+::vector$<$ double $>$}]{efforts,  }\item[{double}]{seconds\+From\+Start }\end{DoxyParamCaption})}
+
+Default constructor for a trajectory point for a joint. 
+\begin{DoxyParams}{Parameters}
+{\em positions} & The positions for the trajectory point. \\
+\hline
+{\em velocities} & The velocities for the trajectory point. \\
+\hline
+{\em accelerations} & The accelerations for the trajectory point. \\
+\hline
+{\em efforts} & The efforts for the trajectory point. \\
+\hline
+{\em seconds\+From\+Start} & The seconds from the start for the trajectory point. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1JointTrajectoryPoint_a2104db284e75fc008412f484f99fbde7}\label{classrobot__arm_1_1JointTrajectoryPoint_a2104db284e75fc008412f484f99fbde7}} 
+\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}!GetAccelerations@{GetAccelerations}}
+\index{GetAccelerations@{GetAccelerations}!robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+\doxysubsubsection{\texorpdfstring{GetAccelerations()}{GetAccelerations()}}
+{\footnotesize\ttfamily const std\+::vector$<$double$>$\& robot\+\_\+arm\+::\+Joint\+Trajectory\+Point\+::\+Get\+Accelerations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets the accelerations for the trajectory point \begin{DoxyReturn}{Returns}
+The accelerations for the trajectory point. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointTrajectoryPoint_a4acb524ce0e4e3ccfc36fb1b463e6b2e}\label{classrobot__arm_1_1JointTrajectoryPoint_a4acb524ce0e4e3ccfc36fb1b463e6b2e}} 
+\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}!GetEfforts@{GetEfforts}}
+\index{GetEfforts@{GetEfforts}!robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+\doxysubsubsection{\texorpdfstring{GetEfforts()}{GetEfforts()}}
+{\footnotesize\ttfamily const std\+::vector$<$double$>$\& robot\+\_\+arm\+::\+Joint\+Trajectory\+Point\+::\+Get\+Efforts (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets the efforts for the trajectory point \begin{DoxyReturn}{Returns}
+The efforts for the trajectory point. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointTrajectoryPoint_a4d3be8583a1488f1c318f1251457d006}\label{classrobot__arm_1_1JointTrajectoryPoint_a4d3be8583a1488f1c318f1251457d006}} 
+\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}!GetPositions@{GetPositions}}
+\index{GetPositions@{GetPositions}!robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+\doxysubsubsection{\texorpdfstring{GetPositions()}{GetPositions()}}
+{\footnotesize\ttfamily const std\+::vector$<$double$>$\& robot\+\_\+arm\+::\+Joint\+Trajectory\+Point\+::\+Get\+Positions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets the positions for the trajectory point \begin{DoxyReturn}{Returns}
+The positions for the trajectory point. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointTrajectoryPoint_ab245186c59f49f834bd73fd364822440}\label{classrobot__arm_1_1JointTrajectoryPoint_ab245186c59f49f834bd73fd364822440}} 
+\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}!GetSecondsFromStart@{GetSecondsFromStart}}
+\index{GetSecondsFromStart@{GetSecondsFromStart}!robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+\doxysubsubsection{\texorpdfstring{GetSecondsFromStart()}{GetSecondsFromStart()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+Trajectory\+Point\+::\+Get\+Seconds\+From\+Start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the seconds from the start for the trajectory point \begin{DoxyReturn}{Returns}
+The seconds from the start for the trajectory point. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1JointTrajectoryPoint_a11cabcdf65bc26f63e9232fa9f3180e4}\label{classrobot__arm_1_1JointTrajectoryPoint_a11cabcdf65bc26f63e9232fa9f3180e4}} 
+\index{robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}!GetVelocities@{GetVelocities}}
+\index{GetVelocities@{GetVelocities}!robot\_arm::JointTrajectoryPoint@{robot\_arm::JointTrajectoryPoint}}
+\doxysubsubsection{\texorpdfstring{GetVelocities()}{GetVelocities()}}
+{\footnotesize\ttfamily const std\+::vector$<$double$>$\& robot\+\_\+arm\+::\+Joint\+Trajectory\+Point\+::\+Get\+Velocities (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets the velocities for the trajectory point \begin{DoxyReturn}{Returns}
+The velocities for the trajectory point. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+interface/include/robot\+\_\+arm\+\_\+interface/joint\+\_\+trajectory\+\_\+point.\+hpp\end{DoxyCompactItemize}

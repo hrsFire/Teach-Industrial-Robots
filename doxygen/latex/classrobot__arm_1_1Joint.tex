@@ -1,0 +1,116 @@
+\hypertarget{classrobot__arm_1_1Joint}{}\doxysection{robot\+\_\+arm\+::Joint Class Reference}
+\label{classrobot__arm_1_1Joint}\index{robot\_arm::Joint@{robot\_arm::Joint}}
+
+
+{\ttfamily \#include $<$joint.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrobot__arm_1_1Joint_ab0f8522b572bbd806e8bc0d699a465c4}{Joint}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ name, uint id, double lower\+Limit, double upper\+Limit, double velocity\+Limit, bool can\+Rotate)
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$ \mbox{\hyperlink{classrobot__arm_1_1Joint_a653444ebdb445a011c22aed1afd39c74}{Get\+Name}} () const
+\item 
+uint \mbox{\hyperlink{classrobot__arm_1_1Joint_a1c0645359920ac79252dcd2ef6d7683e}{Get\+ID}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1Joint_a0536bb96deca74a8b64b4c59d2a1e61e}{Get\+Lower\+Limit}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1Joint_ae4c43ef507d4557e0b51e98fd5d2f660}{Get\+Upper\+Limit}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1Joint_acfdfbec289f622f020d98c9635ef0598}{Get\+Velocitiy\+Limit}} () const
+\item 
+double \mbox{\hyperlink{classrobot__arm_1_1Joint_ad9ba3eb08d2cc9535034363f45beea62}{Can\+Rotate}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class provides information about a joint. 
+
+Definition at line 11 of file joint.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_ab0f8522b572bbd806e8bc0d699a465c4}\label{classrobot__arm_1_1Joint_ab0f8522b572bbd806e8bc0d699a465c4}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!Joint@{Joint}}
+\index{Joint@{Joint}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{Joint()}{Joint()}}
+{\footnotesize\ttfamily robot\+\_\+arm\+::\+Joint\+::\+Joint (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}} $>$}]{name,  }\item[{uint}]{id,  }\item[{double}]{lower\+Limit,  }\item[{double}]{upper\+Limit,  }\item[{double}]{velocity\+Limit,  }\item[{bool}]{can\+Rotate }\end{DoxyParamCaption})}
+
+Default constructor for a joint. 
+\begin{DoxyParams}{Parameters}
+{\em name} & The name for the joint. \\
+\hline
+{\em id} & The ID for the joint. \\
+\hline
+{\em lower\+Limit} & The lower limit in rad for the joint. \\
+\hline
+{\em upper\+Limit} & The upper limit in rad for the joint. \\
+\hline
+{\em velocity\+Limit} & The velocity limit in rad/s for the joint. \\
+\hline
+{\em can\+Rotate} & Specifies if the joint can rotate. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_ad9ba3eb08d2cc9535034363f45beea62}\label{classrobot__arm_1_1Joint_ad9ba3eb08d2cc9535034363f45beea62}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!CanRotate@{CanRotate}}
+\index{CanRotate@{CanRotate}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{CanRotate()}{CanRotate()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+::\+Can\+Rotate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets if the joint can rotate. \begin{DoxyReturn}{Returns}
+True if the joint can rotate. Otherwise False is returned. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_a1c0645359920ac79252dcd2ef6d7683e}\label{classrobot__arm_1_1Joint_a1c0645359920ac79252dcd2ef6d7683e}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!GetID@{GetID}}
+\index{GetID@{GetID}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{GetID()}{GetID()}}
+{\footnotesize\ttfamily uint robot\+\_\+arm\+::\+Joint\+::\+Get\+ID (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the ID for the joint. \begin{DoxyReturn}{Returns}
+The ID for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_a0536bb96deca74a8b64b4c59d2a1e61e}\label{classrobot__arm_1_1Joint_a0536bb96deca74a8b64b4c59d2a1e61e}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!GetLowerLimit@{GetLowerLimit}}
+\index{GetLowerLimit@{GetLowerLimit}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{GetLowerLimit()}{GetLowerLimit()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+::\+Get\+Lower\+Limit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the lower limit for the joint. \begin{DoxyReturn}{Returns}
+The lower limit for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_a653444ebdb445a011c22aed1afd39c74}\label{classrobot__arm_1_1Joint_a653444ebdb445a011c22aed1afd39c74}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!GetName@{GetName}}
+\index{GetName@{GetName}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{GetName()}{GetName()}}
+{\footnotesize\ttfamily std\+::shared\+\_\+ptr$<$\mbox{\hyperlink{classrobot__arm_1_1JointName}{Joint\+Name}}$>$ robot\+\_\+arm\+::\+Joint\+::\+Get\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the name for the joint. \begin{DoxyReturn}{Returns}
+The name for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_ae4c43ef507d4557e0b51e98fd5d2f660}\label{classrobot__arm_1_1Joint_ae4c43ef507d4557e0b51e98fd5d2f660}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!GetUpperLimit@{GetUpperLimit}}
+\index{GetUpperLimit@{GetUpperLimit}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{GetUpperLimit()}{GetUpperLimit()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+::\+Get\+Upper\+Limit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the upper limit for the joint. \begin{DoxyReturn}{Returns}
+The upper limit for the joint. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classrobot__arm_1_1Joint_acfdfbec289f622f020d98c9635ef0598}\label{classrobot__arm_1_1Joint_acfdfbec289f622f020d98c9635ef0598}} 
+\index{robot\_arm::Joint@{robot\_arm::Joint}!GetVelocitiyLimit@{GetVelocitiyLimit}}
+\index{GetVelocitiyLimit@{GetVelocitiyLimit}!robot\_arm::Joint@{robot\_arm::Joint}}
+\doxysubsubsection{\texorpdfstring{GetVelocitiyLimit()}{GetVelocitiyLimit()}}
+{\footnotesize\ttfamily double robot\+\_\+arm\+::\+Joint\+::\+Get\+Velocitiy\+Limit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Gets the velocity limit for the joint. \begin{DoxyReturn}{Returns}
+The velocity limit for the joint. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+robot\+\_\+arm\+\_\+interface/include/robot\+\_\+arm\+\_\+interface/joint.\+hpp\end{DoxyCompactItemize}
